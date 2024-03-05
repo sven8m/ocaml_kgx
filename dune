@@ -1,0 +1,5 @@
+(executable
+ (name otgx)
+ (promote (until-clean))
+ (libraries ))
+
