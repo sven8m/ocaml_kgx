@@ -1,0 +1,6 @@
+(library
+ (name printer)
+ (wrapped false)
+ (flags ())
+ (libraries model))
+
