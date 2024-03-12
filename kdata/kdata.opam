@@ -1,8 +1,9 @@
 opam-version: "2.0"
-name: "okgx"
+name: "kdata"
 version: "0.1"
 synopsis: "One-line description"
 maintainer: "Name <email>"
 authors: "Name <email>"
-depends: [ "ocaml" "ocamlfind" ]
+depends: [ "ocaml" "ocamlfind" "kplacement"]
 build: ["dune" "build"]
+

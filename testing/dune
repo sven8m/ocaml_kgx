@@ -1,0 +1,6 @@
+(executable
+ (name okgx)
+ (promote (until-clean))
+ (libraries kdata kgraph kplacement))
+
+

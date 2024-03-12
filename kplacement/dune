@@ -1,0 +1,6 @@
+(library 
+  (name kplacement)
+  (public_name kplacement)
+ (wrapped false)
+ ;(flags ())
+)

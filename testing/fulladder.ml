@@ -208,3 +208,4 @@ let main _ =
 
 	let ff = Format.formatter_of_out_channel oc in
 	Kgraph_printer.graph_to_kgx ff kgraph
+

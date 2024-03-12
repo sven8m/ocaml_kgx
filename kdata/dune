@@ -1,6 +1,7 @@
 (library
- (name kdata)
+ (public_name kdata)
+  (name kdata)
  (wrapped false)
  (flags ())
- (libraries placement utils))
+ (libraries kplacement))
 
