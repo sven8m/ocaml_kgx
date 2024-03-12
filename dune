@@ -1,5 +1,6 @@
-(executable
- (name okgx)
+(library
+ (public_name okgx)
+  (name okgx)
  (promote (until-clean))
  (libraries kdata kgraph placement))
 
