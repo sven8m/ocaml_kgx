@@ -1,5 +1,5 @@
 (library
- (public_name kgraph)
+; (public_name kgraph)
  (name kgraph)
  (wrapped false)
  (flags ())
