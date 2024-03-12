@@ -108,7 +108,6 @@ let createPort kgraph node text =
 	port#setNode node;
 	let l = new label in
 	l#setText text;
-	l#setCenter;
 	port#addLabel l;
 	port
 
@@ -121,8 +120,9 @@ let main _ =
 	main_node#addData (Action a);
 	main_node#addData d;
 	main_node#addProperty (PersistentEntry.constraintPortSide ());
+	let gray = create_color 224 224 242 in
+	main_node#addData (Style (create_style (Background (create_coloring gray))));
 
-	
 	let label1 = new label in
 	label1#setText "fulladder";
 	label1#setCenter;

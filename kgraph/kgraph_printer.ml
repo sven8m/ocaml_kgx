@@ -44,7 +44,7 @@ let print_targetPort ff kedge =
 let print_kedge ff kedge =	
 	Format.fprintf ff "@[<v 4><outgoingEdges target=\"%s\" %a %a>@," (kedge#getTargetOpt ())#getPath print_sourcePort kedge print_targetPort kedge;
 	List.iter (print_property ff) kedge#getProperties;
-	List.iter (fun label -> print_label ff label) kedge#getLabels;
+	List.iter (print_label ff) kedge#getLabels;
 	print_data ff kedge#getContainer kedge#getData;
 	Format.fprintf ff "@]@,</outgoingEdges>@,"
 
@@ -68,9 +68,9 @@ let rec print_knode ff knode =
 	| "" -> ""
 	| s -> "incomingEdges=\""^s^"\""
 	in
-	Format.fprintf ff "@[<v 4><children %a %s>@," Object_pos.print_obj_pos (knode :> Object_pos.obj_pos) incoming;
-	List.iter (print_label ff) knode#getLabels;
+	Format.fprintf ff "@[<v 4><children %a %s>@," Object_pos.print_obj_pos (knode :> Object_pos.obj_pos) incoming;	
 	List.iter (print_property ff) knode#getProperties;
+	List.iter (print_label ff) knode#getLabels;
 	(*printing data*)
 	print_data ff knode#getContainer knode#getData;
 	(*printing children *)
