@@ -1,5 +1,5 @@
 (executable
- (name otgx)
+ (name okgx)
  (promote (until-clean))
- (libraries printer model))
+ (libraries kdata kgraph placement))
 

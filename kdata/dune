@@ -1,0 +1,6 @@
+(library
+ (name kdata)
+ (wrapped false)
+ (flags ())
+ (libraries placement utils))
+

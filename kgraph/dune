@@ -1,6 +1,6 @@
 (library
- (name printer)
+ (name kgraph)
  (wrapped false)
  (flags ())
- (libraries model))
+ (libraries kdata))
 

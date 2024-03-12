@@ -1,10 +1,10 @@
 all:
 	dune build
-	mv otgx.exe otgx
+	mv okgx.exe okgx
 
 clean:
 	dune clean
-	rm -f otgx
+	rm -f okgx
 
 
 .PHONY: all clean

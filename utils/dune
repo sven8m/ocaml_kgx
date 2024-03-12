@@ -1,5 +1,5 @@
 (library
- (name model)
+ (name utils)
  (wrapped false)
  (flags ())
  (libraries))
