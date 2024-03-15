@@ -5,10 +5,10 @@ type container =
 	| Rect 
 	| RoundRect of float * float
 	| Spline
-	| PolyLine
+	| PolyLine of Point.point list
 	| Text of string
 	| Ellipse
-	| Polygon
+	| Polygon of Point.point list
 	| Default
 (* creation *)
 
@@ -22,9 +22,9 @@ let container_to_string c =
 	| RoundRect _ -> "KRoundedRectangle"
 	| Spline -> "KSpline"
 	| Text _ -> "KText"
-	| PolyLine -> "KPolyline"
+	| PolyLine _ -> "KPolyline"
 	| Ellipse -> "KEllipse"
-	| Polygon -> "KPolygon"
+	| Polygon _ -> "KPolygon"
 	| Default -> "KRectangle"
 
 let print_container_infos ff c = 
@@ -33,10 +33,17 @@ let print_container_infos ff c =
 	| RoundRect (x,y) -> Format.fprintf ff "cornerWidth = \"%f\" cornerHeight = \"%f\"" x y
 	| Spline -> ()
 	| Text t -> Format.fprintf ff "text=\"%s\"" t
-	| PolyLine -> ()
+	| PolyLine _ -> ()
 	| Ellipse -> ()
-	| Polygon -> ()
 	| Default -> ()
+	| Polygon _ -> ()
 
+let print_container_content ff c = 
+	match c with
+	| PolyLine pl | Polygon pl ->
+		List.iter (fun point ->
+			Format.fprintf ff "@[<v 4><points>@,%a@]@,</points>@," Point.print_point point) pl
+	| _ -> ()
+	
 let print_container ff c =
 	Format.fprintf ff "%s\" %a" (container_to_string c) print_container_infos c	

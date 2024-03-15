@@ -1,5 +1,5 @@
 let main () =
-		Arg.parse [] Fulladder.main "";;
+		Arg.parse [] Basic.main "";;
 
 let () = main ()
 

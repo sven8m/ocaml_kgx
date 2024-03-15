@@ -1,4 +1,3 @@
-open Kgraph_objects
 
 
 let rec compute_path_knode knode path id =

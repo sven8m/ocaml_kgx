@@ -26,12 +26,8 @@ let place () =
 	let c1 = create_coord ~pos_val:(Abs 10.0) Left in
 	let c2 = create_coord ~pos_val:(Abs 10.0) Top in
 	p#setTopLeft (create_point c1 c2);
-	(*addPlacementInfo p (create_placement_info TopLeft (create_point c1 c2));
-	*)	
 	let c3 = create_coord ~pos_val:(Abs 10.0) Right in
 	let c4 = create_coord ~pos_val:(Abs 10.0) Bottom in
-	(*addPlacementInfo p (create_placement_info BotRight (create_point c3 c4));
-	*)
 	p#setBotRight (create_point c3 c4);
 	Area p
 
@@ -45,7 +41,7 @@ let new_edge kgraph source target =
 	let edge = new kedge kgraph in
 	edge#setSource source;
 	edge#setTarget target;
-	edge#setContainer PolyLine;
+	edge#setContainer (PolyLine []);
 	edge#addData (Style (create_style (LineWidth 1.3)));
 	edge#addData (Style (create_style ~on_sel:true (LineWidth 2.0)));
 	let color = create_color 0 0 255 in
@@ -111,6 +107,40 @@ let createPort kgraph node text =
 	port#addLabel l;
 	port
 
+let special_edge edge = 
+	let place = new DecoratorPlacementData.decoratorPlacementData in
+	place#setAbsolute (-2.0);
+	place#setXOffset (-6.0);
+	place#setYOffset (-3.0);
+	place#setRotateWithLine true;
+	place#setWidth 8.0;
+	place#setHeight 6.0;
+	place#setRelative 1.0;
+	
+	let c1 = Point.create_coord Right in
+	let c2 = Point.create_coord ~pos_val:(Rel 0.5) Bottom in
+	
+	let p1 = Point.create_point c1 c2 in
+
+	let c3 = Point.create_coord Left in
+	let c4 = Point.create_coord Bottom in
+	let p2 = Point.create_point c3 c4 in
+
+	let c5 = Point.create_coord ~pos_val:(Rel 0.4) Left in
+	let c6 = Point.create_coord ~pos_val:(Rel 0.5) Top in
+	let p3 = Point.create_point c5 c6 in
+
+	let c7 = Point.create_coord Left in
+	let c8 = Point.create_coord Top in
+	let p4 = Point.create_point c7 c8 in
+
+	let cont = Rendering.create_container_rendering () in
+	setContainerRendering cont (Polygon [p4;p3;p2;p1]);
+	addContainerData cont (PlacementData (Decorator place));
+	addContainerData cont (Style (create_style JoinRound));
+	addContainerData cont (Style (create_style (LineWidth 2.0)));
+	edge#addData (ContainerRendering cont)
+
 let main _ = 
 	let kgraph = new kgraph in
 
@@ -160,7 +190,6 @@ let main _ =
 	xorAB#setParent main_node;
 	xorABC#setParent main_node;
 	
-	Format.printf "Wtehwth@.";
 
 	let e4 = new_edge kgraph xorABC main_node in
 	e4#setTargetPort port_s;
@@ -203,6 +232,7 @@ let main _ =
 
 	let e = new_edge kgraph plus main_node in
 	e#setTargetPort port_r;
+	special_edge e;
 
 	let oc = open_out "fulladder.kgx" in
 

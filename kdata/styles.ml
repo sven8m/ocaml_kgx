@@ -12,6 +12,8 @@ type c_style =
 	| Bold
 	| FontSize of int
 	| LineStyle of line_style
+	| JoinRound
+
 type style = {
 	style : c_style;
 	on_selection : bool
@@ -37,6 +39,7 @@ let style_to_string c_style = match c_style with
 	| Bold -> "KFontBold"
 	| FontSize _ -> "KFontSize"
 	| LineStyle _ -> "KLineStyle"
+	| JoinRound -> "KLineJoin"
 
 let line_style_to_string s = match s with
 	| SOLID -> "SOLID"
@@ -64,6 +67,8 @@ let print_style ff style =
 		Format.fprintf ff " size=\"%d\"" d
 	| LineStyle s ->
 		Format.fprintf ff " lineStyle=\"%s\"" (line_style_to_string s)
+	| JoinRound ->
+		Format.fprintf ff " lineJoin=\"JOIN_ROUND\""
 	end;
 	Format.fprintf ff ">";
 	begin match style.style with

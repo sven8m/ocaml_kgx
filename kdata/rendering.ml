@@ -35,6 +35,7 @@ let addContainerData cont d =
 let rec print_container_rendering ff cont = 
 	Format.fprintf ff "@[<v 4><children xsi:type=\"krendering:%a>@," print_container cont.container;
 	List.iter (print_rendering ff) cont.data;
+	print_container_content ff cont.container;
 	Format.fprintf ff "@]@,</children>@,"
 
 and print_child_area ff rl = 
@@ -57,5 +58,6 @@ and print_rendering ff rendering =
 
 let print_data ff container data = 
 	Format.fprintf ff "@[<v 4><data xsi:type=\"krendering:%a>@," print_container container;
-	List.iter (print_rendering ff) data;	
+	List.iter (print_rendering ff) data;
+	print_container_content ff container; 
 	Format.fprintf ff "@]@,</data>@,"	
