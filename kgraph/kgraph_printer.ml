@@ -13,10 +13,7 @@ let print_port ff port =
 	Format.fprintf ff "@[<v 4><ports %a>@," Object_pos.print_obj_pos (port :> Object_pos.obj_pos) ;
 	List.iter (print_property ff) port#getProperties;
 	List.iter (print_label ff) port#getLabels;
-	begin match port#getContainer with
-	| Default -> ()
-	| c -> print_data ff c port#getData
-	end;
+	List.iter (print_data_node ff) port#getData;
 	Format.fprintf ff "@]@,</ports>@,"
 
 let findPortId port node =
@@ -45,10 +42,10 @@ let print_kedge ff kedge =
 	Format.fprintf ff "@[<v 4><outgoingEdges target=\"%s\" %a %a>@," (kedge#getTargetOpt ())#getPath print_sourcePort kedge print_targetPort kedge;
 	List.iter (print_property ff) kedge#getProperties;
 	List.iter (print_label ff) kedge#getLabels;
-	print_data ff kedge#getContainer kedge#getData;
+	List.iter (print_data_node ff) kedge#getData;
 	Format.fprintf ff "@]@,</outgoingEdges>@,"
 
-let rec print_knode ff knode =
+let rec print_knode ff (knode :knode) =
 	
 	let rec compute_incomingList edge_list = 
 		match edge_list with
@@ -72,7 +69,7 @@ let rec print_knode ff knode =
 	List.iter (print_property ff) knode#getProperties;
 	List.iter (print_label ff) knode#getLabels;
 	(*printing data*)
-	print_data ff knode#getContainer knode#getData;
+	List.iter (print_data_node ff) (knode#getData);
 	(*printing children *)
 	
 	List.iter (print_knode ff) knode#getChildren;

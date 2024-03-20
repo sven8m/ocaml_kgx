@@ -8,7 +8,7 @@ let create_action ?(trig) id =
 	{actionId = id ; trigger = trig}
 
 let create_actionCollapse () = 
-	create_action ~trig:"DOUBLECLICK" "de.cau.cs.kieler.sccharts.ui.synthesis.hooks.actions.MemorizingExpandCollapseAction"
+	create_action ~trig:"DOUBLECLICK" "de.cau.cs.kieler.klighd.actions.CollapseExpandAction" 
 
 let print_action ff action = 
 	Format.fprintf ff "<actions actionId=\"%s\"" action.actionId;

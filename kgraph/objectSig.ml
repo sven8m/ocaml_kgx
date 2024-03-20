@@ -1,14 +1,11 @@
-let kgraph_cnt = ref 0
-
+open RenderingSig
 class type kelementSig = object
+	inherit PersistentEntry.propertyHolderSig
 	val id : int
 	val kgraph_id : int
 	val mutable kgraph : kgraphSig
 	val mutable labels : Label.label list
-	val mutable container : Container.container
-	val mutable data : Rendering.rendering list
-	val mutable properties : PersistentEntry.property list
-	
+	val mutable data : containerRenderingSig list	
 	method getId : int
 
 	method getGraphId : int
@@ -17,14 +14,8 @@ class type kelementSig = object
 	method getLabels : Label.label list
 	method addLabel : Label.label -> unit
 
-	method setContainer : Container.container -> unit
-	method getContainer : Container.container
-
-	method addData : Rendering.rendering -> unit
-	method getData : Rendering.rendering list
-
-	method getProperties : PersistentEntry.property list
-	method addProperty : PersistentEntry.property -> unit
+	method getData : containerRenderingSig list
+	method addData : containerRenderingSig -> unit
 end
 
 and knodeSig = object 

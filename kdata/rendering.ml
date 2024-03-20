@@ -1,63 +1,72 @@
 open Styles
 open Container
 open Placement
+open RenderingSig
 
-type container_rendering = {
-	mutable container : container;
-	mutable data : rendering list
-}
+class data : dataSig = object
+	inherit PersistentEntry.propertyHolder
+	val mutable contRenderings = []
+	val mutable placement = None
+	val mutable childArea = None
+	val mutable styles = [] 
+	val mutable actions = []
 
-and rendering = 
-	| ContainerRendering of container_rendering
-	| PlacementData of placement
-	| ChildArea of rendering list
-	| Style of style
-	| Action of Actions.action
+	method addContainerRendering cr = 
+		contRenderings <- cr :: contRenderings
+	method getContainerRenderings = contRenderings
 
+	method getPlacement = placement
+	method setPlacement p = placement <- Some p 
 
-(*creation*)
+	method getChildArea = childArea
+	method setChildArea a = childArea <- Some a
 
-let create_container_rendering () = 
-	{container = Rect ; data = []}
+	method addStyle a = styles <- a :: styles
+	method getStyles = styles
 
+	method addAction a = actions <- a :: actions
+	method getActions = actions
+end
 
-(*editing*)
+class containerRendering : containerRenderingSig = object
+    inherit data
+	val mutable container = Default
 
-let setContainerRendering cr c =
-	cr.container <- c
-
-let addContainerData cont d =
-	cont.data <- d :: cont.data
+	method setContainer c = container <- c
+	method getContainer = container
+end
 
 
 (* printing *)
 
 let rec print_container_rendering ff cont = 
-	Format.fprintf ff "@[<v 4><children xsi:type=\"krendering:%a>@," print_container cont.container;
-	List.iter (print_rendering ff) cont.data;
-	print_container_content ff cont.container;
+	Format.fprintf ff "@[<v 4><children xsi:type=\"krendering:%a>@," print_container cont#getContainer;
+	print_data ff (cont :> data);
+	print_container_content ff cont#getContainer;
 	Format.fprintf ff "@]@,</children>@,"
 
-and print_child_area ff rl = 
+and print_child_area ff ca = 
 	Format.fprintf ff "@[<v 4><children xsi:type=\"krendering:KChildArea\">@,";
-	List.iter (print_rendering ff) rl;
+	print_data ff ca;
 	Format.fprintf ff "@]@,</children>@,"
 
-and print_rendering ff rendering = 
-	match rendering with
-	| ContainerRendering c ->
-		print_container_rendering ff c
-	| Style style ->
-		print_style ff style
-	| PlacementData p ->
-		print_placement ff p
-	| ChildArea rl ->
-		print_child_area ff rl	
-	| Action a ->
-		Actions.print_action ff a
+and print_data ff data =
+	
+	PersistentEntry.print_properties ff (data :> PersistentEntry.propertyHolder);
+	List.iter (print_style ff) data#getStyles;
+	begin match data#getPlacement with
+	| None -> ()
+	| Some p -> print_placement ff p
+	end;
+	begin match data#getChildArea with
+	| None -> ()
+	| Some a -> print_child_area ff a
+	end;
+	List.iter (Actions.print_action ff) data#getActions;
+	List.iter (print_container_rendering ff) data#getContainerRenderings 
 
-let print_data ff container data = 
-	Format.fprintf ff "@[<v 4><data xsi:type=\"krendering:%a>@," print_container container;
-	List.iter (print_rendering ff) data;
-	print_container_content ff container; 
+let print_data_node ff cont = 
+	Format.fprintf ff "@[<v 4><data xsi:type=\"krendering:%a>@," print_container cont#getContainer;
+	print_data ff (cont:>data);
+	print_container_content ff cont#getContainer; 
 	Format.fprintf ff "@]@,</data>@,"	
