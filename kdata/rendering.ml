@@ -10,6 +10,7 @@ class data : dataSig = object
 	val mutable childArea = None
 	val mutable styles = [] 
 	val mutable actions = []
+	val mutable junctions = []
 
 	method addContainerRendering cr = 
 		contRenderings <- cr :: contRenderings
@@ -26,6 +27,9 @@ class data : dataSig = object
 
 	method addAction a = actions <- a :: actions
 	method getActions = actions
+
+	method getJunctions = junctions
+	method addJunction j = junctions <- j :: junctions
 end
 
 class containerRendering : containerRenderingSig = object
@@ -50,6 +54,12 @@ and print_child_area ff ca =
 	print_data ff ca;
 	Format.fprintf ff "@]@,</children>@,"
 
+and print_junction ff j = 
+	Format.fprintf ff "@[<v 4><junctionPointRendering xsi:type=\"krendering:%a>@," print_container j#getContainer;
+	print_data ff (j :> data);
+	print_container_content ff j#getContainer;
+	Format.fprintf ff "@]@,</junctionPointRendering>@,"
+
 and print_data ff data =
 	
 	PersistentEntry.print_properties ff (data :> PersistentEntry.propertyHolder);
@@ -63,7 +73,8 @@ and print_data ff data =
 	| Some a -> print_child_area ff a
 	end;
 	List.iter (Actions.print_action ff) data#getActions;
-	List.iter (print_container_rendering ff) data#getContainerRenderings 
+	List.iter (print_container_rendering ff) data#getContainerRenderings; 
+	List.iter (print_junction ff) data#getJunctions
 
 let print_data_node ff cont = 
 	Format.fprintf ff "@[<v 4><data xsi:type=\"krendering:%a>@," print_container cont#getContainer;

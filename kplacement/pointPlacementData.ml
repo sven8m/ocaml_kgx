@@ -17,7 +17,7 @@ class pointPlacementData = object
 	method setMinHeight h = minHeight <- Some h
 
 	method getMinWidth = minWidth
-	method setMinWith w = minWidth <- Some w
+	method setMinWidth w = minWidth <- Some w
 	
 	method getHorizontalMargin = horMargin
 	method setHorizontalMargin h = horMargin <- Some h

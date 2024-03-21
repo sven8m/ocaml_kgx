@@ -9,6 +9,7 @@ class type dataSig = object
 	val mutable childArea : dataSig option
 	val mutable styles : style list
 	val mutable actions : Actions.action list
+	val mutable junctions : containerRenderingSig list
 
 	method addContainerRendering : containerRenderingSig -> unit 
 	method getContainerRenderings : containerRenderingSig list
@@ -24,6 +25,9 @@ class type dataSig = object
 
 	method addAction : Actions.action -> unit 
 	method getActions : Actions.action list
+
+	method getJunctions : containerRenderingSig list
+	method addJunction : containerRenderingSig -> unit
 end
 
 and containerRenderingSig = object

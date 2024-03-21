@@ -51,12 +51,17 @@ let centerPlacement ?(ho_mar=None) ?(ver_mar=None) x y =
 	end;
 	Point p
 
-let defaultNode kgraph = 
+let defaultNode ?(order=false) kgraph = 
 	let node = new knode kgraph in
 	node#setWidth 20.0;
 	node#setHeight 20.0;	
 	node#addProperty (PersistentEntry.addPortSpace "0.0" "0.0" "0.0" "0.0");	
-	node#addProperty (PersistentEntry.constraintPortSide ());
+	node#addProperty (PersistentEntry.portAlignmentNorth "CENTER");
+	node#addProperty (PersistentEntry.portAlignmentSouth "CENTER");
+	if order then
+		node#addProperty (PersistentEntry.constraintPortOrder ())
+	else
+		node#addProperty (PersistentEntry.constraintPortSide ());
 	node#addProperty (PersistentEntry.allowSwitch ()); 
 	node
 
@@ -158,8 +163,8 @@ let unopNode ?(no=false) kgraph node =
 	in
 	{node = node ; inputs = [p1] ; outputs = [po] ; control = []}
 
-let simpleOpNode ?(ho_mar=0.0) kgraph text relX relY= 
-	let node = defaultNode kgraph in
+let simpleOpNode ?(ho_mar=0.0) ?(order=false) kgraph text relX relY= 
+	let node = defaultNode ~order:order kgraph in
 	let cont = simpleOpContWtT () in
 	cont#addContainerRendering (simpleText ~ho_mar:ho_mar text relX relY);
 	node#addData cont;
@@ -182,7 +187,7 @@ let simpleSliceNode kgraph i j =
 	unopNode kgraph (simpleOpNode ~ho_mar:2.0 kgraph ("["^i^"."^j^"]") 0.5 0.5)
 
 let simpleConcatNode kgraph =
-	binopNode kgraph (simpleOpNode kgraph "." 0.5 0.5)
+	binopNode kgraph (simpleOpNode ~order:true kgraph "." 0.5 0.5)
 
 let rectangleAsPolygon () = 
 	let c1 = Point.create_coord Top in
@@ -346,27 +351,27 @@ let simpleMatchNode kgraph constr_list =
 	{op with control = [control_port]}
 
 let simpleTupleShape () = 
-	let c1 = create_coord Top in
+	(*let c1 = create_coord Top in
 	let c2 = create_coord Bottom in
 	let c3 = create_coord Left in
 	let p1 = create_point c3 c1 in
 	let p2 = create_point c3 c2 in
-	
+	*)
 	let c = new containerRendering in
-	c#setContainer (PolyLine [p1;p2]);
-	c#addStyle (create_style (LineWidth 5.0));
+	(*c#setContainer (PolyLine [p1;p2]);*)
+	c#addStyle (create_style (LineWidth 5.1));
 	c
 
 let simpleTupleNode kgraph n = 
 	let node = defaultNode kgraph in
-	node#setWidth 5.0;
+	node#setWidth 0.1;
 	let cont = simpleTupleShape () in
 	node#addData cont;
 	multOpNode kgraph node n
 
 let simpleUnTupleNode kgraph n = 
 	let node = defaultNode kgraph in
-	node#setWidth 5.0;
+	node#setWidth 0.1;
 	let cont = simpleTupleShape () in
 	node#addData cont;
 	let input = invisibleInputPort kgraph node in
@@ -465,7 +470,7 @@ let functionTitle name =
 
 
 
-let function_node kgraph name inputs outputs layer = 
+let function_node ?(m=false) kgraph name inputs outputs layer = 
 	let layer = if layer >= 5 then 5 else layer in
 	let main_node= defaultNode kgraph in
 	let cont = new containerRendering in
@@ -473,9 +478,12 @@ let function_node kgraph name inputs outputs layer =
 	ca#setPlacement (place ());
 	cont#setChildArea ca;
 	cont#addAction (Actions.create_actionCollapse ());
-	let gray = create_color (224 - 10 * layer) (224 - 10 * layer) (242 - 10 * layer) in
-	cont#addStyle (create_style (Background (create_coloring gray)));
+	let gray = if not m then create_color (224 - 10 * layer) (224 - 10 * layer) (242 - 10 * layer)
+     else create_color (200 - 10 * layer) (200 - 10 * layer) (242 - 10 * layer)
+	in
 
+	cont#addStyle (create_style (Background (create_coloring gray)));
+	if m then cont#addStyle (create_style (LineStyle DASH));
 	cont#addContainerRendering (functionTitle name);
 	main_node#addData cont;
 (*
@@ -501,12 +509,27 @@ let function_node kgraph name inputs outputs layer =
 		) outputs in
 	{node = main_node ; inputs = inputs ; outputs = outputs ; control = []}
 
-let functionReset kgraph name inputs outputs layer = 
-	let op = function_node kgraph name inputs outputs layer in
+let functionReset ?(m=false) kgraph name inputs outputs layer = 
+	let op = function_node ~m:m kgraph name inputs outputs layer in
 	{op with control = [invisibleControlPort kgraph op.node]}
 
 let addReset kgraph (opNode : op_node) = 
 	{opNode with control = [invisibleControlPort kgraph opNode.node]}
+
+let junction mult =
+	let cont = new containerRendering in
+	cont#setContainer Ellipse;
+	let color = create_color 0 0 0 in
+	cont#addStyle (create_style (Background (create_coloring color)));
+	let pd = new PointPlacementData.pointPlacementData in
+	pd#setVerticalAlignment CENTER;
+	pd#setHorizontalAlignment CENTER;
+	let size = if mult then 5.0 else 4.0 in
+	pd#setMinWidth size;
+	pd#setMinHeight size;
+	cont#setPlacement (Point pd);
+	cont
+
 
 let new_edge ?(mult=false) kgraph source target = 
 	let edge = new kedge kgraph in
@@ -520,6 +543,7 @@ let new_edge ?(mult=false) kgraph source target =
 	cont#addStyle (create_style ~on_sel:true (LineWidth (if mult then 2.5 else 1.5 )));
 	let color = create_color 0 0 255 in
 	cont#addStyle (create_style ~on_sel:true (Foreground (create_coloring color)));
+	cont#addJunction (junction mult);
 	edge#addData cont;
 	List.iter (fun t ->
 		let label = new label in

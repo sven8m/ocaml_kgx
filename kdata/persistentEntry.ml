@@ -22,6 +22,7 @@ class propertyHolder : propertyHolderSig = object
 		properties <- p :: properties
 end
 
+
 let createPortWest () = 	
 	{key = "org.eclipse.elk.port.side" ; value="WEST"}
 
@@ -33,6 +34,8 @@ let createPortNorth () =
 
 let constraintPortSide () = 
 	{key = "org.eclipse.elk.portConstraints" ; value="FIXED_SIDE"}
+let constraintPortOrder () = 
+	 {key = "org.eclipse.elk.portConstraints" ; value="FIXED_ORDER"}
 
 let allowSwitch () = 
 	{key = "org.eclipse.elk.layered.allowNonFlowPortsToSwitchSides" ; value="true"}
@@ -51,6 +54,12 @@ let expand b =
 
 let addPortSpace top bot left right = 
 	{key = "org.eclipse.elk.spacing.portsSurrounding"  ;value= "[top="^top^",left="^left^",bottom="^bot^",right="^right^"]"}
+
+let portAlignmentNorth s = 
+	{key = "org.eclipse.elk.portAlignment.north" ; value = s}
+
+let portAlignmentSouth s = 
+	{key = "org.eclipse.elk.portAlignment.south"; value = s}
 
 let print_property ff p = 
 	Format.fprintf ff "<persistentEntries key=\"%s\" value=\"%s\"/>@," p.key p.value
