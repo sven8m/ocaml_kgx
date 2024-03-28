@@ -23,6 +23,19 @@ type endPoint = {
 	port : kport;
 	mutable labels : string list;
 }
+(*
+type utils = {	
+	function_node : knode;
+	layer : int;
+	count_env : int Ast.IdentEnv.t;
+	node_outputs : Ast.IdentSet.t;
+}
+
+type env = {
+	input_env : endPoint Ast.IdentEnv.t;
+	output_env : endPoint Ast.IdentEnv.t;
+}
+*)
 
 let place () =
 	let p = new AreaPlacementData.areaPlacementData in
@@ -564,9 +577,12 @@ let stateNode ?(init=false) kgraph name layer =
 	ca#setPlacement (place ());
 	cont#setChildArea ca;
 	cont#addAction (Actions.create_actionCollapse ());
+	
+	node#addProperty (PersistentEntry.addPortSpace "10.0" "0.0" "0.0" "0.0");
+	
+
 	let color = create_color (242 - 10 * layer) (224 - 10 * layer) (224 - 10 * layer) in
 
-	node#addProperty (PersistentEntry.addPortSpace "10.0" "0.0" "0.0" "0.0");
 	cont#addStyle (create_style (Background (create_coloring color)));
 	cont#addStyle (create_style (LineWidth (if init then 3.0 else 1.0)));
 	cont#addStyle (create_style ~on_sel:true (LineWidth (if init then 4.5 else 1.5)));
@@ -574,11 +590,48 @@ let stateNode ?(init=false) kgraph name layer =
 	
 	node#addProperty (PersistentEntry.expand (string_of_bool (layer=0)));
 	node#addProperty (PersistentEntry.nodeSize "[NODE_LABELS, PORTS, PORT_LABELS, MINIMUM_SIZE]");
-	if layer > 0 then node#addProperty (PersistentEntry.portLabelPlacement "[INSIDE, NEXT_TO_PORT_IF_POSSIBLE]");
 
 	cont#setContainer (RoundRect (10.0 , 10.0));
 	node#addData cont;
 	node
+
+let simpleSyncNode ?(init=false) kgraph =
+	let node = defaultStateNode kgraph in
+	node#addProperty (PersistentEntry.activatePartition ());
+	let cont = new containerRendering in
+	let ca = new data in
+	ca#setPlacement (place ());
+	cont#setChildArea ca;
+	cont#addAction (Actions.create_actionCollapse ());
+
+	node#addProperty (PersistentEntry.addPortSpace "10.0" "0.0" "0.0" "0.0");
+	
+
+	let color = create_color 200 200 200 in
+	cont#addStyle (create_style (Background (create_coloring color)));
+	cont#addStyle (create_style (LineWidth (if init then 3.0 else 1.0)));
+	cont#addStyle (create_style ~on_sel:true (LineWidth (if init then 4.5 else 1.5)));
+	
+	node#addProperty (PersistentEntry.expand "false");
+	node#addProperty (PersistentEntry.nodeSize "[NODE_LABELS, PORTS, PORT_LABELS, MINIMUM_SIZE]");
+
+	cont#setContainer (RoundRect (10.0 , 10.0));
+	node#addData cont;
+	node
+
+let simpleBubleNode kgraph = 
+	let node = defaultStateNode kgraph in
+	let cont = new containerRendering in
+	let color = create_color 0 0 0 in
+	cont#addStyle (create_style (Background (create_coloring color)));
+	cont#addStyle (create_style (LineWidth 2.0)); 
+	cont#addStyle (create_style ~on_sel:true (LineWidth 3.0));
+	node#setWidth 5.0;
+	node#setHeight 5.0;
+	cont#setContainer Ellipse;
+	node#addData cont;
+	node
+
 
 let ramNode kgraph = 
 	let node = simpleOpNode ~order:true kgraph "ram" 0.5 0.5 in
@@ -653,12 +706,12 @@ let automaton_edge kgraph source target name =
 	cont#addStyle (create_style ~on_sel:true (Foreground (create_coloring color)));
 	(*cont#addContainerRendering (arrow_decorator ());
 *)
-	edge#addData cont
-	(*let label = new label in
+	edge#addData cont;
+	let label = new label in
 	label#setText name;
 	label#addProperty (PersistentEntry.edgeLabelPlacement "CENTER");
 	edge#addLabel label
-	*)
+	
 let new_edge ?(mult=false) kgraph source target = 
 	let edge = new kedge kgraph in
 	edge#setSource source.node;
