@@ -86,6 +86,7 @@ and kportSig = object
 end
 
 and kgraphSig = object
+	inherit PersistentEntry.propertyHolderSig
 	val id : int 
 	val mutable cnt : int
 	val mutable nodes : knodeSig list

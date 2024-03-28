@@ -14,9 +14,9 @@ class kelement graph : kelementSig = object
 	method getGraphId = kgraph_id
 	method getGraph = graph
 
-	method getLabels = labels
+	method getLabels = List.rev labels
 	method addLabel label = labels <- label :: labels
 
-	method getData = data
+	method getData = List.rev data
 	method addData d = data <- d :: data
 end

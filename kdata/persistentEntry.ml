@@ -17,7 +17,7 @@ end
 class propertyHolder : propertyHolderSig = object
 	val mutable properties = []
 
-	method getProperties = properties
+	method getProperties = List.rev properties
 	method addProperty p =
 		properties <- p :: properties
 end
@@ -60,6 +60,12 @@ let portAlignmentNorth s =
 
 let portAlignmentSouth s = 
 	{key = "org.eclipse.elk.portAlignment.south"; value = s}
+
+let partition v = 
+	{key = "org.eclipse.elk.partitioning.partition"; value = v}
+
+let activatePartition () = 
+	{key = "org.eclipse.elk.partitioning.activate" ; value = "true"}
 
 let print_property ff p = 
 	Format.fprintf ff "<persistentEntries key=\"%s\" value=\"%s\"/>@," p.key p.value

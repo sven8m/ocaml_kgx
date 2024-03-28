@@ -55,15 +55,26 @@ let defaultNode ?(order=false) kgraph =
 	let node = new knode kgraph in
 	node#setWidth 20.0;
 	node#setHeight 20.0;	
-	node#addProperty (PersistentEntry.addPortSpace "0.0" "0.0" "0.0" "0.0");	
 	node#addProperty (PersistentEntry.portAlignmentNorth "CENTER");
 	node#addProperty (PersistentEntry.portAlignmentSouth "CENTER");
+	node#addProperty (PersistentEntry.partition "1");
 	if order then
 		node#addProperty (PersistentEntry.constraintPortOrder ())
 	else
 		node#addProperty (PersistentEntry.constraintPortSide ());
 	node#addProperty (PersistentEntry.allowSwitch ()); 
 	node
+
+let defaultStateNode kgraph = 
+	let node = new knode kgraph in
+	node#setWidth 20.0;
+	node#setHeight 20.0;
+	node#addProperty (PersistentEntry.partition "1");
+	node#addProperty (PersistentEntry.portAlignmentNorth "CENTER");
+	node#addProperty (PersistentEntry.portAlignmentSouth "CENTER");
+	node#addProperty (PersistentEntry.allowSwitch ()); 
+	node
+
 
 let simpleOpContWtT () =
 	let cont = new containerRendering in
@@ -112,6 +123,19 @@ let invisibleControlPort kgraph knode =
 	let port = invisiblePort kgraph knode in
 	port#addProperty (PersistentEntry.createPortNorth ());
 	port
+
+let visibleControlPort kgraph node = 
+	let port = new kport kgraph in
+	port#setHeight 5.0;
+	port#setWidth 5.0;
+	let color = create_color 0 0 0 in
+	let cont = new containerRendering in
+	cont#addStyle (create_style (Background (create_coloring color)));
+	port#setNode node;
+	port#addData cont;
+	port#addProperty (PersistentEntry.createPortNorth ());
+	port	
+
 
 let notOutputPort kgraph knode = 
 	let port = new kport kgraph in
@@ -163,11 +187,15 @@ let unopNode ?(no=false) kgraph node =
 	in
 	{node = node ; inputs = [p1] ; outputs = [po] ; control = []}
 
+let resetPortsSurrounding node = 
+	node#addProperty (PersistentEntry.create_property "org.eclipse.elk.spacing.individual" "org.eclipse.elk.spacing.portsSurrounding:[top=0.0,left=0.0,bottom=0.0,right=0.0]")
+
 let simpleOpNode ?(ho_mar=0.0) ?(order=false) kgraph text relX relY= 
 	let node = defaultNode ~order:order kgraph in
 	let cont = simpleOpContWtT () in
 	cont#addContainerRendering (simpleText ~ho_mar:ho_mar text relX relY);
 	node#addData cont;
+	resetPortsSurrounding node;
 	node
 
 
@@ -242,6 +270,7 @@ let triangle () =
 
 let simpleRegNode kgraph =
 	let node = defaultNode kgraph in
+	resetPortsSurrounding node;
 	let cont = simpleOpContWtT () in
 	cont#setContainer (rectangleAsPolygon ());
 
@@ -301,10 +330,11 @@ let simpleMuxNode kgraph =
 	let cont = simpleMuxShape () in
 	node#setHeight 30.0;
 	node#addData cont;
+	resetPortsSurrounding node;	
 	node#addProperty (PersistentEntry.nodeSize "[NODE_LABELS, PORTS, PORT_LABELS, MINIMUM_SIZE]");
 	
 	let op = binopNode kgraph node in
-	let p1 = invisibleControlPort kgraph node in
+	let p1 = visibleControlPort kgraph node in
 	List.iteri (fun i port ->
 		let label = new label in
 		label#setText (string_of_int i);
@@ -317,11 +347,12 @@ let simpleCondNode kgraph n_cond =
 	node#setHeight 40.0;
 	node#addData cont;
 	node#addProperty (PersistentEntry.nodeSize "[NODE_LABELS, PORTS, PORT_LABELS, MINIMUM_SIZE]");
+	resetPortsSurrounding node;
 	
 	let op = multOpNode kgraph node (n_cond + 1) in
 	let control_ports = 
 		let rec create n = match n with | 0 -> []
-		| _ -> (invisibleControlPort kgraph node) :: (create (n-1)) in
+		| _ -> (visibleControlPort kgraph node) :: (create (n-1)) in
 		create n_cond
 	in
 	List.iteri (fun i port ->
@@ -340,9 +371,10 @@ let simpleMatchNode kgraph constr_list =
 	node#setHeight 40.0;
 	node#addData cont;
 	node#addProperty (PersistentEntry.nodeSize "[NODE_LABELS, PORTS, PORT_LABELS, MINIMUM_SIZE]");
-
+	resetPortsSurrounding node;
+	
 	let op = multOpNode kgraph node (List.length constr_list) in
-	let control_port = invisibleControlPort kgraph node in
+	let control_port = visibleControlPort kgraph node in
 	List.iter2 (fun port name ->
 		let label = new label in
 		label#setText name;
@@ -367,6 +399,8 @@ let simpleTupleNode kgraph n =
 	node#setWidth 0.1;
 	let cont = simpleTupleShape () in
 	node#addData cont;
+	resetPortsSurrounding node;
+	
 	multOpNode kgraph node n
 
 let simpleUnTupleNode kgraph n = 
@@ -374,6 +408,8 @@ let simpleUnTupleNode kgraph n =
 	node#setWidth 0.1;
 	let cont = simpleTupleShape () in
 	node#addData cont;
+	resetPortsSurrounding node;
+	
 	let input = invisibleInputPort kgraph node in
 	let rec create n = 
 		match n with
@@ -399,6 +435,9 @@ let simpleConstNode kgraph text =
 	let d = Polygon [p1;p2;p3;p4;p5;p1] in
 
 	let node = defaultNode kgraph in
+	node#addProperty (PersistentEntry.partition "0");
+	resetPortsSurrounding node;
+	
 	let cont = simpleOpContWtT () in
 	cont#setContainer d;
 	cont#addContainerRendering (simpleText ~ho_mar:(5.0) text 0.5 0.5);
@@ -424,17 +463,19 @@ let simpleSinkNode kgraph text =
 
 	let cont = simpleOpContWtT () in
 	let node = defaultNode kgraph in
+	node#addProperty (PersistentEntry.partition "2");
 	cont#setContainer d;
 	cont#addContainerRendering (simpleText ~ho_mar:(5.0) text 0.5 0.5);
 	node#addData cont;
-
+	resetPortsSurrounding node;
+	
 	let p = invisibleInputPort kgraph node in
 	{node = node ; inputs =[p] ; outputs = [] ; control = []}
 
 
 let simpleFbyNode kgraph =
 	let op = unopNode kgraph (simpleOpNode ~ho_mar:5.0 kgraph "fby" 0.5 0.5) in
-	let c = invisibleControlPort kgraph op.node in
+	let c = visibleControlPort kgraph op.node in
 	{op with control = [c]}
 
 let createPort kgraph node text = 
@@ -470,9 +511,11 @@ let functionTitle name =
 
 
 
-let function_node ?(m=false) kgraph name inputs outputs layer = 
+let function_node ?(state=false) ?(m=false) kgraph name inputs outputs layer = 
 	let layer = if layer >= 5 then 5 else layer in
-	let main_node= defaultNode kgraph in
+	let main_node= if state then defaultStateNode kgraph else defaultNode kgraph in
+	if (state) then
+		main_node#addProperty (PersistentEntry.activatePartition ());
 	let cont = new containerRendering in
 	let ca = new data in
 	ca#setPlacement (place ());
@@ -482,19 +525,15 @@ let function_node ?(m=false) kgraph name inputs outputs layer =
      else create_color (200 - 10 * layer) (200 - 10 * layer) (242 - 10 * layer)
 	in
 
+	main_node#addProperty (PersistentEntry.addPortSpace "10.0" "0.0" "0.0" "0.0");
+	
 	cont#addStyle (create_style (Background (create_coloring gray)));
 	if m then cont#addStyle (create_style (LineStyle DASH));
 	cont#addContainerRendering (functionTitle name);
 	main_node#addData cont;
-(*
-	let label1 = new label in
-	label1#setText name;
-	label1#setCenter;
-	main_node#addLabel label1;
-*)
+	
 	main_node#addProperty (PersistentEntry.expand (string_of_bool (layer=0)));
 	main_node#addProperty (PersistentEntry.nodeSize "[NODE_LABELS, PORTS, PORT_LABELS, MINIMUM_SIZE]");
-	main_node#addProperty (PersistentEntry.addPortSpace "40.0" "0.0" "0.0" "0.0");
 	if layer > 0 then main_node#addProperty (PersistentEntry.portLabelPlacement "[INSIDE, NEXT_TO_PORT_IF_POSSIBLE]");
 	let inputs = List.map (fun input ->
 		let port = createPort kgraph main_node input in 
@@ -511,10 +550,44 @@ let function_node ?(m=false) kgraph name inputs outputs layer =
 
 let functionReset ?(m=false) kgraph name inputs outputs layer = 
 	let op = function_node ~m:m kgraph name inputs outputs layer in
-	{op with control = [invisibleControlPort kgraph op.node]}
+	{op with control = [visibleControlPort kgraph op.node]}
 
 let addReset kgraph (opNode : op_node) = 
-	{opNode with control = [invisibleControlPort kgraph opNode.node]}
+	{opNode with control = [visibleControlPort kgraph opNode.node]}
+
+let stateNode ?(init=false) kgraph name layer = 
+	let layer = if layer >= 5 then 5 else layer in
+	let node = defaultStateNode kgraph in
+	node#addProperty (PersistentEntry.activatePartition ());
+	let cont = new containerRendering in
+	let ca = new data in
+	ca#setPlacement (place ());
+	cont#setChildArea ca;
+	cont#addAction (Actions.create_actionCollapse ());
+	let color = create_color (242 - 10 * layer) (224 - 10 * layer) (224 - 10 * layer) in
+
+	node#addProperty (PersistentEntry.addPortSpace "10.0" "0.0" "0.0" "0.0");
+	cont#addStyle (create_style (Background (create_coloring color)));
+	cont#addStyle (create_style (LineWidth (if init then 3.0 else 1.0)));
+	cont#addStyle (create_style ~on_sel:true (LineWidth (if init then 4.5 else 1.5)));
+	cont#addContainerRendering (functionTitle name);
+	
+	node#addProperty (PersistentEntry.expand (string_of_bool (layer=0)));
+	node#addProperty (PersistentEntry.nodeSize "[NODE_LABELS, PORTS, PORT_LABELS, MINIMUM_SIZE]");
+	if layer > 0 then node#addProperty (PersistentEntry.portLabelPlacement "[INSIDE, NEXT_TO_PORT_IF_POSSIBLE]");
+
+	cont#setContainer (RoundRect (10.0 , 10.0));
+	node#addData cont;
+	node
+
+let ramNode kgraph = 
+	let node = simpleOpNode ~order:true kgraph "ram" 0.5 0.5 in
+	let opNode = multOpNode kgraph node 4 in
+	opNode
+
+let romNode kgraph = 
+	let node = simpleOpNode ~order:true kgraph "rom" 0.5 0.5 in
+	multOpNode kgraph node 1
 
 let junction mult =
 	let cont = new containerRendering in
@@ -531,6 +604,61 @@ let junction mult =
 	cont
 
 
+let arrow_decorator () = 
+	let place = new DecoratorPlacementData.decoratorPlacementData in
+	place#setAbsolute (-2.0);
+	place#setXOffset (-6.0);
+	place#setYOffset (-3.0);
+	place#setRotateWithLine true;
+	place#setWidth 8.0;
+	place#setHeight 6.0;
+	place#setRelative 1.0;
+
+	let c1 = Point.create_coord Right in
+	let c2 = Point.create_coord ~pos_val:(Rel 0.5) Bottom in
+
+	let p1 = Point.create_point c1 c2 in
+
+	let c3 = Point.create_coord Left in
+	let c4 = Point.create_coord Bottom in
+	let p2 = Point.create_point c3 c4 in
+
+	let c5 = Point.create_coord ~pos_val:(Rel 0.4) Left in
+	let c6 = Point.create_coord ~pos_val:(Rel 0.5) Top in
+	let p3 = Point.create_point c5 c6 in
+
+	let c7 = Point.create_coord Left in
+	let c8 = Point.create_coord Top in
+	let p4 = Point.create_point c7 c8 in
+
+	let cont = new containerRendering in
+	cont#setContainer (Polygon [p4;p3;p2;p1]);
+	cont#setPlacement (Decorator place);
+	cont#addStyle (create_style JoinRound);
+	cont#addStyle (create_style (LineWidth 2.0));
+	cont
+
+	
+
+let automaton_edge kgraph source target name = 
+	let edge = new kedge kgraph in
+	edge#setSource source;
+	edge#setTarget target;
+	
+	let cont = new containerRendering in
+	cont#setContainer Spline;
+	cont#addStyle (create_style (LineWidth 2.0));
+	cont#addStyle (create_style ~on_sel:true (LineWidth 3.0));
+	let color = create_color 224 242 224 in
+	cont#addStyle (create_style ~on_sel:true (Foreground (create_coloring color)));
+	(*cont#addContainerRendering (arrow_decorator ());
+*)
+	edge#addData cont
+	(*let label = new label in
+	label#setText name;
+	label#addProperty (PersistentEntry.edgeLabelPlacement "CENTER");
+	edge#addLabel label
+	*)
 let new_edge ?(mult=false) kgraph source target = 
 	let edge = new kedge kgraph in
 	edge#setSource source.node;
@@ -561,7 +689,11 @@ let new_edge ?(mult=false) kgraph source target =
 	target.labels <- [];
 	edge
 
+let init_kgraph () = 
+	let kgraph = new kgraph in
 
+	kgraph#addProperty (PersistentEntry.addPortSpace "10.0" "0.0" "0.0" "0.0");
+	kgraph
 let main _ = 
 	let kgraph = new kgraph in
 	
@@ -603,6 +735,8 @@ let main _ =
 	let untuple = simpleUnTupleNode kgraph 6 in
 
 	let sink = simpleSinkNode kgraph "ala" in
+
+	let _ = stateNode kgraph "oo" 0 in
 	let oc = open_out "basic.kgx" in
 
 	let ff = Format.formatter_of_out_channel oc in

@@ -23,12 +23,12 @@ class data : dataSig = object
 	method setChildArea a = childArea <- Some a
 
 	method addStyle a = styles <- a :: styles
-	method getStyles = styles
+	method getStyles = List.rev styles
 
 	method addAction a = actions <- a :: actions
-	method getActions = actions
+	method getActions = List.rev actions
 
-	method getJunctions = junctions
+	method getJunctions = List.rev junctions
 	method addJunction j = junctions <- j :: junctions
 end
 

@@ -91,6 +91,8 @@ let graph_to_kgx ff (kgraph : kgraph) =
 	Compute_path.compute_path_kgraph kgraph;
 
 	Format.fprintf ff "%s@[<v 0>@," header;
+	List.iter (print_property ff) kgraph#getProperties;
 	List.iter (Format.fprintf ff "%a" print_knode) kgraph#getNodes;
+	
 	Format.fprintf ff "@]%s@." finish;
 

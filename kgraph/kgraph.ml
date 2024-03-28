@@ -3,6 +3,7 @@ open ObjectSig
 let graph_cnt = ref 0
 
 class kgraph : kgraphSig = object
+	inherit PersistentEntry.propertyHolder
 	val id = incr graph_cnt; !graph_cnt 
 	val mutable cnt = 0
 	val mutable nodes = [] 
