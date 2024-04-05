@@ -67,6 +67,9 @@ let partition v =
 let activatePartition () = 
 	{key = "org.eclipse.elk.partitioning.activate" ; value = "true"}
 
+let borderOffset v = 
+	{key = "org.eclipse.elk.port.borderOffset" ; value = string_of_float v}
+
 let print_property ff p = 
 	Format.fprintf ff "<persistentEntries key=\"%s\" value=\"%s\"/>@," p.key p.value
 

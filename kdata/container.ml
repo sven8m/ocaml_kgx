@@ -10,6 +10,7 @@ type container =
 	| Ellipse
 	| Polygon of Point.point list
 	| Default
+	| RoundPolyline of float * Point.point list
 (* creation *)
 
 (* functions *)
@@ -26,6 +27,7 @@ let container_to_string c =
 	| Ellipse -> "KEllipse"
 	| Polygon _ -> "KPolygon"
 	| Default -> "KRectangle"
+	| RoundPolyline _ -> "KRoundedBendsPolyline"
 
 let print_container_infos ff c = 
 	match c with
@@ -37,10 +39,11 @@ let print_container_infos ff c =
 	| Ellipse -> ()
 	| Default -> ()
 	| Polygon _ -> ()
+	| RoundPolyline (x,_) -> Format.fprintf ff "bendRadius = \"%f\"" x
 
 let print_container_content ff c = 
 	match c with
-	| PolyLine pl | Polygon pl ->
+	| RoundPolyline (_,pl) | PolyLine pl | Polygon pl ->
 		List.iter (fun point ->
 			Format.fprintf ff "@[<v 4><points>@,%a@]@,</points>@," Point.print_point point) pl
 	| _ -> ()

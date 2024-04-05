@@ -4,14 +4,43 @@
     xmlns:klighdgraph="http://kieler.cs.cau.de/KlighdGraph"
     xmlns:krendering="http://kieler.cs.cau.de/KRendering">
 
+<children   width="40.000000" height="40.000000" >
+    <persistentEntries key="org.eclipse.elk.partitioning.partition" value="2"/>
+    <data xsi:type="krendering:KRoundedRectangle" cornerWidth = "20.000000" cornerHeight = "20.000000">
+        <styles xsi:type="krendering:KBackground"><color red="255" green="255" blue="255"/>
+            
+        </styles>
+        <styles xsi:type="krendering:KShadow" xOffset="4.000000" yOffset="4.000000">
+        </styles>
+        <children xsi:type="krendering:KRoundedRectangle" cornerWidth = "15.000000" cornerHeight = "15.000000">
+            <styles xsi:type="krendering:KBackground"><color red="210" green="210" blue="200"/>
+                
+            </styles>
+            <placementData xsi:type="krendering:KAreaPlacementData">
+                <topLeft>
+                    <x xsi:type="krendering:KLeftPosition" absolute="5.000000"/>
+                    <y xsi:type="krendering:KTopPosition" absolute="5.000000"/>
+                    
+                </topLeft>
+                <bottomRight>
+                    <x xsi:type="krendering:KRightPosition" absolute="5.000000"/>
+                    <y xsi:type="krendering:KBottomPosition" absolute="5.000000"/>
+                    
+                </bottomRight>
+                
+            </placementData>
+            
+        </children>
+        
+    </data>
+    
+</children>
 <children   width="20.000000" height="20.000000" >
-    <persistentEntries key="org.eclipse.elk.nodeSize.constraints" value="[NODE_LABELS, PORTS, PORT_LABELS, MINIMUM_SIZE]"/>
+    <persistentEntries key="org.eclipse.elk.partitioning.partition" value="1"/>
+    <persistentEntries key="org.eclipse.elk.partitioning.activate" value="true"/>
+    <persistentEntries key="org.eclipse.elk.spacing.portsSurrounding" value="[top=12.0,left=10.0,bottom=0.0,right=10.0]"/>
     <persistentEntries key="de.cau.cs.kieler.klighd.expand" value="true"/>
-    <persistentEntries key="org.eclipse.elk.spacing.portsSurrounding" value="[top=10.0,left=0.0,bottom=0.0,right=0.0]"/>
-    <persistentEntries key="org.eclipse.elk.layered.allowNonFlowPortsToSwitchSides" value="true"/>
-    <persistentEntries key="org.eclipse.elk.portConstraints" value="FIXED_SIDE"/>
-    <persistentEntries key="org.eclipse.elk.portAlignment.south" value="CENTER"/>
-    <persistentEntries key="org.eclipse.elk.portAlignment.north" value="CENTER"/>
+    <persistentEntries key="org.eclipse.elk.nodeSize.constraints" value="[NODE_LABELS, PORTS, PORT_LABELS, MINIMUM_SIZE]"/>
     <data xsi:type="krendering:KRoundedRectangle" cornerWidth = "10.000000" cornerHeight = "10.000000">
         <styles xsi:type="krendering:KBackground"><color red="242" green="224" blue="224"/>
             
@@ -20,11 +49,13 @@
         </styles>
         <styles xsi:type="krendering:KLineWidth" selection="true" lineWidth="1.500000">
         </styles>
+        <styles xsi:type="krendering:KShadow" xOffset="4.000000" yOffset="4.000000">
+        </styles>
         <children xsi:type="krendering:KChildArea">
             <placementData xsi:type="krendering:KAreaPlacementData">
                 <topLeft>
-                    <x xsi:type="krendering:KLeftPosition" absolute="10.000000"/>
-                    <y xsi:type="krendering:KTopPosition" absolute="15.000000"/>
+                    <x xsi:type="krendering:KLeftPosition" absolute="15.000000"/>
+                    <y xsi:type="krendering:KTopPosition" absolute="10.000000"/>
                     
                 </topLeft>
                 <bottomRight>
@@ -41,9 +72,9 @@
             <persistentEntries key="klighd.isNodeTitle" value="true"/>
             <styles xsi:type="krendering:KFontBold" selection="true">
             </styles>
-            <styles xsi:type="krendering:KFontSize" size="11">
+            <styles xsi:type="krendering:KFontSize" size="13">
             </styles>
-            <placementData xsi:type="krendering:KPointPlacementData" verticalAlignment="CENTER" horizontalAlignment="CENTER" horizontalMargin="2.000000" >
+            <placementData xsi:type="krendering:KPointPlacementData" verticalAlignment="CENTER" horizontalAlignment="CENTER" horizontalMargin="6.000000" >
                 <referencePoint>
                     <x xsi:type="krendering:KLeftPosition" relative="0.500000"/>
                     <y xsi:type="krendering:KTopPosition" absolute="15.000000"/>
@@ -57,11 +88,12 @@
     
 </children>
 <children   width="20.000000" height="20.000000" >
-    <persistentEntries key="org.eclipse.elk.spacing.individual" value="org.eclipse.elk.spacing.portsSurrounding:[top=0.0,left=0.0,bottom=0.0,right=0.0]"/>
-    <persistentEntries key="org.eclipse.elk.layered.allowNonFlowPortsToSwitchSides" value="true"/>
-    <persistentEntries key="org.eclipse.elk.portConstraints" value="FIXED_SIDE"/>
-    <persistentEntries key="org.eclipse.elk.portAlignment.south" value="CENTER"/>
     <persistentEntries key="org.eclipse.elk.portAlignment.north" value="CENTER"/>
+    <persistentEntries key="org.eclipse.elk.portAlignment.south" value="CENTER"/>
+    <persistentEntries key="org.eclipse.elk.partitioning.partition" value="2"/>
+    <persistentEntries key="org.eclipse.elk.portConstraints" value="FIXED_SIDE"/>
+    <persistentEntries key="org.eclipse.elk.layered.allowNonFlowPortsToSwitchSides" value="true"/>
+    <persistentEntries key="org.eclipse.elk.spacing.individual" value="org.eclipse.elk.spacing.portsSurrounding:[top=0.0,left=0.0,bottom=0.0,right=0.0]"/>
     <data xsi:type="krendering:KPolygon" >
         <styles xsi:type="krendering:KLineWidth" lineWidth="1.300000">
         </styles>
@@ -75,6 +107,8 @@
         <children xsi:type="krendering:KText" text="ala">
             <styles xsi:type="krendering:KFontBold" selection="true">
             </styles>
+            <styles xsi:type="krendering:KFontSize" size="11">
+            </styles>
             <placementData xsi:type="krendering:KPointPlacementData" verticalAlignment="CENTER" horizontalAlignment="CENTER" horizontalMargin="5.000000" >
                 <referencePoint>
                     <x xsi:type="krendering:KLeftPosition" relative="0.500000"/>
@@ -128,11 +162,12 @@
     
 </children>
 <children   width="0.100000" height="20.000000" >
-    <persistentEntries key="org.eclipse.elk.spacing.individual" value="org.eclipse.elk.spacing.portsSurrounding:[top=0.0,left=0.0,bottom=0.0,right=0.0]"/>
-    <persistentEntries key="org.eclipse.elk.layered.allowNonFlowPortsToSwitchSides" value="true"/>
-    <persistentEntries key="org.eclipse.elk.portConstraints" value="FIXED_SIDE"/>
-    <persistentEntries key="org.eclipse.elk.portAlignment.south" value="CENTER"/>
     <persistentEntries key="org.eclipse.elk.portAlignment.north" value="CENTER"/>
+    <persistentEntries key="org.eclipse.elk.portAlignment.south" value="CENTER"/>
+    <persistentEntries key="org.eclipse.elk.partitioning.partition" value="1"/>
+    <persistentEntries key="org.eclipse.elk.portConstraints" value="FIXED_SIDE"/>
+    <persistentEntries key="org.eclipse.elk.layered.allowNonFlowPortsToSwitchSides" value="true"/>
+    <persistentEntries key="org.eclipse.elk.spacing.individual" value="org.eclipse.elk.spacing.portsSurrounding:[top=0.0,left=0.0,bottom=0.0,right=0.0]"/>
     <data xsi:type="krendering:KRectangle" >
         <styles xsi:type="krendering:KLineWidth" lineWidth="5.100000">
         </styles>
@@ -204,11 +239,12 @@
     
 </children>
 <children   width="0.100000" height="20.000000" >
-    <persistentEntries key="org.eclipse.elk.spacing.individual" value="org.eclipse.elk.spacing.portsSurrounding:[top=0.0,left=0.0,bottom=0.0,right=0.0]"/>
-    <persistentEntries key="org.eclipse.elk.layered.allowNonFlowPortsToSwitchSides" value="true"/>
-    <persistentEntries key="org.eclipse.elk.portConstraints" value="FIXED_SIDE"/>
-    <persistentEntries key="org.eclipse.elk.portAlignment.south" value="CENTER"/>
     <persistentEntries key="org.eclipse.elk.portAlignment.north" value="CENTER"/>
+    <persistentEntries key="org.eclipse.elk.portAlignment.south" value="CENTER"/>
+    <persistentEntries key="org.eclipse.elk.partitioning.partition" value="1"/>
+    <persistentEntries key="org.eclipse.elk.portConstraints" value="FIXED_SIDE"/>
+    <persistentEntries key="org.eclipse.elk.layered.allowNonFlowPortsToSwitchSides" value="true"/>
+    <persistentEntries key="org.eclipse.elk.spacing.individual" value="org.eclipse.elk.spacing.portsSurrounding:[top=0.0,left=0.0,bottom=0.0,right=0.0]"/>
     <data xsi:type="krendering:KRectangle" >
         <styles xsi:type="krendering:KLineWidth" lineWidth="5.100000">
         </styles>
@@ -280,11 +316,12 @@
     
 </children>
 <children   width="20.000000" height="20.000000" >
-    <persistentEntries key="org.eclipse.elk.spacing.individual" value="org.eclipse.elk.spacing.portsSurrounding:[top=0.0,left=0.0,bottom=0.0,right=0.0]"/>
-    <persistentEntries key="org.eclipse.elk.layered.allowNonFlowPortsToSwitchSides" value="true"/>
-    <persistentEntries key="org.eclipse.elk.portConstraints" value="FIXED_SIDE"/>
-    <persistentEntries key="org.eclipse.elk.portAlignment.south" value="CENTER"/>
     <persistentEntries key="org.eclipse.elk.portAlignment.north" value="CENTER"/>
+    <persistentEntries key="org.eclipse.elk.portAlignment.south" value="CENTER"/>
+    <persistentEntries key="org.eclipse.elk.partitioning.partition" value="1"/>
+    <persistentEntries key="org.eclipse.elk.portConstraints" value="FIXED_SIDE"/>
+    <persistentEntries key="org.eclipse.elk.layered.allowNonFlowPortsToSwitchSides" value="true"/>
+    <persistentEntries key="org.eclipse.elk.spacing.individual" value="org.eclipse.elk.spacing.portsSurrounding:[top=0.0,left=0.0,bottom=0.0,right=0.0]"/>
     <data xsi:type="krendering:KRectangle" >
         <styles xsi:type="krendering:KLineWidth" lineWidth="1.300000">
         </styles>
@@ -298,6 +335,8 @@
         <children xsi:type="krendering:KText" text="fby">
             <styles xsi:type="krendering:KFontBold" selection="true">
             </styles>
+            <styles xsi:type="krendering:KFontSize" size="11">
+            </styles>
             <placementData xsi:type="krendering:KPointPlacementData" verticalAlignment="CENTER" horizontalAlignment="CENTER" horizontalMargin="5.000000" >
                 <referencePoint>
                     <x xsi:type="krendering:KLeftPosition" relative="0.500000"/>
@@ -310,6 +349,7 @@
         
     </data>
     <ports   width="5.000000" height="5.000000">
+        <persistentEntries key="org.eclipse.elk.port.borderOffset" value="0."/>
         <persistentEntries key="org.eclipse.elk.port.side" value="NORTH"/>
         <data xsi:type="krendering:KRectangle" >
             <styles xsi:type="krendering:KBackground"><color red="0" green="0" blue="0"/>
@@ -339,1044 +379,1009 @@
     </ports>
     
 </children>
-<children   width="20.000000" height="40.000000" >
-    <persistentEntries key="org.eclipse.elk.spacing.individual" value="org.eclipse.elk.spacing.portsSurrounding:[top=0.0,left=0.0,bottom=0.0,right=0.0]"/>
-    <persistentEntries key="org.eclipse.elk.nodeSize.constraints" value="[NODE_LABELS, PORTS, PORT_LABELS, MINIMUM_SIZE]"/>
-    <persistentEntries key="org.eclipse.elk.layered.allowNonFlowPortsToSwitchSides" value="true"/>
-    <persistentEntries key="org.eclipse.elk.portConstraints" value="FIXED_SIDE"/>
-    <persistentEntries key="org.eclipse.elk.portAlignment.south" value="CENTER"/>
-    <persistentEntries key="org.eclipse.elk.portAlignment.north" value="CENTER"/>
-    <data xsi:type="krendering:KPolygon" >
-        <styles xsi:type="krendering:KLineWidth" lineWidth="1.300000">
-        </styles>
-        <styles xsi:type="krendering:KLineWidth" selection="true" lineWidth="2.000000">
-        </styles>
-        <styles xsi:type="krendering:KBackground"><color red="200" green="200" blue="250"/>
-            
-        </styles>
-        <styles xsi:type="krendering:KShadow" xOffset="2.000000" yOffset="2.000000">
-        </styles>
-        <points>
-            <x xsi:type="krendering:KLeftPosition" />
-            <y xsi:type="krendering:KTopPosition" />
-            
-        </points>
-        <points>
-            <x xsi:type="krendering:KLeftPosition" />
-            <y xsi:type="krendering:KBottomPosition" />
-            
-        </points>
-        <points>
-            <x xsi:type="krendering:KRightPosition" />
-            <y xsi:type="krendering:KBottomPosition" relative="0.200000"/>
-            
-        </points>
-        <points>
-            <x xsi:type="krendering:KRightPosition" />
-            <y xsi:type="krendering:KTopPosition" relative="0.200000"/>
-            
-        </points>
-        <points>
-            <x xsi:type="krendering:KLeftPosition" />
-            <y xsi:type="krendering:KTopPosition" />
-            
-        </points>
-        
-    </data>
-    <ports   width="5.000000" height="5.000000">
-        <persistentEntries key="org.eclipse.elk.port.side" value="NORTH"/>
-        <data xsi:type="krendering:KRectangle" >
-            <styles xsi:type="krendering:KBackground"><color red="0" green="0" blue="0"/>
-                
-            </styles>
-            
-        </data>
-        
-    </ports>
-    <ports   width="-0.100000" height="-0.100000">
-        <persistentEntries key="org.eclipse.elk.port.side" value="EAST"/>
-        <data xsi:type="krendering:KRectangle" >
-            <styles xsi:type="krendering:KInvisibility">
-            </styles>
-            
-        </data>
-        
-    </ports>
-    <ports   width="-0.100000" height="-0.100000">
-        <persistentEntries key="org.eclipse.elk.port.side" value="WEST"/>
-        <labels text="A">
-            <data xsi:type="krendering:KText">
-                
-            </data>
-        </labels>
-        <data xsi:type="krendering:KRectangle" >
-            <styles xsi:type="krendering:KInvisibility">
-            </styles>
-            
-        </data>
-        
-    </ports>
-    <ports   width="-0.100000" height="-0.100000">
-        <persistentEntries key="org.eclipse.elk.port.side" value="WEST"/>
-        <labels text="B">
-            <data xsi:type="krendering:KText">
-                
-            </data>
-        </labels>
-        <data xsi:type="krendering:KRectangle" >
-            <styles xsi:type="krendering:KInvisibility">
-            </styles>
-            
-        </data>
-        
-    </ports>
-    <ports   width="-0.100000" height="-0.100000">
-        <persistentEntries key="org.eclipse.elk.port.side" value="WEST"/>
-        <labels text="C">
-            <data xsi:type="krendering:KText">
-                
-            </data>
-        </labels>
-        <data xsi:type="krendering:KRectangle" >
-            <styles xsi:type="krendering:KInvisibility">
-            </styles>
-            
-        </data>
-        
-    </ports>
-    <ports   width="-0.100000" height="-0.100000">
-        <persistentEntries key="org.eclipse.elk.port.side" value="WEST"/>
-        <labels text="else">
-            <data xsi:type="krendering:KText">
-                
-            </data>
-        </labels>
-        <data xsi:type="krendering:KRectangle" >
-            <styles xsi:type="krendering:KInvisibility">
-            </styles>
-            
-        </data>
-        
-    </ports>
-    
-</children>
-<children   width="20.000000" height="40.000000" >
-    <persistentEntries key="org.eclipse.elk.spacing.individual" value="org.eclipse.elk.spacing.portsSurrounding:[top=0.0,left=0.0,bottom=0.0,right=0.0]"/>
-    <persistentEntries key="org.eclipse.elk.nodeSize.constraints" value="[NODE_LABELS, PORTS, PORT_LABELS, MINIMUM_SIZE]"/>
-    <persistentEntries key="org.eclipse.elk.layered.allowNonFlowPortsToSwitchSides" value="true"/>
-    <persistentEntries key="org.eclipse.elk.portConstraints" value="FIXED_SIDE"/>
-    <persistentEntries key="org.eclipse.elk.portAlignment.south" value="CENTER"/>
-    <persistentEntries key="org.eclipse.elk.portAlignment.north" value="CENTER"/>
-    <data xsi:type="krendering:KPolygon" >
-        <styles xsi:type="krendering:KLineWidth" lineWidth="1.300000">
-        </styles>
-        <styles xsi:type="krendering:KLineWidth" selection="true" lineWidth="2.000000">
-        </styles>
-        <styles xsi:type="krendering:KBackground"><color red="200" green="200" blue="250"/>
-            
-        </styles>
-        <styles xsi:type="krendering:KShadow" xOffset="2.000000" yOffset="2.000000">
-        </styles>
-        <points>
-            <x xsi:type="krendering:KLeftPosition" />
-            <y xsi:type="krendering:KTopPosition" />
-            
-        </points>
-        <points>
-            <x xsi:type="krendering:KLeftPosition" />
-            <y xsi:type="krendering:KBottomPosition" />
-            
-        </points>
-        <points>
-            <x xsi:type="krendering:KRightPosition" />
-            <y xsi:type="krendering:KBottomPosition" relative="0.200000"/>
-            
-        </points>
-        <points>
-            <x xsi:type="krendering:KRightPosition" />
-            <y xsi:type="krendering:KTopPosition" relative="0.200000"/>
-            
-        </points>
-        <points>
-            <x xsi:type="krendering:KLeftPosition" />
-            <y xsi:type="krendering:KTopPosition" />
-            
-        </points>
-        
-    </data>
-    <ports   width="5.000000" height="5.000000">
-        <persistentEntries key="org.eclipse.elk.port.side" value="NORTH"/>
-        <labels text="1">
-            <data xsi:type="krendering:KText">
-                
-            </data>
-        </labels>
-        <data xsi:type="krendering:KRectangle" >
-            <styles xsi:type="krendering:KBackground"><color red="0" green="0" blue="0"/>
-                
-            </styles>
-            
-        </data>
-        
-    </ports>
-    <ports   width="5.000000" height="5.000000">
-        <persistentEntries key="org.eclipse.elk.port.side" value="NORTH"/>
-        <labels text="2">
-            <data xsi:type="krendering:KText">
-                
-            </data>
-        </labels>
-        <data xsi:type="krendering:KRectangle" >
-            <styles xsi:type="krendering:KBackground"><color red="0" green="0" blue="0"/>
-                
-            </styles>
-            
-        </data>
-        
-    </ports>
-    <ports   width="5.000000" height="5.000000">
-        <persistentEntries key="org.eclipse.elk.port.side" value="NORTH"/>
-        <labels text="3">
-            <data xsi:type="krendering:KText">
-                
-            </data>
-        </labels>
-        <data xsi:type="krendering:KRectangle" >
-            <styles xsi:type="krendering:KBackground"><color red="0" green="0" blue="0"/>
-                
-            </styles>
-            
-        </data>
-        
-    </ports>
-    <ports   width="-0.100000" height="-0.100000">
-        <persistentEntries key="org.eclipse.elk.port.side" value="EAST"/>
-        <data xsi:type="krendering:KRectangle" >
-            <styles xsi:type="krendering:KInvisibility">
-            </styles>
-            
-        </data>
-        
-    </ports>
-    <ports   width="-0.100000" height="-0.100000">
-        <persistentEntries key="org.eclipse.elk.port.side" value="WEST"/>
-        <labels text="1">
-            <data xsi:type="krendering:KText">
-                
-            </data>
-        </labels>
-        <data xsi:type="krendering:KRectangle" >
-            <styles xsi:type="krendering:KInvisibility">
-            </styles>
-            
-        </data>
-        
-    </ports>
-    <ports   width="-0.100000" height="-0.100000">
-        <persistentEntries key="org.eclipse.elk.port.side" value="WEST"/>
-        <labels text="2">
-            <data xsi:type="krendering:KText">
-                
-            </data>
-        </labels>
-        <data xsi:type="krendering:KRectangle" >
-            <styles xsi:type="krendering:KInvisibility">
-            </styles>
-            
-        </data>
-        
-    </ports>
-    <ports   width="-0.100000" height="-0.100000">
-        <persistentEntries key="org.eclipse.elk.port.side" value="WEST"/>
-        <labels text="3">
-            <data xsi:type="krendering:KText">
-                
-            </data>
-        </labels>
-        <data xsi:type="krendering:KRectangle" >
-            <styles xsi:type="krendering:KInvisibility">
-            </styles>
-            
-        </data>
-        
-    </ports>
-    <ports   width="-0.100000" height="-0.100000">
-        <persistentEntries key="org.eclipse.elk.port.side" value="WEST"/>
-        <labels text="else">
-            <data xsi:type="krendering:KText">
-                
-            </data>
-        </labels>
-        <data xsi:type="krendering:KRectangle" >
-            <styles xsi:type="krendering:KInvisibility">
-            </styles>
-            
-        </data>
-        
-    </ports>
-    
-</children>
 <children   width="20.000000" height="20.000000" >
-    <persistentEntries key="org.eclipse.elk.portLabels.placement" value="[INSIDE, NEXT_TO_PORT_IF_POSSIBLE]"/>
-    <persistentEntries key="org.eclipse.elk.nodeSize.constraints" value="[NODE_LABELS, PORTS, PORT_LABELS, MINIMUM_SIZE]"/>
-    <persistentEntries key="de.cau.cs.kieler.klighd.expand" value="false"/>
-    <persistentEntries key="org.eclipse.elk.spacing.portsSurrounding" value="[top=10.0,left=0.0,bottom=0.0,right=0.0]"/>
-    <persistentEntries key="org.eclipse.elk.layered.allowNonFlowPortsToSwitchSides" value="true"/>
-    <persistentEntries key="org.eclipse.elk.portConstraints" value="FIXED_SIDE"/>
-    <persistentEntries key="org.eclipse.elk.portAlignment.south" value="CENTER"/>
     <persistentEntries key="org.eclipse.elk.portAlignment.north" value="CENTER"/>
-    <data xsi:type="krendering:KRectangle" >
-        <styles xsi:type="krendering:KBackground"><color red="174" green="174" blue="192"/>
-            
-        </styles>
-        <children xsi:type="krendering:KChildArea">
-            <placementData xsi:type="krendering:KAreaPlacementData">
-                <topLeft>
-                    <x xsi:type="krendering:KLeftPosition" absolute="10.000000"/>
-                    <y xsi:type="krendering:KTopPosition" absolute="15.000000"/>
-                    
-                </topLeft>
-                <bottomRight>
-                    <x xsi:type="krendering:KRightPosition" absolute="10.000000"/>
-                    <y xsi:type="krendering:KBottomPosition" absolute="10.000000"/>
-                    
-                </bottomRight>
-                
-            </placementData>
-            
-        </children>
-        <actions actionId="de.cau.cs.kieler.klighd.actions.CollapseExpandAction" trigger="DOUBLECLICK"/>
-        <children xsi:type="krendering:KText" text="fulladder">
-            <persistentEntries key="klighd.isNodeTitle" value="true"/>
-            <styles xsi:type="krendering:KFontBold" selection="true">
-            </styles>
-            <styles xsi:type="krendering:KFontSize" size="11">
-            </styles>
-            <placementData xsi:type="krendering:KPointPlacementData" verticalAlignment="CENTER" horizontalAlignment="CENTER" horizontalMargin="2.000000" >
-                <referencePoint>
-                    <x xsi:type="krendering:KLeftPosition" relative="0.500000"/>
-                    <y xsi:type="krendering:KTopPosition" absolute="15.000000"/>
-                    
-                </referencePoint>
-            </placementData>
-            
-        </children>
-        
-    </data>
-    <ports   width="5.000000" height="5.000000">
-        <persistentEntries key="org.eclipse.elk.port.side" value="EAST"/>
-        <labels text="e">
-            <data xsi:type="krendering:KText">
-                
-            </data>
-        </labels>
-        <data xsi:type="krendering:KRectangle" >
-            <styles xsi:type="krendering:KBackground"><color red="0" green="0" blue="0"/>
-                
-            </styles>
-            
-        </data>
-        
-    </ports>
-    <ports   width="5.000000" height="5.000000">
-        <persistentEntries key="org.eclipse.elk.port.side" value="EAST"/>
-        <labels text="r">
-            <data xsi:type="krendering:KText">
-                
-            </data>
-        </labels>
-        <data xsi:type="krendering:KRectangle" >
-            <styles xsi:type="krendering:KBackground"><color red="0" green="0" blue="0"/>
-                
-            </styles>
-            
-        </data>
-        
-    </ports>
-    <ports   width="5.000000" height="5.000000">
-        <persistentEntries key="org.eclipse.elk.port.side" value="EAST"/>
-        <labels text="c">
-            <data xsi:type="krendering:KText">
-                
-            </data>
-        </labels>
-        <data xsi:type="krendering:KRectangle" >
-            <styles xsi:type="krendering:KBackground"><color red="0" green="0" blue="0"/>
-                
-            </styles>
-            
-        </data>
-        
-    </ports>
-    <ports   width="5.000000" height="5.000000">
-        <persistentEntries key="org.eclipse.elk.port.side" value="WEST"/>
-        <labels text="b">
-            <data xsi:type="krendering:KText">
-                
-            </data>
-        </labels>
-        <data xsi:type="krendering:KRectangle" >
-            <styles xsi:type="krendering:KBackground"><color red="0" green="0" blue="0"/>
-                
-            </styles>
-            
-        </data>
-        
-    </ports>
-    <ports   width="5.000000" height="5.000000">
-        <persistentEntries key="org.eclipse.elk.port.side" value="WEST"/>
-        <labels text="a">
-            <data xsi:type="krendering:KText">
-                
-            </data>
-        </labels>
-        <data xsi:type="krendering:KRectangle" >
-            <styles xsi:type="krendering:KBackground"><color red="0" green="0" blue="0"/>
-                
-            </styles>
-            
-        </data>
-        
-    </ports>
-    
-</children>
-<children   width="20.000000" height="20.000000" >
-    <persistentEntries key="org.eclipse.elk.portLabels.placement" value="[INSIDE, NEXT_TO_PORT_IF_POSSIBLE]"/>
-    <persistentEntries key="org.eclipse.elk.nodeSize.constraints" value="[NODE_LABELS, PORTS, PORT_LABELS, MINIMUM_SIZE]"/>
-    <persistentEntries key="de.cau.cs.kieler.klighd.expand" value="false"/>
-    <persistentEntries key="org.eclipse.elk.spacing.portsSurrounding" value="[top=10.0,left=0.0,bottom=0.0,right=0.0]"/>
-    <persistentEntries key="org.eclipse.elk.layered.allowNonFlowPortsToSwitchSides" value="true"/>
-    <persistentEntries key="org.eclipse.elk.portConstraints" value="FIXED_SIDE"/>
     <persistentEntries key="org.eclipse.elk.portAlignment.south" value="CENTER"/>
-    <persistentEntries key="org.eclipse.elk.portAlignment.north" value="CENTER"/>
-    <data xsi:type="krendering:KRectangle" >
-        <styles xsi:type="krendering:KBackground"><color red="174" green="174" blue="192"/>
-            
-        </styles>
-        <children xsi:type="krendering:KChildArea">
-            <placementData xsi:type="krendering:KAreaPlacementData">
-                <topLeft>
-                    <x xsi:type="krendering:KLeftPosition" absolute="10.000000"/>
-                    <y xsi:type="krendering:KTopPosition" absolute="15.000000"/>
-                    
-                </topLeft>
-                <bottomRight>
-                    <x xsi:type="krendering:KRightPosition" absolute="10.000000"/>
-                    <y xsi:type="krendering:KBottomPosition" absolute="10.000000"/>
-                    
-                </bottomRight>
-                
-            </placementData>
-            
-        </children>
-        <actions actionId="de.cau.cs.kieler.klighd.actions.CollapseExpandAction" trigger="DOUBLECLICK"/>
-        <children xsi:type="krendering:KText" text="fulladder">
-            <persistentEntries key="klighd.isNodeTitle" value="true"/>
-            <styles xsi:type="krendering:KFontBold" selection="true">
-            </styles>
-            <styles xsi:type="krendering:KFontSize" size="11">
-            </styles>
-            <placementData xsi:type="krendering:KPointPlacementData" verticalAlignment="CENTER" horizontalAlignment="CENTER" horizontalMargin="2.000000" >
-                <referencePoint>
-                    <x xsi:type="krendering:KLeftPosition" relative="0.500000"/>
-                    <y xsi:type="krendering:KTopPosition" absolute="15.000000"/>
-                    
-                </referencePoint>
-            </placementData>
-            
-        </children>
-        
-    </data>
-    <ports   width="5.000000" height="5.000000">
-        <persistentEntries key="org.eclipse.elk.port.side" value="EAST"/>
-        <labels text="e">
-            <data xsi:type="krendering:KText">
-                
-            </data>
-        </labels>
-        <data xsi:type="krendering:KRectangle" >
-            <styles xsi:type="krendering:KBackground"><color red="0" green="0" blue="0"/>
-                
-            </styles>
-            
-        </data>
-        
-    </ports>
-    <ports   width="5.000000" height="5.000000">
-        <persistentEntries key="org.eclipse.elk.port.side" value="EAST"/>
-        <labels text="r">
-            <data xsi:type="krendering:KText">
-                
-            </data>
-        </labels>
-        <data xsi:type="krendering:KRectangle" >
-            <styles xsi:type="krendering:KBackground"><color red="0" green="0" blue="0"/>
-                
-            </styles>
-            
-        </data>
-        
-    </ports>
-    <ports   width="5.000000" height="5.000000">
-        <persistentEntries key="org.eclipse.elk.port.side" value="EAST"/>
-        <labels text="c">
-            <data xsi:type="krendering:KText">
-                
-            </data>
-        </labels>
-        <data xsi:type="krendering:KRectangle" >
-            <styles xsi:type="krendering:KBackground"><color red="0" green="0" blue="0"/>
-                
-            </styles>
-            
-        </data>
-        
-    </ports>
-    <ports   width="5.000000" height="5.000000">
-        <persistentEntries key="org.eclipse.elk.port.side" value="WEST"/>
-        <labels text="b">
-            <data xsi:type="krendering:KText">
-                
-            </data>
-        </labels>
-        <data xsi:type="krendering:KRectangle" >
-            <styles xsi:type="krendering:KBackground"><color red="0" green="0" blue="0"/>
-                
-            </styles>
-            
-        </data>
-        
-    </ports>
-    <ports   width="5.000000" height="5.000000">
-        <persistentEntries key="org.eclipse.elk.port.side" value="WEST"/>
-        <labels text="a">
-            <data xsi:type="krendering:KText">
-                
-            </data>
-        </labels>
-        <data xsi:type="krendering:KRectangle" >
-            <styles xsi:type="krendering:KBackground"><color red="0" green="0" blue="0"/>
-                
-            </styles>
-            
-        </data>
-        
-    </ports>
-    
-</children>
-<children   width="20.000000" height="20.000000" >
-    <persistentEntries key="org.eclipse.elk.portLabels.placement" value="[INSIDE, NEXT_TO_PORT_IF_POSSIBLE]"/>
-    <persistentEntries key="org.eclipse.elk.nodeSize.constraints" value="[NODE_LABELS, PORTS, PORT_LABELS, MINIMUM_SIZE]"/>
-    <persistentEntries key="de.cau.cs.kieler.klighd.expand" value="false"/>
-    <persistentEntries key="org.eclipse.elk.spacing.portsSurrounding" value="[top=10.0,left=0.0,bottom=0.0,right=0.0]"/>
-    <persistentEntries key="org.eclipse.elk.layered.allowNonFlowPortsToSwitchSides" value="true"/>
+    <persistentEntries key="org.eclipse.elk.partitioning.partition" value="1"/>
     <persistentEntries key="org.eclipse.elk.portConstraints" value="FIXED_SIDE"/>
-    <persistentEntries key="org.eclipse.elk.portAlignment.south" value="CENTER"/>
-    <persistentEntries key="org.eclipse.elk.portAlignment.north" value="CENTER"/>
-    <data xsi:type="krendering:KRectangle" >
-        <styles xsi:type="krendering:KBackground"><color red="184" green="184" blue="202"/>
-            
-        </styles>
-        <children xsi:type="krendering:KChildArea">
-            <placementData xsi:type="krendering:KAreaPlacementData">
-                <topLeft>
-                    <x xsi:type="krendering:KLeftPosition" absolute="10.000000"/>
-                    <y xsi:type="krendering:KTopPosition" absolute="15.000000"/>
-                    
-                </topLeft>
-                <bottomRight>
-                    <x xsi:type="krendering:KRightPosition" absolute="10.000000"/>
-                    <y xsi:type="krendering:KBottomPosition" absolute="10.000000"/>
-                    
-                </bottomRight>
-                
-            </placementData>
-            
-        </children>
-        <actions actionId="de.cau.cs.kieler.klighd.actions.CollapseExpandAction" trigger="DOUBLECLICK"/>
-        <children xsi:type="krendering:KText" text="fulladder">
-            <persistentEntries key="klighd.isNodeTitle" value="true"/>
-            <styles xsi:type="krendering:KFontBold" selection="true">
-            </styles>
-            <styles xsi:type="krendering:KFontSize" size="11">
-            </styles>
-            <placementData xsi:type="krendering:KPointPlacementData" verticalAlignment="CENTER" horizontalAlignment="CENTER" horizontalMargin="2.000000" >
-                <referencePoint>
-                    <x xsi:type="krendering:KLeftPosition" relative="0.500000"/>
-                    <y xsi:type="krendering:KTopPosition" absolute="15.000000"/>
-                    
-                </referencePoint>
-            </placementData>
-            
-        </children>
-        
-    </data>
-    <ports   width="5.000000" height="5.000000">
-        <persistentEntries key="org.eclipse.elk.port.side" value="EAST"/>
-        <labels text="e">
-            <data xsi:type="krendering:KText">
-                
-            </data>
-        </labels>
-        <data xsi:type="krendering:KRectangle" >
-            <styles xsi:type="krendering:KBackground"><color red="0" green="0" blue="0"/>
-                
-            </styles>
-            
-        </data>
-        
-    </ports>
-    <ports   width="5.000000" height="5.000000">
-        <persistentEntries key="org.eclipse.elk.port.side" value="EAST"/>
-        <labels text="r">
-            <data xsi:type="krendering:KText">
-                
-            </data>
-        </labels>
-        <data xsi:type="krendering:KRectangle" >
-            <styles xsi:type="krendering:KBackground"><color red="0" green="0" blue="0"/>
-                
-            </styles>
-            
-        </data>
-        
-    </ports>
-    <ports   width="5.000000" height="5.000000">
-        <persistentEntries key="org.eclipse.elk.port.side" value="EAST"/>
-        <labels text="c">
-            <data xsi:type="krendering:KText">
-                
-            </data>
-        </labels>
-        <data xsi:type="krendering:KRectangle" >
-            <styles xsi:type="krendering:KBackground"><color red="0" green="0" blue="0"/>
-                
-            </styles>
-            
-        </data>
-        
-    </ports>
-    <ports   width="5.000000" height="5.000000">
-        <persistentEntries key="org.eclipse.elk.port.side" value="WEST"/>
-        <labels text="b">
-            <data xsi:type="krendering:KText">
-                
-            </data>
-        </labels>
-        <data xsi:type="krendering:KRectangle" >
-            <styles xsi:type="krendering:KBackground"><color red="0" green="0" blue="0"/>
-                
-            </styles>
-            
-        </data>
-        
-    </ports>
-    <ports   width="5.000000" height="5.000000">
-        <persistentEntries key="org.eclipse.elk.port.side" value="WEST"/>
-        <labels text="a">
-            <data xsi:type="krendering:KText">
-                
-            </data>
-        </labels>
-        <data xsi:type="krendering:KRectangle" >
-            <styles xsi:type="krendering:KBackground"><color red="0" green="0" blue="0"/>
-                
-            </styles>
-            
-        </data>
-        
-    </ports>
-    
-</children>
-<children   width="20.000000" height="20.000000" >
-    <persistentEntries key="org.eclipse.elk.portLabels.placement" value="[INSIDE, NEXT_TO_PORT_IF_POSSIBLE]"/>
-    <persistentEntries key="org.eclipse.elk.nodeSize.constraints" value="[NODE_LABELS, PORTS, PORT_LABELS, MINIMUM_SIZE]"/>
-    <persistentEntries key="de.cau.cs.kieler.klighd.expand" value="false"/>
-    <persistentEntries key="org.eclipse.elk.spacing.portsSurrounding" value="[top=10.0,left=0.0,bottom=0.0,right=0.0]"/>
     <persistentEntries key="org.eclipse.elk.layered.allowNonFlowPortsToSwitchSides" value="true"/>
-    <persistentEntries key="org.eclipse.elk.portConstraints" value="FIXED_SIDE"/>
-    <persistentEntries key="org.eclipse.elk.portAlignment.south" value="CENTER"/>
-    <persistentEntries key="org.eclipse.elk.portAlignment.north" value="CENTER"/>
-    <data xsi:type="krendering:KRectangle" >
-        <styles xsi:type="krendering:KBackground"><color red="194" green="194" blue="212"/>
-            
-        </styles>
-        <children xsi:type="krendering:KChildArea">
-            <placementData xsi:type="krendering:KAreaPlacementData">
-                <topLeft>
-                    <x xsi:type="krendering:KLeftPosition" absolute="10.000000"/>
-                    <y xsi:type="krendering:KTopPosition" absolute="15.000000"/>
-                    
-                </topLeft>
-                <bottomRight>
-                    <x xsi:type="krendering:KRightPosition" absolute="10.000000"/>
-                    <y xsi:type="krendering:KBottomPosition" absolute="10.000000"/>
-                    
-                </bottomRight>
-                
-            </placementData>
-            
-        </children>
-        <actions actionId="de.cau.cs.kieler.klighd.actions.CollapseExpandAction" trigger="DOUBLECLICK"/>
-        <children xsi:type="krendering:KText" text="fulladder">
-            <persistentEntries key="klighd.isNodeTitle" value="true"/>
-            <styles xsi:type="krendering:KFontBold" selection="true">
-            </styles>
-            <styles xsi:type="krendering:KFontSize" size="11">
-            </styles>
-            <placementData xsi:type="krendering:KPointPlacementData" verticalAlignment="CENTER" horizontalAlignment="CENTER" horizontalMargin="2.000000" >
-                <referencePoint>
-                    <x xsi:type="krendering:KLeftPosition" relative="0.500000"/>
-                    <y xsi:type="krendering:KTopPosition" absolute="15.000000"/>
-                    
-                </referencePoint>
-            </placementData>
-            
-        </children>
-        
-    </data>
-    <ports   width="5.000000" height="5.000000">
-        <persistentEntries key="org.eclipse.elk.port.side" value="EAST"/>
-        <labels text="e">
-            <data xsi:type="krendering:KText">
-                
-            </data>
-        </labels>
-        <data xsi:type="krendering:KRectangle" >
-            <styles xsi:type="krendering:KBackground"><color red="0" green="0" blue="0"/>
-                
-            </styles>
-            
-        </data>
-        
-    </ports>
-    <ports   width="5.000000" height="5.000000">
-        <persistentEntries key="org.eclipse.elk.port.side" value="EAST"/>
-        <labels text="r">
-            <data xsi:type="krendering:KText">
-                
-            </data>
-        </labels>
-        <data xsi:type="krendering:KRectangle" >
-            <styles xsi:type="krendering:KBackground"><color red="0" green="0" blue="0"/>
-                
-            </styles>
-            
-        </data>
-        
-    </ports>
-    <ports   width="5.000000" height="5.000000">
-        <persistentEntries key="org.eclipse.elk.port.side" value="EAST"/>
-        <labels text="c">
-            <data xsi:type="krendering:KText">
-                
-            </data>
-        </labels>
-        <data xsi:type="krendering:KRectangle" >
-            <styles xsi:type="krendering:KBackground"><color red="0" green="0" blue="0"/>
-                
-            </styles>
-            
-        </data>
-        
-    </ports>
-    <ports   width="5.000000" height="5.000000">
-        <persistentEntries key="org.eclipse.elk.port.side" value="WEST"/>
-        <labels text="b">
-            <data xsi:type="krendering:KText">
-                
-            </data>
-        </labels>
-        <data xsi:type="krendering:KRectangle" >
-            <styles xsi:type="krendering:KBackground"><color red="0" green="0" blue="0"/>
-                
-            </styles>
-            
-        </data>
-        
-    </ports>
-    <ports   width="5.000000" height="5.000000">
-        <persistentEntries key="org.eclipse.elk.port.side" value="WEST"/>
-        <labels text="a">
-            <data xsi:type="krendering:KText">
-                
-            </data>
-        </labels>
-        <data xsi:type="krendering:KRectangle" >
-            <styles xsi:type="krendering:KBackground"><color red="0" green="0" blue="0"/>
-                
-            </styles>
-            
-        </data>
-        
-    </ports>
-    
-</children>
-<children   width="20.000000" height="20.000000" >
-    <persistentEntries key="org.eclipse.elk.portLabels.placement" value="[INSIDE, NEXT_TO_PORT_IF_POSSIBLE]"/>
-    <persistentEntries key="org.eclipse.elk.nodeSize.constraints" value="[NODE_LABELS, PORTS, PORT_LABELS, MINIMUM_SIZE]"/>
-    <persistentEntries key="de.cau.cs.kieler.klighd.expand" value="false"/>
-    <persistentEntries key="org.eclipse.elk.spacing.portsSurrounding" value="[top=10.0,left=0.0,bottom=0.0,right=0.0]"/>
-    <persistentEntries key="org.eclipse.elk.layered.allowNonFlowPortsToSwitchSides" value="true"/>
-    <persistentEntries key="org.eclipse.elk.portConstraints" value="FIXED_SIDE"/>
-    <persistentEntries key="org.eclipse.elk.portAlignment.south" value="CENTER"/>
-    <persistentEntries key="org.eclipse.elk.portAlignment.north" value="CENTER"/>
-    <data xsi:type="krendering:KRectangle" >
-        <styles xsi:type="krendering:KBackground"><color red="204" green="204" blue="222"/>
-            
-        </styles>
-        <children xsi:type="krendering:KChildArea">
-            <placementData xsi:type="krendering:KAreaPlacementData">
-                <topLeft>
-                    <x xsi:type="krendering:KLeftPosition" absolute="10.000000"/>
-                    <y xsi:type="krendering:KTopPosition" absolute="15.000000"/>
-                    
-                </topLeft>
-                <bottomRight>
-                    <x xsi:type="krendering:KRightPosition" absolute="10.000000"/>
-                    <y xsi:type="krendering:KBottomPosition" absolute="10.000000"/>
-                    
-                </bottomRight>
-                
-            </placementData>
-            
-        </children>
-        <actions actionId="de.cau.cs.kieler.klighd.actions.CollapseExpandAction" trigger="DOUBLECLICK"/>
-        <children xsi:type="krendering:KText" text="fulladder">
-            <persistentEntries key="klighd.isNodeTitle" value="true"/>
-            <styles xsi:type="krendering:KFontBold" selection="true">
-            </styles>
-            <styles xsi:type="krendering:KFontSize" size="11">
-            </styles>
-            <placementData xsi:type="krendering:KPointPlacementData" verticalAlignment="CENTER" horizontalAlignment="CENTER" horizontalMargin="2.000000" >
-                <referencePoint>
-                    <x xsi:type="krendering:KLeftPosition" relative="0.500000"/>
-                    <y xsi:type="krendering:KTopPosition" absolute="15.000000"/>
-                    
-                </referencePoint>
-            </placementData>
-            
-        </children>
-        
-    </data>
-    <ports   width="5.000000" height="5.000000">
-        <persistentEntries key="org.eclipse.elk.port.side" value="EAST"/>
-        <labels text="e">
-            <data xsi:type="krendering:KText">
-                
-            </data>
-        </labels>
-        <data xsi:type="krendering:KRectangle" >
-            <styles xsi:type="krendering:KBackground"><color red="0" green="0" blue="0"/>
-                
-            </styles>
-            
-        </data>
-        
-    </ports>
-    <ports   width="5.000000" height="5.000000">
-        <persistentEntries key="org.eclipse.elk.port.side" value="EAST"/>
-        <labels text="r">
-            <data xsi:type="krendering:KText">
-                
-            </data>
-        </labels>
-        <data xsi:type="krendering:KRectangle" >
-            <styles xsi:type="krendering:KBackground"><color red="0" green="0" blue="0"/>
-                
-            </styles>
-            
-        </data>
-        
-    </ports>
-    <ports   width="5.000000" height="5.000000">
-        <persistentEntries key="org.eclipse.elk.port.side" value="EAST"/>
-        <labels text="c">
-            <data xsi:type="krendering:KText">
-                
-            </data>
-        </labels>
-        <data xsi:type="krendering:KRectangle" >
-            <styles xsi:type="krendering:KBackground"><color red="0" green="0" blue="0"/>
-                
-            </styles>
-            
-        </data>
-        
-    </ports>
-    <ports   width="5.000000" height="5.000000">
-        <persistentEntries key="org.eclipse.elk.port.side" value="WEST"/>
-        <labels text="b">
-            <data xsi:type="krendering:KText">
-                
-            </data>
-        </labels>
-        <data xsi:type="krendering:KRectangle" >
-            <styles xsi:type="krendering:KBackground"><color red="0" green="0" blue="0"/>
-                
-            </styles>
-            
-        </data>
-        
-    </ports>
-    <ports   width="5.000000" height="5.000000">
-        <persistentEntries key="org.eclipse.elk.port.side" value="WEST"/>
-        <labels text="a">
-            <data xsi:type="krendering:KText">
-                
-            </data>
-        </labels>
-        <data xsi:type="krendering:KRectangle" >
-            <styles xsi:type="krendering:KBackground"><color red="0" green="0" blue="0"/>
-                
-            </styles>
-            
-        </data>
-        
-    </ports>
-    
-</children>
-<children   width="20.000000" height="20.000000" >
-    <persistentEntries key="org.eclipse.elk.portLabels.placement" value="[INSIDE, NEXT_TO_PORT_IF_POSSIBLE]"/>
-    <persistentEntries key="org.eclipse.elk.nodeSize.constraints" value="[NODE_LABELS, PORTS, PORT_LABELS, MINIMUM_SIZE]"/>
-    <persistentEntries key="de.cau.cs.kieler.klighd.expand" value="false"/>
-    <persistentEntries key="org.eclipse.elk.spacing.portsSurrounding" value="[top=10.0,left=0.0,bottom=0.0,right=0.0]"/>
-    <persistentEntries key="org.eclipse.elk.layered.allowNonFlowPortsToSwitchSides" value="true"/>
-    <persistentEntries key="org.eclipse.elk.portConstraints" value="FIXED_SIDE"/>
-    <persistentEntries key="org.eclipse.elk.portAlignment.south" value="CENTER"/>
-    <persistentEntries key="org.eclipse.elk.portAlignment.north" value="CENTER"/>
-    <data xsi:type="krendering:KRectangle" >
-        <styles xsi:type="krendering:KBackground"><color red="214" green="214" blue="232"/>
-            
-        </styles>
-        <children xsi:type="krendering:KChildArea">
-            <placementData xsi:type="krendering:KAreaPlacementData">
-                <topLeft>
-                    <x xsi:type="krendering:KLeftPosition" absolute="10.000000"/>
-                    <y xsi:type="krendering:KTopPosition" absolute="15.000000"/>
-                    
-                </topLeft>
-                <bottomRight>
-                    <x xsi:type="krendering:KRightPosition" absolute="10.000000"/>
-                    <y xsi:type="krendering:KBottomPosition" absolute="10.000000"/>
-                    
-                </bottomRight>
-                
-            </placementData>
-            
-        </children>
-        <actions actionId="de.cau.cs.kieler.klighd.actions.CollapseExpandAction" trigger="DOUBLECLICK"/>
-        <children xsi:type="krendering:KText" text="fulladder">
-            <persistentEntries key="klighd.isNodeTitle" value="true"/>
-            <styles xsi:type="krendering:KFontBold" selection="true">
-            </styles>
-            <styles xsi:type="krendering:KFontSize" size="11">
-            </styles>
-            <placementData xsi:type="krendering:KPointPlacementData" verticalAlignment="CENTER" horizontalAlignment="CENTER" horizontalMargin="2.000000" >
-                <referencePoint>
-                    <x xsi:type="krendering:KLeftPosition" relative="0.500000"/>
-                    <y xsi:type="krendering:KTopPosition" absolute="15.000000"/>
-                    
-                </referencePoint>
-            </placementData>
-            
-        </children>
-        
-    </data>
-    <ports   width="5.000000" height="5.000000">
-        <persistentEntries key="org.eclipse.elk.port.side" value="EAST"/>
-        <labels text="e">
-            <data xsi:type="krendering:KText">
-                
-            </data>
-        </labels>
-        <data xsi:type="krendering:KRectangle" >
-            <styles xsi:type="krendering:KBackground"><color red="0" green="0" blue="0"/>
-                
-            </styles>
-            
-        </data>
-        
-    </ports>
-    <ports   width="5.000000" height="5.000000">
-        <persistentEntries key="org.eclipse.elk.port.side" value="EAST"/>
-        <labels text="r">
-            <data xsi:type="krendering:KText">
-                
-            </data>
-        </labels>
-        <data xsi:type="krendering:KRectangle" >
-            <styles xsi:type="krendering:KBackground"><color red="0" green="0" blue="0"/>
-                
-            </styles>
-            
-        </data>
-        
-    </ports>
-    <ports   width="5.000000" height="5.000000">
-        <persistentEntries key="org.eclipse.elk.port.side" value="EAST"/>
-        <labels text="c">
-            <data xsi:type="krendering:KText">
-                
-            </data>
-        </labels>
-        <data xsi:type="krendering:KRectangle" >
-            <styles xsi:type="krendering:KBackground"><color red="0" green="0" blue="0"/>
-                
-            </styles>
-            
-        </data>
-        
-    </ports>
-    <ports   width="5.000000" height="5.000000">
-        <persistentEntries key="org.eclipse.elk.port.side" value="WEST"/>
-        <labels text="b">
-            <data xsi:type="krendering:KText">
-                
-            </data>
-        </labels>
-        <data xsi:type="krendering:KRectangle" >
-            <styles xsi:type="krendering:KBackground"><color red="0" green="0" blue="0"/>
-                
-            </styles>
-            
-        </data>
-        
-    </ports>
-    <ports   width="5.000000" height="5.000000">
-        <persistentEntries key="org.eclipse.elk.port.side" value="WEST"/>
-        <labels text="a">
-            <data xsi:type="krendering:KText">
-                
-            </data>
-        </labels>
-        <data xsi:type="krendering:KRectangle" >
-            <styles xsi:type="krendering:KBackground"><color red="0" green="0" blue="0"/>
-                
-            </styles>
-            
-        </data>
-        
-    </ports>
-    
-</children>
-<children   width="20.000000" height="20.000000" >
-    <persistentEntries key="org.eclipse.elk.nodeSize.constraints" value="[NODE_LABELS, PORTS, PORT_LABELS, MINIMUM_SIZE]"/>
+    <persistentEntries key="org.eclipse.elk.spacing.portsSurrounding" value="[top=12.0,left=10.0,bottom=0.0,right=10.0]"/>
     <persistentEntries key="de.cau.cs.kieler.klighd.expand" value="true"/>
-    <persistentEntries key="org.eclipse.elk.spacing.portsSurrounding" value="[top=10.0,left=0.0,bottom=0.0,right=0.0]"/>
-    <persistentEntries key="org.eclipse.elk.layered.allowNonFlowPortsToSwitchSides" value="true"/>
-    <persistentEntries key="org.eclipse.elk.portConstraints" value="FIXED_SIDE"/>
-    <persistentEntries key="org.eclipse.elk.portAlignment.south" value="CENTER"/>
-    <persistentEntries key="org.eclipse.elk.portAlignment.north" value="CENTER"/>
+    <persistentEntries key="org.eclipse.elk.nodeSize.constraints" value="[NODE_LABELS, PORTS, PORT_LABELS, MINIMUM_SIZE]"/>
+    <persistentEntries key="org.eclipse.elk.partitioning.activate" value="true"/>
     <data xsi:type="krendering:KRectangle" >
         <styles xsi:type="krendering:KBackground"><color red="224" green="224" blue="242"/>
             
         </styles>
+        <styles xsi:type="krendering:KShadow" xOffset="4.000000" yOffset="4.000000">
+        </styles>
         <children xsi:type="krendering:KChildArea">
             <placementData xsi:type="krendering:KAreaPlacementData">
                 <topLeft>
-                    <x xsi:type="krendering:KLeftPosition" absolute="10.000000"/>
+                    <x xsi:type="krendering:KLeftPosition" absolute="15.000000"/>
+                    <y xsi:type="krendering:KTopPosition" absolute="10.000000"/>
+                    
+                </topLeft>
+                <bottomRight>
+                    <x xsi:type="krendering:KRightPosition" absolute="10.000000"/>
+                    <y xsi:type="krendering:KBottomPosition" absolute="10.000000"/>
+                    
+                </bottomRight>
+                
+            </placementData>
+            
+        </children>
+        <actions actionId="de.cau.cs.kieler.klighd.actions.CollapseExpandAction" trigger="DOUBLECLICK"/>
+        <children xsi:type="krendering:KText" text="main">
+            <persistentEntries key="klighd.isNodeTitle" value="true"/>
+            <styles xsi:type="krendering:KFontBold" selection="true">
+            </styles>
+            <styles xsi:type="krendering:KFontSize" size="13">
+            </styles>
+            <placementData xsi:type="krendering:KPointPlacementData" verticalAlignment="CENTER" horizontalAlignment="CENTER" horizontalMargin="2.000000" >
+                <referencePoint>
+                    <x xsi:type="krendering:KLeftPosition" relative="0.500000"/>
                     <y xsi:type="krendering:KTopPosition" absolute="15.000000"/>
+                    
+                </referencePoint>
+            </placementData>
+            
+        </children>
+        
+    </data>
+    <children   width="20.000000" height="40.000000" >
+        <persistentEntries key="org.eclipse.elk.portAlignment.north" value="CENTER"/>
+        <persistentEntries key="org.eclipse.elk.portAlignment.south" value="CENTER"/>
+        <persistentEntries key="org.eclipse.elk.partitioning.partition" value="1"/>
+        <persistentEntries key="org.eclipse.elk.portConstraints" value="FIXED_SIDE"/>
+        <persistentEntries key="org.eclipse.elk.layered.allowNonFlowPortsToSwitchSides" value="true"/>
+        <persistentEntries key="org.eclipse.elk.nodeSize.constraints" value="[NODE_LABELS, PORTS, PORT_LABELS, MINIMUM_SIZE]"/>
+        <persistentEntries key="org.eclipse.elk.spacing.portsSurrounding" value="[top=0.0,left=10.0,bottom=0.0,right=10.0]"/>
+        <data xsi:type="krendering:KPolygon" >
+            <styles xsi:type="krendering:KLineWidth" lineWidth="1.300000">
+            </styles>
+            <styles xsi:type="krendering:KLineWidth" selection="true" lineWidth="2.000000">
+            </styles>
+            <styles xsi:type="krendering:KBackground"><color red="200" green="200" blue="250"/>
+                
+            </styles>
+            <styles xsi:type="krendering:KShadow" xOffset="2.000000" yOffset="2.000000">
+            </styles>
+            <points>
+                <x xsi:type="krendering:KLeftPosition" />
+                <y xsi:type="krendering:KTopPosition" />
+                
+            </points>
+            <points>
+                <x xsi:type="krendering:KLeftPosition" />
+                <y xsi:type="krendering:KBottomPosition" />
+                
+            </points>
+            <points>
+                <x xsi:type="krendering:KRightPosition" />
+                <y xsi:type="krendering:KBottomPosition" relative="0.200000"/>
+                
+            </points>
+            <points>
+                <x xsi:type="krendering:KRightPosition" />
+                <y xsi:type="krendering:KTopPosition" relative="0.200000"/>
+                
+            </points>
+            <points>
+                <x xsi:type="krendering:KLeftPosition" />
+                <y xsi:type="krendering:KTopPosition" />
+                
+            </points>
+            
+        </data>
+        <ports   width="5.000000" height="5.000000">
+            <persistentEntries key="org.eclipse.elk.port.borderOffset" value="-24."/>
+            <persistentEntries key="org.eclipse.elk.port.side" value="NORTH"/>
+            <data xsi:type="krendering:KRectangle" >
+                <styles xsi:type="krendering:KBackground"><color red="0" green="0" blue="0"/>
+                    
+                </styles>
+                
+            </data>
+            
+        </ports>
+        <ports   width="-0.100000" height="-0.100000">
+            <persistentEntries key="org.eclipse.elk.port.side" value="EAST"/>
+            <data xsi:type="krendering:KRectangle" >
+                <styles xsi:type="krendering:KInvisibility">
+                </styles>
+                
+            </data>
+            
+        </ports>
+        <ports   width="-0.100000" height="-0.100000">
+            <persistentEntries key="org.eclipse.elk.port.side" value="WEST"/>
+            <labels text="A">
+                <data xsi:type="krendering:KText">
+                    
+                </data>
+            </labels>
+            <data xsi:type="krendering:KRectangle" >
+                <styles xsi:type="krendering:KInvisibility">
+                </styles>
+                
+            </data>
+            
+        </ports>
+        <ports   width="-0.100000" height="-0.100000">
+            <persistentEntries key="org.eclipse.elk.port.side" value="WEST"/>
+            <labels text="B">
+                <data xsi:type="krendering:KText">
+                    
+                </data>
+            </labels>
+            <data xsi:type="krendering:KRectangle" >
+                <styles xsi:type="krendering:KInvisibility">
+                </styles>
+                
+            </data>
+            
+        </ports>
+        <ports   width="-0.100000" height="-0.100000">
+            <persistentEntries key="org.eclipse.elk.port.side" value="WEST"/>
+            <labels text="C">
+                <data xsi:type="krendering:KText">
+                    
+                </data>
+            </labels>
+            <data xsi:type="krendering:KRectangle" >
+                <styles xsi:type="krendering:KInvisibility">
+                </styles>
+                
+            </data>
+            
+        </ports>
+        <ports   width="-0.100000" height="-0.100000">
+            <persistentEntries key="org.eclipse.elk.port.side" value="WEST"/>
+            <labels text="else">
+                <data xsi:type="krendering:KText">
+                    
+                </data>
+            </labels>
+            <data xsi:type="krendering:KRectangle" >
+                <styles xsi:type="krendering:KInvisibility">
+                </styles>
+                
+            </data>
+            
+        </ports>
+        <ports   width="-0.100000" height="-0.100000">
+            <persistentEntries key="org.eclipse.elk.port.side" value="WEST"/>
+            <labels text="B">
+                <data xsi:type="krendering:KText">
+                    
+                </data>
+            </labels>
+            <data xsi:type="krendering:KRectangle" >
+                <styles xsi:type="krendering:KInvisibility">
+                </styles>
+                
+            </data>
+            
+        </ports>
+        <ports   width="-0.100000" height="-0.100000">
+            <persistentEntries key="org.eclipse.elk.port.side" value="WEST"/>
+            <labels text="C">
+                <data xsi:type="krendering:KText">
+                    
+                </data>
+            </labels>
+            <data xsi:type="krendering:KRectangle" >
+                <styles xsi:type="krendering:KInvisibility">
+                </styles>
+                
+            </data>
+            
+        </ports>
+        <ports   width="-0.100000" height="-0.100000">
+            <persistentEntries key="org.eclipse.elk.port.side" value="WEST"/>
+            <labels text="else">
+                <data xsi:type="krendering:KText">
+                    
+                </data>
+            </labels>
+            <data xsi:type="krendering:KRectangle" >
+                <styles xsi:type="krendering:KInvisibility">
+                </styles>
+                
+            </data>
+            
+        </ports>
+        
+    </children>
+    <children   width="20.000000" height="40.000000" >
+        <persistentEntries key="org.eclipse.elk.portAlignment.north" value="CENTER"/>
+        <persistentEntries key="org.eclipse.elk.portAlignment.south" value="CENTER"/>
+        <persistentEntries key="org.eclipse.elk.partitioning.partition" value="1"/>
+        <persistentEntries key="org.eclipse.elk.portConstraints" value="FIXED_SIDE"/>
+        <persistentEntries key="org.eclipse.elk.layered.allowNonFlowPortsToSwitchSides" value="true"/>
+        <persistentEntries key="org.eclipse.elk.nodeSize.constraints" value="[NODE_LABELS, PORTS, PORT_LABELS, MINIMUM_SIZE]"/>
+        <persistentEntries key="org.eclipse.elk.spacing.portsSurrounding" value="[top=0.0,left=10.0,bottom=0.0,right=10.0]"/>
+        <data xsi:type="krendering:KPolygon" >
+            <styles xsi:type="krendering:KLineWidth" lineWidth="1.300000">
+            </styles>
+            <styles xsi:type="krendering:KLineWidth" selection="true" lineWidth="2.000000">
+            </styles>
+            <styles xsi:type="krendering:KBackground"><color red="200" green="200" blue="250"/>
+                
+            </styles>
+            <styles xsi:type="krendering:KShadow" xOffset="2.000000" yOffset="2.000000">
+            </styles>
+            <points>
+                <x xsi:type="krendering:KLeftPosition" />
+                <y xsi:type="krendering:KTopPosition" />
+                
+            </points>
+            <points>
+                <x xsi:type="krendering:KLeftPosition" />
+                <y xsi:type="krendering:KBottomPosition" />
+                
+            </points>
+            <points>
+                <x xsi:type="krendering:KRightPosition" />
+                <y xsi:type="krendering:KBottomPosition" relative="0.200000"/>
+                
+            </points>
+            <points>
+                <x xsi:type="krendering:KRightPosition" />
+                <y xsi:type="krendering:KTopPosition" relative="0.200000"/>
+                
+            </points>
+            <points>
+                <x xsi:type="krendering:KLeftPosition" />
+                <y xsi:type="krendering:KTopPosition" />
+                
+            </points>
+            
+        </data>
+        <ports   width="5.000000" height="5.000000">
+            <persistentEntries key="org.eclipse.elk.port.borderOffset" value="-51."/>
+            <persistentEntries key="org.eclipse.elk.port.side" value="NORTH"/>
+            <data xsi:type="krendering:KRectangle" >
+                <styles xsi:type="krendering:KBackground"><color red="0" green="0" blue="0"/>
+                    
+                </styles>
+                
+            </data>
+            
+        </ports>
+        <ports   width="-0.100000" height="-0.100000">
+            <persistentEntries key="org.eclipse.elk.port.side" value="EAST"/>
+            <data xsi:type="krendering:KRectangle" >
+                <styles xsi:type="krendering:KInvisibility">
+                </styles>
+                
+            </data>
+            
+        </ports>
+        <ports   width="-0.100000" height="-0.100000">
+            <persistentEntries key="org.eclipse.elk.port.side" value="WEST"/>
+            <labels text="A">
+                <data xsi:type="krendering:KText">
+                    
+                </data>
+            </labels>
+            <data xsi:type="krendering:KRectangle" >
+                <styles xsi:type="krendering:KInvisibility">
+                </styles>
+                
+            </data>
+            
+        </ports>
+        <ports   width="-0.100000" height="-0.100000">
+            <persistentEntries key="org.eclipse.elk.port.side" value="WEST"/>
+            <labels text="B">
+                <data xsi:type="krendering:KText">
+                    
+                </data>
+            </labels>
+            <data xsi:type="krendering:KRectangle" >
+                <styles xsi:type="krendering:KInvisibility">
+                </styles>
+                
+            </data>
+            
+        </ports>
+        <ports   width="-0.100000" height="-0.100000">
+            <persistentEntries key="org.eclipse.elk.port.side" value="WEST"/>
+            <labels text="C">
+                <data xsi:type="krendering:KText">
+                    
+                </data>
+            </labels>
+            <data xsi:type="krendering:KRectangle" >
+                <styles xsi:type="krendering:KInvisibility">
+                </styles>
+                
+            </data>
+            
+        </ports>
+        <ports   width="-0.100000" height="-0.100000">
+            <persistentEntries key="org.eclipse.elk.port.side" value="WEST"/>
+            <labels text="else">
+                <data xsi:type="krendering:KText">
+                    
+                </data>
+            </labels>
+            <data xsi:type="krendering:KRectangle" >
+                <styles xsi:type="krendering:KInvisibility">
+                </styles>
+                
+            </data>
+            
+        </ports>
+        <ports   width="-0.100000" height="-0.100000">
+            <persistentEntries key="org.eclipse.elk.port.side" value="WEST"/>
+            <labels text="B">
+                <data xsi:type="krendering:KText">
+                    
+                </data>
+            </labels>
+            <data xsi:type="krendering:KRectangle" >
+                <styles xsi:type="krendering:KInvisibility">
+                </styles>
+                
+            </data>
+            
+        </ports>
+        <ports   width="-0.100000" height="-0.100000">
+            <persistentEntries key="org.eclipse.elk.port.side" value="WEST"/>
+            <labels text="C">
+                <data xsi:type="krendering:KText">
+                    
+                </data>
+            </labels>
+            <data xsi:type="krendering:KRectangle" >
+                <styles xsi:type="krendering:KInvisibility">
+                </styles>
+                
+            </data>
+            
+        </ports>
+        <ports   width="-0.100000" height="-0.100000">
+            <persistentEntries key="org.eclipse.elk.port.side" value="WEST"/>
+            <labels text="else">
+                <data xsi:type="krendering:KText">
+                    
+                </data>
+            </labels>
+            <data xsi:type="krendering:KRectangle" >
+                <styles xsi:type="krendering:KInvisibility">
+                </styles>
+                
+            </data>
+            
+        </ports>
+        <ports   width="-0.100000" height="-0.100000">
+            <persistentEntries key="org.eclipse.elk.port.side" value="WEST"/>
+            <labels text="B">
+                <data xsi:type="krendering:KText">
+                    
+                </data>
+            </labels>
+            <data xsi:type="krendering:KRectangle" >
+                <styles xsi:type="krendering:KInvisibility">
+                </styles>
+                
+            </data>
+            
+        </ports>
+        <ports   width="-0.100000" height="-0.100000">
+            <persistentEntries key="org.eclipse.elk.port.side" value="WEST"/>
+            <labels text="C">
+                <data xsi:type="krendering:KText">
+                    
+                </data>
+            </labels>
+            <data xsi:type="krendering:KRectangle" >
+                <styles xsi:type="krendering:KInvisibility">
+                </styles>
+                
+            </data>
+            
+        </ports>
+        <ports   width="-0.100000" height="-0.100000">
+            <persistentEntries key="org.eclipse.elk.port.side" value="WEST"/>
+            <labels text="else">
+                <data xsi:type="krendering:KText">
+                    
+                </data>
+            </labels>
+            <data xsi:type="krendering:KRectangle" >
+                <styles xsi:type="krendering:KInvisibility">
+                </styles>
+                
+            </data>
+            
+        </ports>
+        <ports   width="-0.100000" height="-0.100000">
+            <persistentEntries key="org.eclipse.elk.port.side" value="WEST"/>
+            <labels text="B">
+                <data xsi:type="krendering:KText">
+                    
+                </data>
+            </labels>
+            <data xsi:type="krendering:KRectangle" >
+                <styles xsi:type="krendering:KInvisibility">
+                </styles>
+                
+            </data>
+            
+        </ports>
+        <ports   width="-0.100000" height="-0.100000">
+            <persistentEntries key="org.eclipse.elk.port.side" value="WEST"/>
+            <labels text="C">
+                <data xsi:type="krendering:KText">
+                    
+                </data>
+            </labels>
+            <data xsi:type="krendering:KRectangle" >
+                <styles xsi:type="krendering:KInvisibility">
+                </styles>
+                
+            </data>
+            
+        </ports>
+        <ports   width="-0.100000" height="-0.100000">
+            <persistentEntries key="org.eclipse.elk.port.side" value="WEST"/>
+            <labels text="else">
+                <data xsi:type="krendering:KText">
+                    
+                </data>
+            </labels>
+            <data xsi:type="krendering:KRectangle" >
+                <styles xsi:type="krendering:KInvisibility">
+                </styles>
+                
+            </data>
+            
+        </ports>
+        <ports   width="-0.100000" height="-0.100000">
+            <persistentEntries key="org.eclipse.elk.port.side" value="WEST"/>
+            <labels text="B">
+                <data xsi:type="krendering:KText">
+                    
+                </data>
+            </labels>
+            <data xsi:type="krendering:KRectangle" >
+                <styles xsi:type="krendering:KInvisibility">
+                </styles>
+                
+            </data>
+            
+        </ports>
+        <ports   width="-0.100000" height="-0.100000">
+            <persistentEntries key="org.eclipse.elk.port.side" value="WEST"/>
+            <labels text="C">
+                <data xsi:type="krendering:KText">
+                    
+                </data>
+            </labels>
+            <data xsi:type="krendering:KRectangle" >
+                <styles xsi:type="krendering:KInvisibility">
+                </styles>
+                
+            </data>
+            
+        </ports>
+        <ports   width="-0.100000" height="-0.100000">
+            <persistentEntries key="org.eclipse.elk.port.side" value="WEST"/>
+            <labels text="else">
+                <data xsi:type="krendering:KText">
+                    
+                </data>
+            </labels>
+            <data xsi:type="krendering:KRectangle" >
+                <styles xsi:type="krendering:KInvisibility">
+                </styles>
+                
+            </data>
+            
+        </ports>
+        
+    </children>
+    <children   width="20.000000" height="40.000000" >
+        <persistentEntries key="org.eclipse.elk.portAlignment.north" value="CENTER"/>
+        <persistentEntries key="org.eclipse.elk.portAlignment.south" value="CENTER"/>
+        <persistentEntries key="org.eclipse.elk.partitioning.partition" value="1"/>
+        <persistentEntries key="org.eclipse.elk.portConstraints" value="FIXED_SIDE"/>
+        <persistentEntries key="org.eclipse.elk.layered.allowNonFlowPortsToSwitchSides" value="true"/>
+        <persistentEntries key="org.eclipse.elk.nodeSize.constraints" value="[NODE_LABELS, PORTS, PORT_LABELS, MINIMUM_SIZE]"/>
+        <persistentEntries key="org.eclipse.elk.spacing.portsSurrounding" value="[top=0.0,left=10.0,bottom=0.0,right=10.0]"/>
+        <data xsi:type="krendering:KPolygon" >
+            <styles xsi:type="krendering:KLineWidth" lineWidth="1.300000">
+            </styles>
+            <styles xsi:type="krendering:KLineWidth" selection="true" lineWidth="2.000000">
+            </styles>
+            <styles xsi:type="krendering:KBackground"><color red="200" green="200" blue="250"/>
+                
+            </styles>
+            <styles xsi:type="krendering:KShadow" xOffset="2.000000" yOffset="2.000000">
+            </styles>
+            <points>
+                <x xsi:type="krendering:KLeftPosition" />
+                <y xsi:type="krendering:KTopPosition" />
+                
+            </points>
+            <points>
+                <x xsi:type="krendering:KLeftPosition" />
+                <y xsi:type="krendering:KBottomPosition" />
+                
+            </points>
+            <points>
+                <x xsi:type="krendering:KRightPosition" />
+                <y xsi:type="krendering:KBottomPosition" relative="0.200000"/>
+                
+            </points>
+            <points>
+                <x xsi:type="krendering:KRightPosition" />
+                <y xsi:type="krendering:KTopPosition" relative="0.200000"/>
+                
+            </points>
+            <points>
+                <x xsi:type="krendering:KLeftPosition" />
+                <y xsi:type="krendering:KTopPosition" />
+                
+            </points>
+            
+        </data>
+        <ports   width="5.000000" height="5.000000">
+            <persistentEntries key="org.eclipse.elk.port.borderOffset" value="-15."/>
+            <persistentEntries key="org.eclipse.elk.port.side" value="NORTH"/>
+            <data xsi:type="krendering:KRectangle" >
+                <styles xsi:type="krendering:KBackground"><color red="0" green="0" blue="0"/>
+                    
+                </styles>
+                
+            </data>
+            
+        </ports>
+        <ports   width="-0.100000" height="-0.100000">
+            <persistentEntries key="org.eclipse.elk.port.side" value="EAST"/>
+            <data xsi:type="krendering:KRectangle" >
+                <styles xsi:type="krendering:KInvisibility">
+                </styles>
+                
+            </data>
+            
+        </ports>
+        <ports   width="-0.100000" height="-0.100000">
+            <persistentEntries key="org.eclipse.elk.port.side" value="WEST"/>
+            <labels text="A">
+                <data xsi:type="krendering:KText">
+                    
+                </data>
+            </labels>
+            <data xsi:type="krendering:KRectangle" >
+                <styles xsi:type="krendering:KInvisibility">
+                </styles>
+                
+            </data>
+            
+        </ports>
+        <ports   width="-0.100000" height="-0.100000">
+            <persistentEntries key="org.eclipse.elk.port.side" value="WEST"/>
+            <labels text="B">
+                <data xsi:type="krendering:KText">
+                    
+                </data>
+            </labels>
+            <data xsi:type="krendering:KRectangle" >
+                <styles xsi:type="krendering:KInvisibility">
+                </styles>
+                
+            </data>
+            
+        </ports>
+        <ports   width="-0.100000" height="-0.100000">
+            <persistentEntries key="org.eclipse.elk.port.side" value="WEST"/>
+            <labels text="C">
+                <data xsi:type="krendering:KText">
+                    
+                </data>
+            </labels>
+            <data xsi:type="krendering:KRectangle" >
+                <styles xsi:type="krendering:KInvisibility">
+                </styles>
+                
+            </data>
+            
+        </ports>
+        <ports   width="-0.100000" height="-0.100000">
+            <persistentEntries key="org.eclipse.elk.port.side" value="WEST"/>
+            <labels text="else">
+                <data xsi:type="krendering:KText">
+                    
+                </data>
+            </labels>
+            <data xsi:type="krendering:KRectangle" >
+                <styles xsi:type="krendering:KInvisibility">
+                </styles>
+                
+            </data>
+            
+        </ports>
+        
+    </children>
+    <children   width="20.000000" height="40.000000" >
+        <persistentEntries key="org.eclipse.elk.portAlignment.north" value="CENTER"/>
+        <persistentEntries key="org.eclipse.elk.portAlignment.south" value="CENTER"/>
+        <persistentEntries key="org.eclipse.elk.partitioning.partition" value="1"/>
+        <persistentEntries key="org.eclipse.elk.portConstraints" value="FIXED_SIDE"/>
+        <persistentEntries key="org.eclipse.elk.layered.allowNonFlowPortsToSwitchSides" value="true"/>
+        <persistentEntries key="org.eclipse.elk.nodeSize.constraints" value="[NODE_LABELS, PORTS, PORT_LABELS, MINIMUM_SIZE]"/>
+        <persistentEntries key="org.eclipse.elk.spacing.portsSurrounding" value="[top=0.0,left=10.0,bottom=0.0,right=10.0]"/>
+        <data xsi:type="krendering:KPolygon" >
+            <styles xsi:type="krendering:KLineWidth" lineWidth="1.300000">
+            </styles>
+            <styles xsi:type="krendering:KLineWidth" selection="true" lineWidth="2.000000">
+            </styles>
+            <styles xsi:type="krendering:KBackground"><color red="200" green="200" blue="250"/>
+                
+            </styles>
+            <styles xsi:type="krendering:KShadow" xOffset="2.000000" yOffset="2.000000">
+            </styles>
+            <points>
+                <x xsi:type="krendering:KLeftPosition" />
+                <y xsi:type="krendering:KTopPosition" />
+                
+            </points>
+            <points>
+                <x xsi:type="krendering:KLeftPosition" />
+                <y xsi:type="krendering:KBottomPosition" />
+                
+            </points>
+            <points>
+                <x xsi:type="krendering:KRightPosition" />
+                <y xsi:type="krendering:KBottomPosition" relative="0.200000"/>
+                
+            </points>
+            <points>
+                <x xsi:type="krendering:KRightPosition" />
+                <y xsi:type="krendering:KTopPosition" relative="0.200000"/>
+                
+            </points>
+            <points>
+                <x xsi:type="krendering:KLeftPosition" />
+                <y xsi:type="krendering:KTopPosition" />
+                
+            </points>
+            
+        </data>
+        <ports   width="5.000000" height="5.000000">
+            <persistentEntries key="org.eclipse.elk.port.borderOffset" value="-4."/>
+            <persistentEntries key="org.eclipse.elk.port.side" value="NORTH"/>
+            <labels text="1">
+                <data xsi:type="krendering:KText">
+                    
+                </data>
+            </labels>
+            <data xsi:type="krendering:KRectangle" >
+                <styles xsi:type="krendering:KBackground"><color red="0" green="0" blue="0"/>
+                    
+                </styles>
+                
+            </data>
+            
+        </ports>
+        <ports   width="5.000000" height="5.000000">
+            <persistentEntries key="org.eclipse.elk.port.borderOffset" value="-11.84"/>
+            <persistentEntries key="org.eclipse.elk.port.side" value="NORTH"/>
+            <labels text="2">
+                <data xsi:type="krendering:KText">
+                    
+                </data>
+            </labels>
+            <data xsi:type="krendering:KRectangle" >
+                <styles xsi:type="krendering:KBackground"><color red="0" green="0" blue="0"/>
+                    
+                </styles>
+                
+            </data>
+            
+        </ports>
+        <ports   width="5.000000" height="5.000000">
+            <persistentEntries key="org.eclipse.elk.port.borderOffset" value="-19.68"/>
+            <persistentEntries key="org.eclipse.elk.port.side" value="NORTH"/>
+            <labels text="3">
+                <data xsi:type="krendering:KText">
+                    
+                </data>
+            </labels>
+            <data xsi:type="krendering:KRectangle" >
+                <styles xsi:type="krendering:KBackground"><color red="0" green="0" blue="0"/>
+                    
+                </styles>
+                
+            </data>
+            
+        </ports>
+        <ports   width="5.000000" height="5.000000">
+            <persistentEntries key="org.eclipse.elk.port.borderOffset" value="-27.52"/>
+            <persistentEntries key="org.eclipse.elk.port.side" value="NORTH"/>
+            <labels text="4">
+                <data xsi:type="krendering:KText">
+                    
+                </data>
+            </labels>
+            <data xsi:type="krendering:KRectangle" >
+                <styles xsi:type="krendering:KBackground"><color red="0" green="0" blue="0"/>
+                    
+                </styles>
+                
+            </data>
+            
+        </ports>
+        <ports   width="-0.100000" height="-0.100000">
+            <persistentEntries key="org.eclipse.elk.port.side" value="EAST"/>
+            <data xsi:type="krendering:KRectangle" >
+                <styles xsi:type="krendering:KInvisibility">
+                </styles>
+                
+            </data>
+            
+        </ports>
+        <ports   width="-0.100000" height="-0.100000">
+            <persistentEntries key="org.eclipse.elk.port.side" value="WEST"/>
+            <labels text="1">
+                <data xsi:type="krendering:KText">
+                    
+                </data>
+            </labels>
+            <data xsi:type="krendering:KRectangle" >
+                <styles xsi:type="krendering:KInvisibility">
+                </styles>
+                
+            </data>
+            
+        </ports>
+        <ports   width="-0.100000" height="-0.100000">
+            <persistentEntries key="org.eclipse.elk.port.side" value="WEST"/>
+            <labels text="2">
+                <data xsi:type="krendering:KText">
+                    
+                </data>
+            </labels>
+            <data xsi:type="krendering:KRectangle" >
+                <styles xsi:type="krendering:KInvisibility">
+                </styles>
+                
+            </data>
+            
+        </ports>
+        <ports   width="-0.100000" height="-0.100000">
+            <persistentEntries key="org.eclipse.elk.port.side" value="WEST"/>
+            <labels text="3">
+                <data xsi:type="krendering:KText">
+                    
+                </data>
+            </labels>
+            <data xsi:type="krendering:KRectangle" >
+                <styles xsi:type="krendering:KInvisibility">
+                </styles>
+                
+            </data>
+            
+        </ports>
+        <ports   width="-0.100000" height="-0.100000">
+            <persistentEntries key="org.eclipse.elk.port.side" value="WEST"/>
+            <labels text="4">
+                <data xsi:type="krendering:KText">
+                    
+                </data>
+            </labels>
+            <data xsi:type="krendering:KRectangle" >
+                <styles xsi:type="krendering:KInvisibility">
+                </styles>
+                
+            </data>
+            
+        </ports>
+        <ports   width="-0.100000" height="-0.100000">
+            <persistentEntries key="org.eclipse.elk.port.side" value="WEST"/>
+            <labels text="else">
+                <data xsi:type="krendering:KText">
+                    
+                </data>
+            </labels>
+            <data xsi:type="krendering:KRectangle" >
+                <styles xsi:type="krendering:KInvisibility">
+                </styles>
+                
+            </data>
+            
+        </ports>
+        
+    </children>
+    <children   width="20.000000" height="40.000000" >
+        <persistentEntries key="org.eclipse.elk.portAlignment.north" value="CENTER"/>
+        <persistentEntries key="org.eclipse.elk.portAlignment.south" value="CENTER"/>
+        <persistentEntries key="org.eclipse.elk.partitioning.partition" value="1"/>
+        <persistentEntries key="org.eclipse.elk.portConstraints" value="FIXED_SIDE"/>
+        <persistentEntries key="org.eclipse.elk.layered.allowNonFlowPortsToSwitchSides" value="true"/>
+        <persistentEntries key="org.eclipse.elk.nodeSize.constraints" value="[NODE_LABELS, PORTS, PORT_LABELS, MINIMUM_SIZE]"/>
+        <persistentEntries key="org.eclipse.elk.spacing.portsSurrounding" value="[top=0.0,left=10.0,bottom=0.0,right=10.0]"/>
+        <data xsi:type="krendering:KPolygon" >
+            <styles xsi:type="krendering:KLineWidth" lineWidth="1.300000">
+            </styles>
+            <styles xsi:type="krendering:KLineWidth" selection="true" lineWidth="2.000000">
+            </styles>
+            <styles xsi:type="krendering:KBackground"><color red="200" green="200" blue="250"/>
+                
+            </styles>
+            <styles xsi:type="krendering:KShadow" xOffset="2.000000" yOffset="2.000000">
+            </styles>
+            <points>
+                <x xsi:type="krendering:KLeftPosition" />
+                <y xsi:type="krendering:KTopPosition" />
+                
+            </points>
+            <points>
+                <x xsi:type="krendering:KLeftPosition" />
+                <y xsi:type="krendering:KBottomPosition" />
+                
+            </points>
+            <points>
+                <x xsi:type="krendering:KRightPosition" />
+                <y xsi:type="krendering:KBottomPosition" relative="0.200000"/>
+                
+            </points>
+            <points>
+                <x xsi:type="krendering:KRightPosition" />
+                <y xsi:type="krendering:KTopPosition" relative="0.200000"/>
+                
+            </points>
+            <points>
+                <x xsi:type="krendering:KLeftPosition" />
+                <y xsi:type="krendering:KTopPosition" />
+                
+            </points>
+            
+        </data>
+        <ports   width="5.000000" height="5.000000">
+            <persistentEntries key="org.eclipse.elk.port.borderOffset" value="-4."/>
+            <persistentEntries key="org.eclipse.elk.port.side" value="NORTH"/>
+            <labels text="1">
+                <data xsi:type="krendering:KText">
+                    
+                </data>
+            </labels>
+            <data xsi:type="krendering:KRectangle" >
+                <styles xsi:type="krendering:KBackground"><color red="0" green="0" blue="0"/>
+                    
+                </styles>
+                
+            </data>
+            
+        </ports>
+        <ports   width="5.000000" height="5.000000">
+            <persistentEntries key="org.eclipse.elk.port.borderOffset" value="-11.88"/>
+            <persistentEntries key="org.eclipse.elk.port.side" value="NORTH"/>
+            <labels text="2">
+                <data xsi:type="krendering:KText">
+                    
+                </data>
+            </labels>
+            <data xsi:type="krendering:KRectangle" >
+                <styles xsi:type="krendering:KBackground"><color red="0" green="0" blue="0"/>
+                    
+                </styles>
+                
+            </data>
+            
+        </ports>
+        <ports   width="5.000000" height="5.000000">
+            <persistentEntries key="org.eclipse.elk.port.borderOffset" value="-19.76"/>
+            <persistentEntries key="org.eclipse.elk.port.side" value="NORTH"/>
+            <labels text="3">
+                <data xsi:type="krendering:KText">
+                    
+                </data>
+            </labels>
+            <data xsi:type="krendering:KRectangle" >
+                <styles xsi:type="krendering:KBackground"><color red="0" green="0" blue="0"/>
+                    
+                </styles>
+                
+            </data>
+            
+        </ports>
+        <ports   width="-0.100000" height="-0.100000">
+            <persistentEntries key="org.eclipse.elk.port.side" value="EAST"/>
+            <data xsi:type="krendering:KRectangle" >
+                <styles xsi:type="krendering:KInvisibility">
+                </styles>
+                
+            </data>
+            
+        </ports>
+        <ports   width="-0.100000" height="-0.100000">
+            <persistentEntries key="org.eclipse.elk.port.side" value="WEST"/>
+            <labels text="1">
+                <data xsi:type="krendering:KText">
+                    
+                </data>
+            </labels>
+            <data xsi:type="krendering:KRectangle" >
+                <styles xsi:type="krendering:KInvisibility">
+                </styles>
+                
+            </data>
+            
+        </ports>
+        <ports   width="-0.100000" height="-0.100000">
+            <persistentEntries key="org.eclipse.elk.port.side" value="WEST"/>
+            <labels text="2">
+                <data xsi:type="krendering:KText">
+                    
+                </data>
+            </labels>
+            <data xsi:type="krendering:KRectangle" >
+                <styles xsi:type="krendering:KInvisibility">
+                </styles>
+                
+            </data>
+            
+        </ports>
+        <ports   width="-0.100000" height="-0.100000">
+            <persistentEntries key="org.eclipse.elk.port.side" value="WEST"/>
+            <labels text="3">
+                <data xsi:type="krendering:KText">
+                    
+                </data>
+            </labels>
+            <data xsi:type="krendering:KRectangle" >
+                <styles xsi:type="krendering:KInvisibility">
+                </styles>
+                
+            </data>
+            
+        </ports>
+        <ports   width="-0.100000" height="-0.100000">
+            <persistentEntries key="org.eclipse.elk.port.side" value="WEST"/>
+            <labels text="else">
+                <data xsi:type="krendering:KText">
+                    
+                </data>
+            </labels>
+            <data xsi:type="krendering:KRectangle" >
+                <styles xsi:type="krendering:KInvisibility">
+                </styles>
+                
+            </data>
+            
+        </ports>
+        
+    </children>
+    
+</children>
+<children   width="20.000000" height="20.000000" >
+    <persistentEntries key="org.eclipse.elk.portAlignment.north" value="CENTER"/>
+    <persistentEntries key="org.eclipse.elk.portAlignment.south" value="CENTER"/>
+    <persistentEntries key="org.eclipse.elk.partitioning.partition" value="1"/>
+    <persistentEntries key="org.eclipse.elk.portConstraints" value="FIXED_SIDE"/>
+    <persistentEntries key="org.eclipse.elk.layered.allowNonFlowPortsToSwitchSides" value="true"/>
+    <persistentEntries key="org.eclipse.elk.spacing.portsSurrounding" value="[top=12.0,left=10.0,bottom=0.0,right=10.0]"/>
+    <persistentEntries key="de.cau.cs.kieler.klighd.expand" value="false"/>
+    <persistentEntries key="org.eclipse.elk.nodeSize.constraints" value="[NODE_LABELS, PORTS, PORT_LABELS, MINIMUM_SIZE]"/>
+    <persistentEntries key="org.eclipse.elk.partitioning.activate" value="true"/>
+    <persistentEntries key="org.eclipse.elk.portLabels.placement" value="[INSIDE, NEXT_TO_PORT_IF_POSSIBLE]"/>
+    <data xsi:type="krendering:KRectangle" >
+        <styles xsi:type="krendering:KBackground"><color red="174" green="174" blue="192"/>
+            
+        </styles>
+        <styles xsi:type="krendering:KShadow" xOffset="4.000000" yOffset="4.000000">
+        </styles>
+        <children xsi:type="krendering:KChildArea">
+            <placementData xsi:type="krendering:KAreaPlacementData">
+                <topLeft>
+                    <x xsi:type="krendering:KLeftPosition" absolute="15.000000"/>
+                    <y xsi:type="krendering:KTopPosition" absolute="10.000000"/>
                     
                 </topLeft>
                 <bottomRight>
@@ -1393,7 +1398,7 @@
             <persistentEntries key="klighd.isNodeTitle" value="true"/>
             <styles xsi:type="krendering:KFontBold" selection="true">
             </styles>
-            <styles xsi:type="krendering:KFontSize" size="11">
+            <styles xsi:type="krendering:KFontSize" size="13">
             </styles>
             <placementData xsi:type="krendering:KPointPlacementData" verticalAlignment="CENTER" horizontalAlignment="CENTER" horizontalMargin="2.000000" >
                 <referencePoint>
@@ -1484,11 +1489,779 @@
     
 </children>
 <children   width="20.000000" height="20.000000" >
-    <persistentEntries key="org.eclipse.elk.spacing.individual" value="org.eclipse.elk.spacing.portsSurrounding:[top=0.0,left=0.0,bottom=0.0,right=0.0]"/>
-    <persistentEntries key="org.eclipse.elk.layered.allowNonFlowPortsToSwitchSides" value="true"/>
-    <persistentEntries key="org.eclipse.elk.portConstraints" value="FIXED_ORDER"/>
-    <persistentEntries key="org.eclipse.elk.portAlignment.south" value="CENTER"/>
     <persistentEntries key="org.eclipse.elk.portAlignment.north" value="CENTER"/>
+    <persistentEntries key="org.eclipse.elk.portAlignment.south" value="CENTER"/>
+    <persistentEntries key="org.eclipse.elk.partitioning.partition" value="1"/>
+    <persistentEntries key="org.eclipse.elk.portConstraints" value="FIXED_SIDE"/>
+    <persistentEntries key="org.eclipse.elk.layered.allowNonFlowPortsToSwitchSides" value="true"/>
+    <persistentEntries key="org.eclipse.elk.spacing.portsSurrounding" value="[top=12.0,left=10.0,bottom=0.0,right=10.0]"/>
+    <persistentEntries key="de.cau.cs.kieler.klighd.expand" value="false"/>
+    <persistentEntries key="org.eclipse.elk.nodeSize.constraints" value="[NODE_LABELS, PORTS, PORT_LABELS, MINIMUM_SIZE]"/>
+    <persistentEntries key="org.eclipse.elk.partitioning.activate" value="true"/>
+    <persistentEntries key="org.eclipse.elk.portLabels.placement" value="[INSIDE, NEXT_TO_PORT_IF_POSSIBLE]"/>
+    <data xsi:type="krendering:KRectangle" >
+        <styles xsi:type="krendering:KBackground"><color red="174" green="174" blue="192"/>
+            
+        </styles>
+        <styles xsi:type="krendering:KShadow" xOffset="4.000000" yOffset="4.000000">
+        </styles>
+        <children xsi:type="krendering:KChildArea">
+            <placementData xsi:type="krendering:KAreaPlacementData">
+                <topLeft>
+                    <x xsi:type="krendering:KLeftPosition" absolute="15.000000"/>
+                    <y xsi:type="krendering:KTopPosition" absolute="10.000000"/>
+                    
+                </topLeft>
+                <bottomRight>
+                    <x xsi:type="krendering:KRightPosition" absolute="10.000000"/>
+                    <y xsi:type="krendering:KBottomPosition" absolute="10.000000"/>
+                    
+                </bottomRight>
+                
+            </placementData>
+            
+        </children>
+        <actions actionId="de.cau.cs.kieler.klighd.actions.CollapseExpandAction" trigger="DOUBLECLICK"/>
+        <children xsi:type="krendering:KText" text="fulladder">
+            <persistentEntries key="klighd.isNodeTitle" value="true"/>
+            <styles xsi:type="krendering:KFontBold" selection="true">
+            </styles>
+            <styles xsi:type="krendering:KFontSize" size="13">
+            </styles>
+            <placementData xsi:type="krendering:KPointPlacementData" verticalAlignment="CENTER" horizontalAlignment="CENTER" horizontalMargin="2.000000" >
+                <referencePoint>
+                    <x xsi:type="krendering:KLeftPosition" relative="0.500000"/>
+                    <y xsi:type="krendering:KTopPosition" absolute="15.000000"/>
+                    
+                </referencePoint>
+            </placementData>
+            
+        </children>
+        
+    </data>
+    <ports   width="5.000000" height="5.000000">
+        <persistentEntries key="org.eclipse.elk.port.side" value="EAST"/>
+        <labels text="e">
+            <data xsi:type="krendering:KText">
+                
+            </data>
+        </labels>
+        <data xsi:type="krendering:KRectangle" >
+            <styles xsi:type="krendering:KBackground"><color red="0" green="0" blue="0"/>
+                
+            </styles>
+            
+        </data>
+        
+    </ports>
+    <ports   width="5.000000" height="5.000000">
+        <persistentEntries key="org.eclipse.elk.port.side" value="EAST"/>
+        <labels text="r">
+            <data xsi:type="krendering:KText">
+                
+            </data>
+        </labels>
+        <data xsi:type="krendering:KRectangle" >
+            <styles xsi:type="krendering:KBackground"><color red="0" green="0" blue="0"/>
+                
+            </styles>
+            
+        </data>
+        
+    </ports>
+    <ports   width="5.000000" height="5.000000">
+        <persistentEntries key="org.eclipse.elk.port.side" value="EAST"/>
+        <labels text="c">
+            <data xsi:type="krendering:KText">
+                
+            </data>
+        </labels>
+        <data xsi:type="krendering:KRectangle" >
+            <styles xsi:type="krendering:KBackground"><color red="0" green="0" blue="0"/>
+                
+            </styles>
+            
+        </data>
+        
+    </ports>
+    <ports   width="5.000000" height="5.000000">
+        <persistentEntries key="org.eclipse.elk.port.side" value="WEST"/>
+        <labels text="b">
+            <data xsi:type="krendering:KText">
+                
+            </data>
+        </labels>
+        <data xsi:type="krendering:KRectangle" >
+            <styles xsi:type="krendering:KBackground"><color red="0" green="0" blue="0"/>
+                
+            </styles>
+            
+        </data>
+        
+    </ports>
+    <ports   width="5.000000" height="5.000000">
+        <persistentEntries key="org.eclipse.elk.port.side" value="WEST"/>
+        <labels text="a">
+            <data xsi:type="krendering:KText">
+                
+            </data>
+        </labels>
+        <data xsi:type="krendering:KRectangle" >
+            <styles xsi:type="krendering:KBackground"><color red="0" green="0" blue="0"/>
+                
+            </styles>
+            
+        </data>
+        
+    </ports>
+    
+</children>
+<children   width="20.000000" height="20.000000" >
+    <persistentEntries key="org.eclipse.elk.portAlignment.north" value="CENTER"/>
+    <persistentEntries key="org.eclipse.elk.portAlignment.south" value="CENTER"/>
+    <persistentEntries key="org.eclipse.elk.partitioning.partition" value="1"/>
+    <persistentEntries key="org.eclipse.elk.portConstraints" value="FIXED_SIDE"/>
+    <persistentEntries key="org.eclipse.elk.layered.allowNonFlowPortsToSwitchSides" value="true"/>
+    <persistentEntries key="org.eclipse.elk.spacing.portsSurrounding" value="[top=12.0,left=10.0,bottom=0.0,right=10.0]"/>
+    <persistentEntries key="de.cau.cs.kieler.klighd.expand" value="false"/>
+    <persistentEntries key="org.eclipse.elk.nodeSize.constraints" value="[NODE_LABELS, PORTS, PORT_LABELS, MINIMUM_SIZE]"/>
+    <persistentEntries key="org.eclipse.elk.partitioning.activate" value="true"/>
+    <persistentEntries key="org.eclipse.elk.portLabels.placement" value="[INSIDE, NEXT_TO_PORT_IF_POSSIBLE]"/>
+    <data xsi:type="krendering:KRectangle" >
+        <styles xsi:type="krendering:KBackground"><color red="184" green="184" blue="202"/>
+            
+        </styles>
+        <styles xsi:type="krendering:KShadow" xOffset="4.000000" yOffset="4.000000">
+        </styles>
+        <children xsi:type="krendering:KChildArea">
+            <placementData xsi:type="krendering:KAreaPlacementData">
+                <topLeft>
+                    <x xsi:type="krendering:KLeftPosition" absolute="15.000000"/>
+                    <y xsi:type="krendering:KTopPosition" absolute="10.000000"/>
+                    
+                </topLeft>
+                <bottomRight>
+                    <x xsi:type="krendering:KRightPosition" absolute="10.000000"/>
+                    <y xsi:type="krendering:KBottomPosition" absolute="10.000000"/>
+                    
+                </bottomRight>
+                
+            </placementData>
+            
+        </children>
+        <actions actionId="de.cau.cs.kieler.klighd.actions.CollapseExpandAction" trigger="DOUBLECLICK"/>
+        <children xsi:type="krendering:KText" text="fulladder">
+            <persistentEntries key="klighd.isNodeTitle" value="true"/>
+            <styles xsi:type="krendering:KFontBold" selection="true">
+            </styles>
+            <styles xsi:type="krendering:KFontSize" size="13">
+            </styles>
+            <placementData xsi:type="krendering:KPointPlacementData" verticalAlignment="CENTER" horizontalAlignment="CENTER" horizontalMargin="2.000000" >
+                <referencePoint>
+                    <x xsi:type="krendering:KLeftPosition" relative="0.500000"/>
+                    <y xsi:type="krendering:KTopPosition" absolute="15.000000"/>
+                    
+                </referencePoint>
+            </placementData>
+            
+        </children>
+        
+    </data>
+    <ports   width="5.000000" height="5.000000">
+        <persistentEntries key="org.eclipse.elk.port.side" value="EAST"/>
+        <labels text="e">
+            <data xsi:type="krendering:KText">
+                
+            </data>
+        </labels>
+        <data xsi:type="krendering:KRectangle" >
+            <styles xsi:type="krendering:KBackground"><color red="0" green="0" blue="0"/>
+                
+            </styles>
+            
+        </data>
+        
+    </ports>
+    <ports   width="5.000000" height="5.000000">
+        <persistentEntries key="org.eclipse.elk.port.side" value="EAST"/>
+        <labels text="r">
+            <data xsi:type="krendering:KText">
+                
+            </data>
+        </labels>
+        <data xsi:type="krendering:KRectangle" >
+            <styles xsi:type="krendering:KBackground"><color red="0" green="0" blue="0"/>
+                
+            </styles>
+            
+        </data>
+        
+    </ports>
+    <ports   width="5.000000" height="5.000000">
+        <persistentEntries key="org.eclipse.elk.port.side" value="EAST"/>
+        <labels text="c">
+            <data xsi:type="krendering:KText">
+                
+            </data>
+        </labels>
+        <data xsi:type="krendering:KRectangle" >
+            <styles xsi:type="krendering:KBackground"><color red="0" green="0" blue="0"/>
+                
+            </styles>
+            
+        </data>
+        
+    </ports>
+    <ports   width="5.000000" height="5.000000">
+        <persistentEntries key="org.eclipse.elk.port.side" value="WEST"/>
+        <labels text="b">
+            <data xsi:type="krendering:KText">
+                
+            </data>
+        </labels>
+        <data xsi:type="krendering:KRectangle" >
+            <styles xsi:type="krendering:KBackground"><color red="0" green="0" blue="0"/>
+                
+            </styles>
+            
+        </data>
+        
+    </ports>
+    <ports   width="5.000000" height="5.000000">
+        <persistentEntries key="org.eclipse.elk.port.side" value="WEST"/>
+        <labels text="a">
+            <data xsi:type="krendering:KText">
+                
+            </data>
+        </labels>
+        <data xsi:type="krendering:KRectangle" >
+            <styles xsi:type="krendering:KBackground"><color red="0" green="0" blue="0"/>
+                
+            </styles>
+            
+        </data>
+        
+    </ports>
+    
+</children>
+<children   width="20.000000" height="20.000000" >
+    <persistentEntries key="org.eclipse.elk.portAlignment.north" value="CENTER"/>
+    <persistentEntries key="org.eclipse.elk.portAlignment.south" value="CENTER"/>
+    <persistentEntries key="org.eclipse.elk.partitioning.partition" value="1"/>
+    <persistentEntries key="org.eclipse.elk.portConstraints" value="FIXED_SIDE"/>
+    <persistentEntries key="org.eclipse.elk.layered.allowNonFlowPortsToSwitchSides" value="true"/>
+    <persistentEntries key="org.eclipse.elk.spacing.portsSurrounding" value="[top=12.0,left=10.0,bottom=0.0,right=10.0]"/>
+    <persistentEntries key="de.cau.cs.kieler.klighd.expand" value="false"/>
+    <persistentEntries key="org.eclipse.elk.nodeSize.constraints" value="[NODE_LABELS, PORTS, PORT_LABELS, MINIMUM_SIZE]"/>
+    <persistentEntries key="org.eclipse.elk.partitioning.activate" value="true"/>
+    <persistentEntries key="org.eclipse.elk.portLabels.placement" value="[INSIDE, NEXT_TO_PORT_IF_POSSIBLE]"/>
+    <data xsi:type="krendering:KRectangle" >
+        <styles xsi:type="krendering:KBackground"><color red="194" green="194" blue="212"/>
+            
+        </styles>
+        <styles xsi:type="krendering:KShadow" xOffset="4.000000" yOffset="4.000000">
+        </styles>
+        <children xsi:type="krendering:KChildArea">
+            <placementData xsi:type="krendering:KAreaPlacementData">
+                <topLeft>
+                    <x xsi:type="krendering:KLeftPosition" absolute="15.000000"/>
+                    <y xsi:type="krendering:KTopPosition" absolute="10.000000"/>
+                    
+                </topLeft>
+                <bottomRight>
+                    <x xsi:type="krendering:KRightPosition" absolute="10.000000"/>
+                    <y xsi:type="krendering:KBottomPosition" absolute="10.000000"/>
+                    
+                </bottomRight>
+                
+            </placementData>
+            
+        </children>
+        <actions actionId="de.cau.cs.kieler.klighd.actions.CollapseExpandAction" trigger="DOUBLECLICK"/>
+        <children xsi:type="krendering:KText" text="fulladder">
+            <persistentEntries key="klighd.isNodeTitle" value="true"/>
+            <styles xsi:type="krendering:KFontBold" selection="true">
+            </styles>
+            <styles xsi:type="krendering:KFontSize" size="13">
+            </styles>
+            <placementData xsi:type="krendering:KPointPlacementData" verticalAlignment="CENTER" horizontalAlignment="CENTER" horizontalMargin="2.000000" >
+                <referencePoint>
+                    <x xsi:type="krendering:KLeftPosition" relative="0.500000"/>
+                    <y xsi:type="krendering:KTopPosition" absolute="15.000000"/>
+                    
+                </referencePoint>
+            </placementData>
+            
+        </children>
+        
+    </data>
+    <ports   width="5.000000" height="5.000000">
+        <persistentEntries key="org.eclipse.elk.port.side" value="EAST"/>
+        <labels text="e">
+            <data xsi:type="krendering:KText">
+                
+            </data>
+        </labels>
+        <data xsi:type="krendering:KRectangle" >
+            <styles xsi:type="krendering:KBackground"><color red="0" green="0" blue="0"/>
+                
+            </styles>
+            
+        </data>
+        
+    </ports>
+    <ports   width="5.000000" height="5.000000">
+        <persistentEntries key="org.eclipse.elk.port.side" value="EAST"/>
+        <labels text="r">
+            <data xsi:type="krendering:KText">
+                
+            </data>
+        </labels>
+        <data xsi:type="krendering:KRectangle" >
+            <styles xsi:type="krendering:KBackground"><color red="0" green="0" blue="0"/>
+                
+            </styles>
+            
+        </data>
+        
+    </ports>
+    <ports   width="5.000000" height="5.000000">
+        <persistentEntries key="org.eclipse.elk.port.side" value="EAST"/>
+        <labels text="c">
+            <data xsi:type="krendering:KText">
+                
+            </data>
+        </labels>
+        <data xsi:type="krendering:KRectangle" >
+            <styles xsi:type="krendering:KBackground"><color red="0" green="0" blue="0"/>
+                
+            </styles>
+            
+        </data>
+        
+    </ports>
+    <ports   width="5.000000" height="5.000000">
+        <persistentEntries key="org.eclipse.elk.port.side" value="WEST"/>
+        <labels text="b">
+            <data xsi:type="krendering:KText">
+                
+            </data>
+        </labels>
+        <data xsi:type="krendering:KRectangle" >
+            <styles xsi:type="krendering:KBackground"><color red="0" green="0" blue="0"/>
+                
+            </styles>
+            
+        </data>
+        
+    </ports>
+    <ports   width="5.000000" height="5.000000">
+        <persistentEntries key="org.eclipse.elk.port.side" value="WEST"/>
+        <labels text="a">
+            <data xsi:type="krendering:KText">
+                
+            </data>
+        </labels>
+        <data xsi:type="krendering:KRectangle" >
+            <styles xsi:type="krendering:KBackground"><color red="0" green="0" blue="0"/>
+                
+            </styles>
+            
+        </data>
+        
+    </ports>
+    
+</children>
+<children   width="20.000000" height="20.000000" >
+    <persistentEntries key="org.eclipse.elk.portAlignment.north" value="CENTER"/>
+    <persistentEntries key="org.eclipse.elk.portAlignment.south" value="CENTER"/>
+    <persistentEntries key="org.eclipse.elk.partitioning.partition" value="1"/>
+    <persistentEntries key="org.eclipse.elk.portConstraints" value="FIXED_SIDE"/>
+    <persistentEntries key="org.eclipse.elk.layered.allowNonFlowPortsToSwitchSides" value="true"/>
+    <persistentEntries key="org.eclipse.elk.spacing.portsSurrounding" value="[top=12.0,left=10.0,bottom=0.0,right=10.0]"/>
+    <persistentEntries key="de.cau.cs.kieler.klighd.expand" value="false"/>
+    <persistentEntries key="org.eclipse.elk.nodeSize.constraints" value="[NODE_LABELS, PORTS, PORT_LABELS, MINIMUM_SIZE]"/>
+    <persistentEntries key="org.eclipse.elk.partitioning.activate" value="true"/>
+    <persistentEntries key="org.eclipse.elk.portLabels.placement" value="[INSIDE, NEXT_TO_PORT_IF_POSSIBLE]"/>
+    <data xsi:type="krendering:KRectangle" >
+        <styles xsi:type="krendering:KBackground"><color red="204" green="204" blue="222"/>
+            
+        </styles>
+        <styles xsi:type="krendering:KShadow" xOffset="4.000000" yOffset="4.000000">
+        </styles>
+        <children xsi:type="krendering:KChildArea">
+            <placementData xsi:type="krendering:KAreaPlacementData">
+                <topLeft>
+                    <x xsi:type="krendering:KLeftPosition" absolute="15.000000"/>
+                    <y xsi:type="krendering:KTopPosition" absolute="10.000000"/>
+                    
+                </topLeft>
+                <bottomRight>
+                    <x xsi:type="krendering:KRightPosition" absolute="10.000000"/>
+                    <y xsi:type="krendering:KBottomPosition" absolute="10.000000"/>
+                    
+                </bottomRight>
+                
+            </placementData>
+            
+        </children>
+        <actions actionId="de.cau.cs.kieler.klighd.actions.CollapseExpandAction" trigger="DOUBLECLICK"/>
+        <children xsi:type="krendering:KText" text="fulladder">
+            <persistentEntries key="klighd.isNodeTitle" value="true"/>
+            <styles xsi:type="krendering:KFontBold" selection="true">
+            </styles>
+            <styles xsi:type="krendering:KFontSize" size="13">
+            </styles>
+            <placementData xsi:type="krendering:KPointPlacementData" verticalAlignment="CENTER" horizontalAlignment="CENTER" horizontalMargin="2.000000" >
+                <referencePoint>
+                    <x xsi:type="krendering:KLeftPosition" relative="0.500000"/>
+                    <y xsi:type="krendering:KTopPosition" absolute="15.000000"/>
+                    
+                </referencePoint>
+            </placementData>
+            
+        </children>
+        
+    </data>
+    <ports   width="5.000000" height="5.000000">
+        <persistentEntries key="org.eclipse.elk.port.side" value="EAST"/>
+        <labels text="e">
+            <data xsi:type="krendering:KText">
+                
+            </data>
+        </labels>
+        <data xsi:type="krendering:KRectangle" >
+            <styles xsi:type="krendering:KBackground"><color red="0" green="0" blue="0"/>
+                
+            </styles>
+            
+        </data>
+        
+    </ports>
+    <ports   width="5.000000" height="5.000000">
+        <persistentEntries key="org.eclipse.elk.port.side" value="EAST"/>
+        <labels text="r">
+            <data xsi:type="krendering:KText">
+                
+            </data>
+        </labels>
+        <data xsi:type="krendering:KRectangle" >
+            <styles xsi:type="krendering:KBackground"><color red="0" green="0" blue="0"/>
+                
+            </styles>
+            
+        </data>
+        
+    </ports>
+    <ports   width="5.000000" height="5.000000">
+        <persistentEntries key="org.eclipse.elk.port.side" value="EAST"/>
+        <labels text="c">
+            <data xsi:type="krendering:KText">
+                
+            </data>
+        </labels>
+        <data xsi:type="krendering:KRectangle" >
+            <styles xsi:type="krendering:KBackground"><color red="0" green="0" blue="0"/>
+                
+            </styles>
+            
+        </data>
+        
+    </ports>
+    <ports   width="5.000000" height="5.000000">
+        <persistentEntries key="org.eclipse.elk.port.side" value="WEST"/>
+        <labels text="b">
+            <data xsi:type="krendering:KText">
+                
+            </data>
+        </labels>
+        <data xsi:type="krendering:KRectangle" >
+            <styles xsi:type="krendering:KBackground"><color red="0" green="0" blue="0"/>
+                
+            </styles>
+            
+        </data>
+        
+    </ports>
+    <ports   width="5.000000" height="5.000000">
+        <persistentEntries key="org.eclipse.elk.port.side" value="WEST"/>
+        <labels text="a">
+            <data xsi:type="krendering:KText">
+                
+            </data>
+        </labels>
+        <data xsi:type="krendering:KRectangle" >
+            <styles xsi:type="krendering:KBackground"><color red="0" green="0" blue="0"/>
+                
+            </styles>
+            
+        </data>
+        
+    </ports>
+    
+</children>
+<children   width="20.000000" height="20.000000" >
+    <persistentEntries key="org.eclipse.elk.portAlignment.north" value="CENTER"/>
+    <persistentEntries key="org.eclipse.elk.portAlignment.south" value="CENTER"/>
+    <persistentEntries key="org.eclipse.elk.partitioning.partition" value="1"/>
+    <persistentEntries key="org.eclipse.elk.portConstraints" value="FIXED_SIDE"/>
+    <persistentEntries key="org.eclipse.elk.layered.allowNonFlowPortsToSwitchSides" value="true"/>
+    <persistentEntries key="org.eclipse.elk.spacing.portsSurrounding" value="[top=12.0,left=10.0,bottom=0.0,right=10.0]"/>
+    <persistentEntries key="de.cau.cs.kieler.klighd.expand" value="false"/>
+    <persistentEntries key="org.eclipse.elk.nodeSize.constraints" value="[NODE_LABELS, PORTS, PORT_LABELS, MINIMUM_SIZE]"/>
+    <persistentEntries key="org.eclipse.elk.partitioning.activate" value="true"/>
+    <persistentEntries key="org.eclipse.elk.portLabels.placement" value="[INSIDE, NEXT_TO_PORT_IF_POSSIBLE]"/>
+    <data xsi:type="krendering:KRectangle" >
+        <styles xsi:type="krendering:KBackground"><color red="214" green="214" blue="232"/>
+            
+        </styles>
+        <styles xsi:type="krendering:KShadow" xOffset="4.000000" yOffset="4.000000">
+        </styles>
+        <children xsi:type="krendering:KChildArea">
+            <placementData xsi:type="krendering:KAreaPlacementData">
+                <topLeft>
+                    <x xsi:type="krendering:KLeftPosition" absolute="15.000000"/>
+                    <y xsi:type="krendering:KTopPosition" absolute="10.000000"/>
+                    
+                </topLeft>
+                <bottomRight>
+                    <x xsi:type="krendering:KRightPosition" absolute="10.000000"/>
+                    <y xsi:type="krendering:KBottomPosition" absolute="10.000000"/>
+                    
+                </bottomRight>
+                
+            </placementData>
+            
+        </children>
+        <actions actionId="de.cau.cs.kieler.klighd.actions.CollapseExpandAction" trigger="DOUBLECLICK"/>
+        <children xsi:type="krendering:KText" text="fulladder">
+            <persistentEntries key="klighd.isNodeTitle" value="true"/>
+            <styles xsi:type="krendering:KFontBold" selection="true">
+            </styles>
+            <styles xsi:type="krendering:KFontSize" size="13">
+            </styles>
+            <placementData xsi:type="krendering:KPointPlacementData" verticalAlignment="CENTER" horizontalAlignment="CENTER" horizontalMargin="2.000000" >
+                <referencePoint>
+                    <x xsi:type="krendering:KLeftPosition" relative="0.500000"/>
+                    <y xsi:type="krendering:KTopPosition" absolute="15.000000"/>
+                    
+                </referencePoint>
+            </placementData>
+            
+        </children>
+        
+    </data>
+    <ports   width="5.000000" height="5.000000">
+        <persistentEntries key="org.eclipse.elk.port.side" value="EAST"/>
+        <labels text="e">
+            <data xsi:type="krendering:KText">
+                
+            </data>
+        </labels>
+        <data xsi:type="krendering:KRectangle" >
+            <styles xsi:type="krendering:KBackground"><color red="0" green="0" blue="0"/>
+                
+            </styles>
+            
+        </data>
+        
+    </ports>
+    <ports   width="5.000000" height="5.000000">
+        <persistentEntries key="org.eclipse.elk.port.side" value="EAST"/>
+        <labels text="r">
+            <data xsi:type="krendering:KText">
+                
+            </data>
+        </labels>
+        <data xsi:type="krendering:KRectangle" >
+            <styles xsi:type="krendering:KBackground"><color red="0" green="0" blue="0"/>
+                
+            </styles>
+            
+        </data>
+        
+    </ports>
+    <ports   width="5.000000" height="5.000000">
+        <persistentEntries key="org.eclipse.elk.port.side" value="EAST"/>
+        <labels text="c">
+            <data xsi:type="krendering:KText">
+                
+            </data>
+        </labels>
+        <data xsi:type="krendering:KRectangle" >
+            <styles xsi:type="krendering:KBackground"><color red="0" green="0" blue="0"/>
+                
+            </styles>
+            
+        </data>
+        
+    </ports>
+    <ports   width="5.000000" height="5.000000">
+        <persistentEntries key="org.eclipse.elk.port.side" value="WEST"/>
+        <labels text="b">
+            <data xsi:type="krendering:KText">
+                
+            </data>
+        </labels>
+        <data xsi:type="krendering:KRectangle" >
+            <styles xsi:type="krendering:KBackground"><color red="0" green="0" blue="0"/>
+                
+            </styles>
+            
+        </data>
+        
+    </ports>
+    <ports   width="5.000000" height="5.000000">
+        <persistentEntries key="org.eclipse.elk.port.side" value="WEST"/>
+        <labels text="a">
+            <data xsi:type="krendering:KText">
+                
+            </data>
+        </labels>
+        <data xsi:type="krendering:KRectangle" >
+            <styles xsi:type="krendering:KBackground"><color red="0" green="0" blue="0"/>
+                
+            </styles>
+            
+        </data>
+        
+    </ports>
+    
+</children>
+<children   width="20.000000" height="20.000000" >
+    <persistentEntries key="org.eclipse.elk.portAlignment.north" value="CENTER"/>
+    <persistentEntries key="org.eclipse.elk.portAlignment.south" value="CENTER"/>
+    <persistentEntries key="org.eclipse.elk.partitioning.partition" value="1"/>
+    <persistentEntries key="org.eclipse.elk.portConstraints" value="FIXED_SIDE"/>
+    <persistentEntries key="org.eclipse.elk.layered.allowNonFlowPortsToSwitchSides" value="true"/>
+    <persistentEntries key="org.eclipse.elk.spacing.portsSurrounding" value="[top=12.0,left=10.0,bottom=0.0,right=10.0]"/>
+    <persistentEntries key="de.cau.cs.kieler.klighd.expand" value="true"/>
+    <persistentEntries key="org.eclipse.elk.nodeSize.constraints" value="[NODE_LABELS, PORTS, PORT_LABELS, MINIMUM_SIZE]"/>
+    <persistentEntries key="org.eclipse.elk.partitioning.activate" value="true"/>
+    <data xsi:type="krendering:KRectangle" >
+        <styles xsi:type="krendering:KBackground"><color red="224" green="224" blue="242"/>
+            
+        </styles>
+        <styles xsi:type="krendering:KShadow" xOffset="4.000000" yOffset="4.000000">
+        </styles>
+        <children xsi:type="krendering:KChildArea">
+            <placementData xsi:type="krendering:KAreaPlacementData">
+                <topLeft>
+                    <x xsi:type="krendering:KLeftPosition" absolute="15.000000"/>
+                    <y xsi:type="krendering:KTopPosition" absolute="10.000000"/>
+                    
+                </topLeft>
+                <bottomRight>
+                    <x xsi:type="krendering:KRightPosition" absolute="10.000000"/>
+                    <y xsi:type="krendering:KBottomPosition" absolute="10.000000"/>
+                    
+                </bottomRight>
+                
+            </placementData>
+            
+        </children>
+        <actions actionId="de.cau.cs.kieler.klighd.actions.CollapseExpandAction" trigger="DOUBLECLICK"/>
+        <children xsi:type="krendering:KText" text="fulladder">
+            <persistentEntries key="klighd.isNodeTitle" value="true"/>
+            <styles xsi:type="krendering:KFontBold" selection="true">
+            </styles>
+            <styles xsi:type="krendering:KFontSize" size="13">
+            </styles>
+            <placementData xsi:type="krendering:KPointPlacementData" verticalAlignment="CENTER" horizontalAlignment="CENTER" horizontalMargin="2.000000" >
+                <referencePoint>
+                    <x xsi:type="krendering:KLeftPosition" relative="0.500000"/>
+                    <y xsi:type="krendering:KTopPosition" absolute="15.000000"/>
+                    
+                </referencePoint>
+            </placementData>
+            
+        </children>
+        
+    </data>
+    <ports   width="5.000000" height="5.000000">
+        <persistentEntries key="org.eclipse.elk.port.side" value="EAST"/>
+        <labels text="e">
+            <data xsi:type="krendering:KText">
+                
+            </data>
+        </labels>
+        <data xsi:type="krendering:KRectangle" >
+            <styles xsi:type="krendering:KBackground"><color red="0" green="0" blue="0"/>
+                
+            </styles>
+            
+        </data>
+        
+    </ports>
+    <ports   width="5.000000" height="5.000000">
+        <persistentEntries key="org.eclipse.elk.port.side" value="EAST"/>
+        <labels text="r">
+            <data xsi:type="krendering:KText">
+                
+            </data>
+        </labels>
+        <data xsi:type="krendering:KRectangle" >
+            <styles xsi:type="krendering:KBackground"><color red="0" green="0" blue="0"/>
+                
+            </styles>
+            
+        </data>
+        
+    </ports>
+    <ports   width="5.000000" height="5.000000">
+        <persistentEntries key="org.eclipse.elk.port.side" value="EAST"/>
+        <labels text="c">
+            <data xsi:type="krendering:KText">
+                
+            </data>
+        </labels>
+        <data xsi:type="krendering:KRectangle" >
+            <styles xsi:type="krendering:KBackground"><color red="0" green="0" blue="0"/>
+                
+            </styles>
+            
+        </data>
+        
+    </ports>
+    <ports   width="5.000000" height="5.000000">
+        <persistentEntries key="org.eclipse.elk.port.side" value="WEST"/>
+        <labels text="b">
+            <data xsi:type="krendering:KText">
+                
+            </data>
+        </labels>
+        <data xsi:type="krendering:KRectangle" >
+            <styles xsi:type="krendering:KBackground"><color red="0" green="0" blue="0"/>
+                
+            </styles>
+            
+        </data>
+        
+    </ports>
+    <ports   width="5.000000" height="5.000000">
+        <persistentEntries key="org.eclipse.elk.port.side" value="WEST"/>
+        <labels text="a">
+            <data xsi:type="krendering:KText">
+                
+            </data>
+        </labels>
+        <data xsi:type="krendering:KRectangle" >
+            <styles xsi:type="krendering:KBackground"><color red="0" green="0" blue="0"/>
+                
+            </styles>
+            
+        </data>
+        
+    </ports>
+    
+</children>
+<children   width="20.000000" height="20.000000" >
+    <persistentEntries key="org.eclipse.elk.portAlignment.north" value="CENTER"/>
+    <persistentEntries key="org.eclipse.elk.portAlignment.south" value="CENTER"/>
+    <persistentEntries key="org.eclipse.elk.partitioning.partition" value="1"/>
+    <persistentEntries key="org.eclipse.elk.portConstraints" value="FIXED_ORDER"/>
+    <persistentEntries key="org.eclipse.elk.layered.allowNonFlowPortsToSwitchSides" value="true"/>
+    <persistentEntries key="org.eclipse.elk.spacing.individual" value="org.eclipse.elk.spacing.portsSurrounding:[top=0.0,left=0.0,bottom=0.0,right=0.0]"/>
     <data xsi:type="krendering:KRectangle" >
         <styles xsi:type="krendering:KLineWidth" lineWidth="1.300000">
         </styles>
@@ -1501,6 +2274,8 @@
         </styles>
         <children xsi:type="krendering:KText" text=".">
             <styles xsi:type="krendering:KFontBold" selection="true">
+            </styles>
+            <styles xsi:type="krendering:KFontSize" size="11">
             </styles>
             <placementData xsi:type="krendering:KPointPlacementData" verticalAlignment="CENTER" horizontalAlignment="CENTER" horizontalMargin="0.000000" >
                 <referencePoint>
@@ -1543,11 +2318,12 @@
     
 </children>
 <children   width="20.000000" height="20.000000" >
-    <persistentEntries key="org.eclipse.elk.spacing.individual" value="org.eclipse.elk.spacing.portsSurrounding:[top=0.0,left=0.0,bottom=0.0,right=0.0]"/>
-    <persistentEntries key="org.eclipse.elk.layered.allowNonFlowPortsToSwitchSides" value="true"/>
-    <persistentEntries key="org.eclipse.elk.portConstraints" value="FIXED_SIDE"/>
-    <persistentEntries key="org.eclipse.elk.portAlignment.south" value="CENTER"/>
     <persistentEntries key="org.eclipse.elk.portAlignment.north" value="CENTER"/>
+    <persistentEntries key="org.eclipse.elk.portAlignment.south" value="CENTER"/>
+    <persistentEntries key="org.eclipse.elk.partitioning.partition" value="1"/>
+    <persistentEntries key="org.eclipse.elk.portConstraints" value="FIXED_SIDE"/>
+    <persistentEntries key="org.eclipse.elk.layered.allowNonFlowPortsToSwitchSides" value="true"/>
+    <persistentEntries key="org.eclipse.elk.spacing.individual" value="org.eclipse.elk.spacing.portsSurrounding:[top=0.0,left=0.0,bottom=0.0,right=0.0]"/>
     <data xsi:type="krendering:KRectangle" >
         <styles xsi:type="krendering:KLineWidth" lineWidth="1.300000">
         </styles>
@@ -1561,6 +2337,8 @@
         <children xsi:type="krendering:KText" text="[0.n]">
             <styles xsi:type="krendering:KFontBold" selection="true">
             </styles>
+            <styles xsi:type="krendering:KFontSize" size="11">
+            </styles>
             <placementData xsi:type="krendering:KPointPlacementData" verticalAlignment="CENTER" horizontalAlignment="CENTER" horizontalMargin="2.000000" >
                 <referencePoint>
                     <x xsi:type="krendering:KLeftPosition" relative="0.500000"/>
@@ -1593,11 +2371,12 @@
     
 </children>
 <children   width="20.000000" height="20.000000" >
-    <persistentEntries key="org.eclipse.elk.spacing.individual" value="org.eclipse.elk.spacing.portsSurrounding:[top=0.0,left=0.0,bottom=0.0,right=0.0]"/>
-    <persistentEntries key="org.eclipse.elk.layered.allowNonFlowPortsToSwitchSides" value="true"/>
-    <persistentEntries key="org.eclipse.elk.portConstraints" value="FIXED_SIDE"/>
-    <persistentEntries key="org.eclipse.elk.portAlignment.south" value="CENTER"/>
     <persistentEntries key="org.eclipse.elk.portAlignment.north" value="CENTER"/>
+    <persistentEntries key="org.eclipse.elk.portAlignment.south" value="CENTER"/>
+    <persistentEntries key="org.eclipse.elk.partitioning.partition" value="1"/>
+    <persistentEntries key="org.eclipse.elk.portConstraints" value="FIXED_SIDE"/>
+    <persistentEntries key="org.eclipse.elk.layered.allowNonFlowPortsToSwitchSides" value="true"/>
+    <persistentEntries key="org.eclipse.elk.spacing.individual" value="org.eclipse.elk.spacing.portsSurrounding:[top=0.0,left=0.0,bottom=0.0,right=0.0]"/>
     <data xsi:type="krendering:KRectangle" >
         <styles xsi:type="krendering:KLineWidth" lineWidth="1.300000">
         </styles>
@@ -1611,6 +2390,8 @@
         <children xsi:type="krendering:KText" text="[2]">
             <styles xsi:type="krendering:KFontBold" selection="true">
             </styles>
+            <styles xsi:type="krendering:KFontSize" size="11">
+            </styles>
             <placementData xsi:type="krendering:KPointPlacementData" verticalAlignment="CENTER" horizontalAlignment="CENTER" horizontalMargin="2.000000" >
                 <referencePoint>
                     <x xsi:type="krendering:KLeftPosition" relative="0.500000"/>
@@ -1643,11 +2424,12 @@
     
 </children>
 <children   width="20.000000" height="20.000000" >
-    <persistentEntries key="org.eclipse.elk.spacing.individual" value="org.eclipse.elk.spacing.portsSurrounding:[top=0.0,left=0.0,bottom=0.0,right=0.0]"/>
-    <persistentEntries key="org.eclipse.elk.layered.allowNonFlowPortsToSwitchSides" value="true"/>
-    <persistentEntries key="org.eclipse.elk.portConstraints" value="FIXED_SIDE"/>
-    <persistentEntries key="org.eclipse.elk.portAlignment.south" value="CENTER"/>
     <persistentEntries key="org.eclipse.elk.portAlignment.north" value="CENTER"/>
+    <persistentEntries key="org.eclipse.elk.portAlignment.south" value="CENTER"/>
+    <persistentEntries key="org.eclipse.elk.partitioning.partition" value="0"/>
+    <persistentEntries key="org.eclipse.elk.portConstraints" value="FIXED_SIDE"/>
+    <persistentEntries key="org.eclipse.elk.layered.allowNonFlowPortsToSwitchSides" value="true"/>
+    <persistentEntries key="org.eclipse.elk.spacing.individual" value="org.eclipse.elk.spacing.portsSurrounding:[top=0.0,left=0.0,bottom=0.0,right=0.0]"/>
     <data xsi:type="krendering:KPolygon" >
         <styles xsi:type="krendering:KLineWidth" lineWidth="1.300000">
         </styles>
@@ -1660,6 +2442,8 @@
         </styles>
         <children xsi:type="krendering:KText" text="hiaaaaaao">
             <styles xsi:type="krendering:KFontBold" selection="true">
+            </styles>
+            <styles xsi:type="krendering:KFontSize" size="11">
             </styles>
             <placementData xsi:type="krendering:KPointPlacementData" verticalAlignment="CENTER" horizontalAlignment="CENTER" horizontalMargin="5.000000" >
                 <referencePoint>
@@ -1714,12 +2498,13 @@
     
 </children>
 <children   width="20.000000" height="30.000000" >
-    <persistentEntries key="org.eclipse.elk.nodeSize.constraints" value="[NODE_LABELS, PORTS, PORT_LABELS, MINIMUM_SIZE]"/>
-    <persistentEntries key="org.eclipse.elk.spacing.individual" value="org.eclipse.elk.spacing.portsSurrounding:[top=0.0,left=0.0,bottom=0.0,right=0.0]"/>
-    <persistentEntries key="org.eclipse.elk.layered.allowNonFlowPortsToSwitchSides" value="true"/>
-    <persistentEntries key="org.eclipse.elk.portConstraints" value="FIXED_SIDE"/>
-    <persistentEntries key="org.eclipse.elk.portAlignment.south" value="CENTER"/>
     <persistentEntries key="org.eclipse.elk.portAlignment.north" value="CENTER"/>
+    <persistentEntries key="org.eclipse.elk.portAlignment.south" value="CENTER"/>
+    <persistentEntries key="org.eclipse.elk.partitioning.partition" value="1"/>
+    <persistentEntries key="org.eclipse.elk.portConstraints" value="FIXED_SIDE"/>
+    <persistentEntries key="org.eclipse.elk.layered.allowNonFlowPortsToSwitchSides" value="true"/>
+    <persistentEntries key="org.eclipse.elk.spacing.portsSurrounding" value="[top=0.0,left=10.0,bottom=0.0,right=10.0]"/>
+    <persistentEntries key="org.eclipse.elk.nodeSize.constraints" value="[NODE_LABELS, PORTS, PORT_LABELS, MINIMUM_SIZE]"/>
     <data xsi:type="krendering:KPolygon" >
         <styles xsi:type="krendering:KLineWidth" lineWidth="1.300000">
         </styles>
@@ -1758,6 +2543,7 @@
         
     </data>
     <ports   width="5.000000" height="5.000000">
+        <persistentEntries key="org.eclipse.elk.port.borderOffset" value="-3.5"/>
         <persistentEntries key="org.eclipse.elk.port.side" value="NORTH"/>
         <data xsi:type="krendering:KRectangle" >
             <styles xsi:type="krendering:KBackground"><color red="0" green="0" blue="0"/>
@@ -1807,11 +2593,12 @@
     
 </children>
 <children   width="20.000000" height="20.000000" >
-    <persistentEntries key="org.eclipse.elk.spacing.individual" value="org.eclipse.elk.spacing.portsSurrounding:[top=0.0,left=0.0,bottom=0.0,right=0.0]"/>
-    <persistentEntries key="org.eclipse.elk.layered.allowNonFlowPortsToSwitchSides" value="true"/>
-    <persistentEntries key="org.eclipse.elk.portConstraints" value="FIXED_SIDE"/>
-    <persistentEntries key="org.eclipse.elk.portAlignment.south" value="CENTER"/>
     <persistentEntries key="org.eclipse.elk.portAlignment.north" value="CENTER"/>
+    <persistentEntries key="org.eclipse.elk.portAlignment.south" value="CENTER"/>
+    <persistentEntries key="org.eclipse.elk.partitioning.partition" value="1"/>
+    <persistentEntries key="org.eclipse.elk.portConstraints" value="FIXED_SIDE"/>
+    <persistentEntries key="org.eclipse.elk.layered.allowNonFlowPortsToSwitchSides" value="true"/>
+    <persistentEntries key="org.eclipse.elk.spacing.individual" value="org.eclipse.elk.spacing.portsSurrounding:[top=0.0,left=0.0,bottom=0.0,right=0.0]"/>
     <data xsi:type="krendering:KRectangle" >
         <styles xsi:type="krendering:KLineWidth" lineWidth="1.300000">
         </styles>
@@ -1824,6 +2611,8 @@
         </styles>
         <children xsi:type="krendering:KText" text="1">
             <styles xsi:type="krendering:KFontBold" selection="true">
+            </styles>
+            <styles xsi:type="krendering:KFontSize" size="11">
             </styles>
             <placementData xsi:type="krendering:KPointPlacementData" verticalAlignment="CENTER" horizontalAlignment="CENTER" horizontalMargin="0.000000" >
                 <referencePoint>
@@ -1859,11 +2648,12 @@
     
 </children>
 <children   width="20.000000" height="20.000000" >
-    <persistentEntries key="org.eclipse.elk.spacing.individual" value="org.eclipse.elk.spacing.portsSurrounding:[top=0.0,left=0.0,bottom=0.0,right=0.0]"/>
-    <persistentEntries key="org.eclipse.elk.layered.allowNonFlowPortsToSwitchSides" value="true"/>
-    <persistentEntries key="org.eclipse.elk.portConstraints" value="FIXED_SIDE"/>
-    <persistentEntries key="org.eclipse.elk.portAlignment.south" value="CENTER"/>
     <persistentEntries key="org.eclipse.elk.portAlignment.north" value="CENTER"/>
+    <persistentEntries key="org.eclipse.elk.portAlignment.south" value="CENTER"/>
+    <persistentEntries key="org.eclipse.elk.partitioning.partition" value="1"/>
+    <persistentEntries key="org.eclipse.elk.portConstraints" value="FIXED_SIDE"/>
+    <persistentEntries key="org.eclipse.elk.layered.allowNonFlowPortsToSwitchSides" value="true"/>
+    <persistentEntries key="org.eclipse.elk.spacing.individual" value="org.eclipse.elk.spacing.portsSurrounding:[top=0.0,left=0.0,bottom=0.0,right=0.0]"/>
     <data xsi:type="krendering:KRectangle" >
         <styles xsi:type="krendering:KLineWidth" lineWidth="1.300000">
         </styles>
@@ -1876,6 +2666,8 @@
         </styles>
         <children xsi:type="krendering:KText" text="1">
             <styles xsi:type="krendering:KFontBold" selection="true">
+            </styles>
+            <styles xsi:type="krendering:KFontSize" size="11">
             </styles>
             <placementData xsi:type="krendering:KPointPlacementData" verticalAlignment="CENTER" horizontalAlignment="CENTER" horizontalMargin="0.000000" >
                 <referencePoint>
@@ -1909,11 +2701,12 @@
     
 </children>
 <children   width="20.000000" height="20.000000" >
-    <persistentEntries key="org.eclipse.elk.spacing.individual" value="org.eclipse.elk.spacing.portsSurrounding:[top=0.0,left=0.0,bottom=0.0,right=0.0]"/>
-    <persistentEntries key="org.eclipse.elk.layered.allowNonFlowPortsToSwitchSides" value="true"/>
-    <persistentEntries key="org.eclipse.elk.portConstraints" value="FIXED_SIDE"/>
-    <persistentEntries key="org.eclipse.elk.portAlignment.south" value="CENTER"/>
     <persistentEntries key="org.eclipse.elk.portAlignment.north" value="CENTER"/>
+    <persistentEntries key="org.eclipse.elk.portAlignment.south" value="CENTER"/>
+    <persistentEntries key="org.eclipse.elk.partitioning.partition" value="1"/>
+    <persistentEntries key="org.eclipse.elk.portConstraints" value="FIXED_SIDE"/>
+    <persistentEntries key="org.eclipse.elk.layered.allowNonFlowPortsToSwitchSides" value="true"/>
+    <persistentEntries key="org.eclipse.elk.spacing.individual" value="org.eclipse.elk.spacing.portsSurrounding:[top=0.0,left=0.0,bottom=0.0,right=0.0]"/>
     <data xsi:type="krendering:KPolygon" >
         <styles xsi:type="krendering:KLineWidth" lineWidth="1.300000">
         </styles>
@@ -2000,11 +2793,12 @@
     
 </children>
 <children   width="20.000000" height="20.000000" >
-    <persistentEntries key="org.eclipse.elk.spacing.individual" value="org.eclipse.elk.spacing.portsSurrounding:[top=0.0,left=0.0,bottom=0.0,right=0.0]"/>
-    <persistentEntries key="org.eclipse.elk.layered.allowNonFlowPortsToSwitchSides" value="true"/>
-    <persistentEntries key="org.eclipse.elk.portConstraints" value="FIXED_SIDE"/>
-    <persistentEntries key="org.eclipse.elk.portAlignment.south" value="CENTER"/>
     <persistentEntries key="org.eclipse.elk.portAlignment.north" value="CENTER"/>
+    <persistentEntries key="org.eclipse.elk.portAlignment.south" value="CENTER"/>
+    <persistentEntries key="org.eclipse.elk.partitioning.partition" value="1"/>
+    <persistentEntries key="org.eclipse.elk.portConstraints" value="FIXED_SIDE"/>
+    <persistentEntries key="org.eclipse.elk.layered.allowNonFlowPortsToSwitchSides" value="true"/>
+    <persistentEntries key="org.eclipse.elk.spacing.individual" value="org.eclipse.elk.spacing.portsSurrounding:[top=0.0,left=0.0,bottom=0.0,right=0.0]"/>
     <data xsi:type="krendering:KRectangle" >
         <styles xsi:type="krendering:KLineWidth" lineWidth="1.300000">
         </styles>
@@ -2017,6 +2811,8 @@
         </styles>
         <children xsi:type="krendering:KText" text="&amp;">
             <styles xsi:type="krendering:KFontBold" selection="true">
+            </styles>
+            <styles xsi:type="krendering:KFontSize" size="11">
             </styles>
             <placementData xsi:type="krendering:KPointPlacementData" verticalAlignment="CENTER" horizontalAlignment="CENTER" horizontalMargin="0.000000" >
                 <referencePoint>
@@ -2061,11 +2857,12 @@
     
 </children>
 <children   width="20.000000" height="20.000000" >
-    <persistentEntries key="org.eclipse.elk.spacing.individual" value="org.eclipse.elk.spacing.portsSurrounding:[top=0.0,left=0.0,bottom=0.0,right=0.0]"/>
-    <persistentEntries key="org.eclipse.elk.layered.allowNonFlowPortsToSwitchSides" value="true"/>
-    <persistentEntries key="org.eclipse.elk.portConstraints" value="FIXED_SIDE"/>
-    <persistentEntries key="org.eclipse.elk.portAlignment.south" value="CENTER"/>
     <persistentEntries key="org.eclipse.elk.portAlignment.north" value="CENTER"/>
+    <persistentEntries key="org.eclipse.elk.portAlignment.south" value="CENTER"/>
+    <persistentEntries key="org.eclipse.elk.partitioning.partition" value="1"/>
+    <persistentEntries key="org.eclipse.elk.portConstraints" value="FIXED_SIDE"/>
+    <persistentEntries key="org.eclipse.elk.layered.allowNonFlowPortsToSwitchSides" value="true"/>
+    <persistentEntries key="org.eclipse.elk.spacing.individual" value="org.eclipse.elk.spacing.portsSurrounding:[top=0.0,left=0.0,bottom=0.0,right=0.0]"/>
     <data xsi:type="krendering:KRectangle" >
         <styles xsi:type="krendering:KLineWidth" lineWidth="1.300000">
         </styles>
@@ -2079,6 +2876,8 @@
         <children xsi:type="krendering:KText" text="=1">
             <styles xsi:type="krendering:KFontBold" selection="true">
             </styles>
+            <styles xsi:type="krendering:KFontSize" size="11">
+            </styles>
             <placementData xsi:type="krendering:KPointPlacementData" verticalAlignment="CENTER" horizontalAlignment="CENTER" horizontalMargin="0.000000" >
                 <referencePoint>
                     <x xsi:type="krendering:KLeftPosition" relative="0.500000"/>
@@ -2120,11 +2919,12 @@
     
 </children>
 <children   width="20.000000" height="20.000000" >
-    <persistentEntries key="org.eclipse.elk.spacing.individual" value="org.eclipse.elk.spacing.portsSurrounding:[top=0.0,left=0.0,bottom=0.0,right=0.0]"/>
-    <persistentEntries key="org.eclipse.elk.layered.allowNonFlowPortsToSwitchSides" value="true"/>
-    <persistentEntries key="org.eclipse.elk.portConstraints" value="FIXED_SIDE"/>
-    <persistentEntries key="org.eclipse.elk.portAlignment.south" value="CENTER"/>
     <persistentEntries key="org.eclipse.elk.portAlignment.north" value="CENTER"/>
+    <persistentEntries key="org.eclipse.elk.portAlignment.south" value="CENTER"/>
+    <persistentEntries key="org.eclipse.elk.partitioning.partition" value="1"/>
+    <persistentEntries key="org.eclipse.elk.portConstraints" value="FIXED_SIDE"/>
+    <persistentEntries key="org.eclipse.elk.layered.allowNonFlowPortsToSwitchSides" value="true"/>
+    <persistentEntries key="org.eclipse.elk.spacing.individual" value="org.eclipse.elk.spacing.portsSurrounding:[top=0.0,left=0.0,bottom=0.0,right=0.0]"/>
     <data xsi:type="krendering:KRectangle" >
         <styles xsi:type="krendering:KLineWidth" lineWidth="1.300000">
         </styles>
@@ -2138,6 +2938,8 @@
         <children xsi:type="krendering:KText" text="&amp;">
             <styles xsi:type="krendering:KFontBold" selection="true">
             </styles>
+            <styles xsi:type="krendering:KFontSize" size="11">
+            </styles>
             <placementData xsi:type="krendering:KPointPlacementData" verticalAlignment="CENTER" horizontalAlignment="CENTER" horizontalMargin="0.000000" >
                 <referencePoint>
                     <x xsi:type="krendering:KLeftPosition" relative="0.500000"/>
@@ -2179,11 +2981,12 @@
     
 </children>
 <children   width="20.000000" height="20.000000" >
-    <persistentEntries key="org.eclipse.elk.spacing.individual" value="org.eclipse.elk.spacing.portsSurrounding:[top=0.0,left=0.0,bottom=0.0,right=0.0]"/>
-    <persistentEntries key="org.eclipse.elk.layered.allowNonFlowPortsToSwitchSides" value="true"/>
-    <persistentEntries key="org.eclipse.elk.portConstraints" value="FIXED_SIDE"/>
-    <persistentEntries key="org.eclipse.elk.portAlignment.south" value="CENTER"/>
     <persistentEntries key="org.eclipse.elk.portAlignment.north" value="CENTER"/>
+    <persistentEntries key="org.eclipse.elk.portAlignment.south" value="CENTER"/>
+    <persistentEntries key="org.eclipse.elk.partitioning.partition" value="1"/>
+    <persistentEntries key="org.eclipse.elk.portConstraints" value="FIXED_SIDE"/>
+    <persistentEntries key="org.eclipse.elk.layered.allowNonFlowPortsToSwitchSides" value="true"/>
+    <persistentEntries key="org.eclipse.elk.spacing.individual" value="org.eclipse.elk.spacing.portsSurrounding:[top=0.0,left=0.0,bottom=0.0,right=0.0]"/>
     <data xsi:type="krendering:KRectangle" >
         <styles xsi:type="krendering:KLineWidth" lineWidth="1.300000">
         </styles>
@@ -2196,6 +2999,8 @@
         </styles>
         <children xsi:type="krendering:KText" text="&#x2265;1">
             <styles xsi:type="krendering:KFontBold" selection="true">
+            </styles>
+            <styles xsi:type="krendering:KFontSize" size="11">
             </styles>
             <placementData xsi:type="krendering:KPointPlacementData" verticalAlignment="CENTER" horizontalAlignment="CENTER" horizontalMargin="0.000000" >
                 <referencePoint>
