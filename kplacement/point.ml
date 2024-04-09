@@ -1,7 +1,6 @@
 
 
 
-
 type pos_type =
 	| Left | Right | Top | Bottom
 

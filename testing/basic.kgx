@@ -92,7 +92,6 @@
     <persistentEntries key="org.eclipse.elk.portAlignment.south" value="CENTER"/>
     <persistentEntries key="org.eclipse.elk.partitioning.partition" value="2"/>
     <persistentEntries key="org.eclipse.elk.portConstraints" value="FIXED_SIDE"/>
-    <persistentEntries key="org.eclipse.elk.layered.allowNonFlowPortsToSwitchSides" value="true"/>
     <persistentEntries key="org.eclipse.elk.spacing.individual" value="org.eclipse.elk.spacing.portsSurrounding:[top=0.0,left=0.0,bottom=0.0,right=0.0]"/>
     <data xsi:type="krendering:KPolygon" >
         <styles xsi:type="krendering:KLineWidth" lineWidth="1.300000">
@@ -166,7 +165,6 @@
     <persistentEntries key="org.eclipse.elk.portAlignment.south" value="CENTER"/>
     <persistentEntries key="org.eclipse.elk.partitioning.partition" value="1"/>
     <persistentEntries key="org.eclipse.elk.portConstraints" value="FIXED_SIDE"/>
-    <persistentEntries key="org.eclipse.elk.layered.allowNonFlowPortsToSwitchSides" value="true"/>
     <persistentEntries key="org.eclipse.elk.spacing.individual" value="org.eclipse.elk.spacing.portsSurrounding:[top=0.0,left=0.0,bottom=0.0,right=0.0]"/>
     <data xsi:type="krendering:KRectangle" >
         <styles xsi:type="krendering:KLineWidth" lineWidth="5.100000">
@@ -243,7 +241,6 @@
     <persistentEntries key="org.eclipse.elk.portAlignment.south" value="CENTER"/>
     <persistentEntries key="org.eclipse.elk.partitioning.partition" value="1"/>
     <persistentEntries key="org.eclipse.elk.portConstraints" value="FIXED_SIDE"/>
-    <persistentEntries key="org.eclipse.elk.layered.allowNonFlowPortsToSwitchSides" value="true"/>
     <persistentEntries key="org.eclipse.elk.spacing.individual" value="org.eclipse.elk.spacing.portsSurrounding:[top=0.0,left=0.0,bottom=0.0,right=0.0]"/>
     <data xsi:type="krendering:KRectangle" >
         <styles xsi:type="krendering:KLineWidth" lineWidth="5.100000">
@@ -320,7 +317,6 @@
     <persistentEntries key="org.eclipse.elk.portAlignment.south" value="CENTER"/>
     <persistentEntries key="org.eclipse.elk.partitioning.partition" value="1"/>
     <persistentEntries key="org.eclipse.elk.portConstraints" value="FIXED_SIDE"/>
-    <persistentEntries key="org.eclipse.elk.layered.allowNonFlowPortsToSwitchSides" value="true"/>
     <persistentEntries key="org.eclipse.elk.spacing.individual" value="org.eclipse.elk.spacing.portsSurrounding:[top=0.0,left=0.0,bottom=0.0,right=0.0]"/>
     <data xsi:type="krendering:KRectangle" >
         <styles xsi:type="krendering:KLineWidth" lineWidth="1.300000">
@@ -384,7 +380,6 @@
     <persistentEntries key="org.eclipse.elk.portAlignment.south" value="CENTER"/>
     <persistentEntries key="org.eclipse.elk.partitioning.partition" value="1"/>
     <persistentEntries key="org.eclipse.elk.portConstraints" value="FIXED_SIDE"/>
-    <persistentEntries key="org.eclipse.elk.layered.allowNonFlowPortsToSwitchSides" value="true"/>
     <persistentEntries key="org.eclipse.elk.spacing.portsSurrounding" value="[top=12.0,left=10.0,bottom=0.0,right=10.0]"/>
     <persistentEntries key="de.cau.cs.kieler.klighd.expand" value="true"/>
     <persistentEntries key="org.eclipse.elk.nodeSize.constraints" value="[NODE_LABELS, PORTS, PORT_LABELS, MINIMUM_SIZE]"/>
@@ -434,7 +429,6 @@
         <persistentEntries key="org.eclipse.elk.portAlignment.south" value="CENTER"/>
         <persistentEntries key="org.eclipse.elk.partitioning.partition" value="1"/>
         <persistentEntries key="org.eclipse.elk.portConstraints" value="FIXED_SIDE"/>
-        <persistentEntries key="org.eclipse.elk.layered.allowNonFlowPortsToSwitchSides" value="true"/>
         <persistentEntries key="org.eclipse.elk.nodeSize.constraints" value="[NODE_LABELS, PORTS, PORT_LABELS, MINIMUM_SIZE]"/>
         <persistentEntries key="org.eclipse.elk.spacing.portsSurrounding" value="[top=0.0,left=10.0,bottom=0.0,right=10.0]"/>
         <data xsi:type="krendering:KPolygon" >
@@ -599,7 +593,6 @@
         <persistentEntries key="org.eclipse.elk.portAlignment.south" value="CENTER"/>
         <persistentEntries key="org.eclipse.elk.partitioning.partition" value="1"/>
         <persistentEntries key="org.eclipse.elk.portConstraints" value="FIXED_SIDE"/>
-        <persistentEntries key="org.eclipse.elk.layered.allowNonFlowPortsToSwitchSides" value="true"/>
         <persistentEntries key="org.eclipse.elk.nodeSize.constraints" value="[NODE_LABELS, PORTS, PORT_LABELS, MINIMUM_SIZE]"/>
         <persistentEntries key="org.eclipse.elk.spacing.portsSurrounding" value="[top=0.0,left=10.0,bottom=0.0,right=10.0]"/>
         <data xsi:type="krendering:KPolygon" >
@@ -890,7 +883,6 @@
         <persistentEntries key="org.eclipse.elk.portAlignment.south" value="CENTER"/>
         <persistentEntries key="org.eclipse.elk.partitioning.partition" value="1"/>
         <persistentEntries key="org.eclipse.elk.portConstraints" value="FIXED_SIDE"/>
-        <persistentEntries key="org.eclipse.elk.layered.allowNonFlowPortsToSwitchSides" value="true"/>
         <persistentEntries key="org.eclipse.elk.nodeSize.constraints" value="[NODE_LABELS, PORTS, PORT_LABELS, MINIMUM_SIZE]"/>
         <persistentEntries key="org.eclipse.elk.spacing.portsSurrounding" value="[top=0.0,left=10.0,bottom=0.0,right=10.0]"/>
         <data xsi:type="krendering:KPolygon" >
@@ -1012,8 +1004,7 @@
         <persistentEntries key="org.eclipse.elk.portAlignment.north" value="CENTER"/>
         <persistentEntries key="org.eclipse.elk.portAlignment.south" value="CENTER"/>
         <persistentEntries key="org.eclipse.elk.partitioning.partition" value="1"/>
-        <persistentEntries key="org.eclipse.elk.portConstraints" value="FIXED_SIDE"/>
-        <persistentEntries key="org.eclipse.elk.layered.allowNonFlowPortsToSwitchSides" value="true"/>
+        <persistentEntries key="org.eclipse.elk.portConstraints" value="FIXED_ORDER"/>
         <persistentEntries key="org.eclipse.elk.nodeSize.constraints" value="[NODE_LABELS, PORTS, PORT_LABELS, MINIMUM_SIZE]"/>
         <persistentEntries key="org.eclipse.elk.spacing.portsSurrounding" value="[top=0.0,left=10.0,bottom=0.0,right=10.0]"/>
         <data xsi:type="krendering:KPolygon" >
@@ -1202,8 +1193,7 @@
         <persistentEntries key="org.eclipse.elk.portAlignment.north" value="CENTER"/>
         <persistentEntries key="org.eclipse.elk.portAlignment.south" value="CENTER"/>
         <persistentEntries key="org.eclipse.elk.partitioning.partition" value="1"/>
-        <persistentEntries key="org.eclipse.elk.portConstraints" value="FIXED_SIDE"/>
-        <persistentEntries key="org.eclipse.elk.layered.allowNonFlowPortsToSwitchSides" value="true"/>
+        <persistentEntries key="org.eclipse.elk.portConstraints" value="FIXED_ORDER"/>
         <persistentEntries key="org.eclipse.elk.nodeSize.constraints" value="[NODE_LABELS, PORTS, PORT_LABELS, MINIMUM_SIZE]"/>
         <persistentEntries key="org.eclipse.elk.spacing.portsSurrounding" value="[top=0.0,left=10.0,bottom=0.0,right=10.0]"/>
         <data xsi:type="krendering:KPolygon" >
@@ -1360,12 +1350,111 @@
     </children>
     
 </children>
+<children   width="70.000000" height="90.000000" >
+    <persistentEntries key="org.eclipse.elk.portAlignment.north" value="CENTER"/>
+    <persistentEntries key="org.eclipse.elk.portAlignment.south" value="CENTER"/>
+    <persistentEntries key="org.eclipse.elk.partitioning.partition" value="1"/>
+    <persistentEntries key="org.eclipse.elk.portConstraints" value="FIXED_ORDER"/>
+    <persistentEntries key="org.eclipse.elk.spacing.individual" value="org.eclipse.elk.spacing.portsSurrounding:[top=0.0,left=0.0,bottom=0.0,right=0.0]"/>
+    <persistentEntries key="org.eclipse.elk.portLabels.placement" value="[INSIDE,NEXT_TO_PORT_IF_POSSIBLE]"/>
+    <data xsi:type="krendering:KRectangle" >
+        <styles xsi:type="krendering:KLineWidth" lineWidth="1.300000">
+        </styles>
+        <styles xsi:type="krendering:KLineWidth" selection="true" lineWidth="2.000000">
+        </styles>
+        <styles xsi:type="krendering:KBackground"><color red="200" green="200" blue="250"/>
+            
+        </styles>
+        <styles xsi:type="krendering:KShadow" xOffset="2.000000" yOffset="2.000000">
+        </styles>
+        <children xsi:type="krendering:KText" text="ram">
+            <styles xsi:type="krendering:KFontBold" selection="true">
+            </styles>
+            <styles xsi:type="krendering:KFontSize" size="11">
+            </styles>
+            <placementData xsi:type="krendering:KPointPlacementData" verticalAlignment="CENTER" horizontalAlignment="CENTER" horizontalMargin="0.000000" >
+                <referencePoint>
+                    <x xsi:type="krendering:KLeftPosition" relative="0.500000"/>
+                    <y xsi:type="krendering:KTopPosition" relative="0.100000"/>
+                    
+                </referencePoint>
+            </placementData>
+            
+        </children>
+        
+    </data>
+    <ports   width="-0.100000" height="-0.100000">
+        <persistentEntries key="org.eclipse.elk.port.side" value="EAST"/>
+        <data xsi:type="krendering:KRectangle" >
+            <styles xsi:type="krendering:KInvisibility">
+            </styles>
+            
+        </data>
+        
+    </ports>
+    <ports   width="-0.100000" height="-0.100000">
+        <persistentEntries key="org.eclipse.elk.port.side" value="WEST"/>
+        <labels text="read_addr">
+            <data xsi:type="krendering:KText">
+                
+            </data>
+        </labels>
+        <data xsi:type="krendering:KRectangle" >
+            <styles xsi:type="krendering:KInvisibility">
+            </styles>
+            
+        </data>
+        
+    </ports>
+    <ports   width="-0.100000" height="-0.100000">
+        <persistentEntries key="org.eclipse.elk.port.side" value="WEST"/>
+        <labels text="write?">
+            <data xsi:type="krendering:KText">
+                
+            </data>
+        </labels>
+        <data xsi:type="krendering:KRectangle" >
+            <styles xsi:type="krendering:KInvisibility">
+            </styles>
+            
+        </data>
+        
+    </ports>
+    <ports   width="-0.100000" height="-0.100000">
+        <persistentEntries key="org.eclipse.elk.port.side" value="WEST"/>
+        <labels text="write_addr">
+            <data xsi:type="krendering:KText">
+                
+            </data>
+        </labels>
+        <data xsi:type="krendering:KRectangle" >
+            <styles xsi:type="krendering:KInvisibility">
+            </styles>
+            
+        </data>
+        
+    </ports>
+    <ports   width="-0.100000" height="-0.100000">
+        <persistentEntries key="org.eclipse.elk.port.side" value="WEST"/>
+        <labels text="write_data">
+            <data xsi:type="krendering:KText">
+                
+            </data>
+        </labels>
+        <data xsi:type="krendering:KRectangle" >
+            <styles xsi:type="krendering:KInvisibility">
+            </styles>
+            
+        </data>
+        
+    </ports>
+    
+</children>
 <children   width="20.000000" height="20.000000" >
     <persistentEntries key="org.eclipse.elk.portAlignment.north" value="CENTER"/>
     <persistentEntries key="org.eclipse.elk.portAlignment.south" value="CENTER"/>
     <persistentEntries key="org.eclipse.elk.partitioning.partition" value="1"/>
     <persistentEntries key="org.eclipse.elk.portConstraints" value="FIXED_SIDE"/>
-    <persistentEntries key="org.eclipse.elk.layered.allowNonFlowPortsToSwitchSides" value="true"/>
     <persistentEntries key="org.eclipse.elk.spacing.portsSurrounding" value="[top=12.0,left=10.0,bottom=0.0,right=10.0]"/>
     <persistentEntries key="de.cau.cs.kieler.klighd.expand" value="false"/>
     <persistentEntries key="org.eclipse.elk.nodeSize.constraints" value="[NODE_LABELS, PORTS, PORT_LABELS, MINIMUM_SIZE]"/>
@@ -1493,7 +1582,6 @@
     <persistentEntries key="org.eclipse.elk.portAlignment.south" value="CENTER"/>
     <persistentEntries key="org.eclipse.elk.partitioning.partition" value="1"/>
     <persistentEntries key="org.eclipse.elk.portConstraints" value="FIXED_SIDE"/>
-    <persistentEntries key="org.eclipse.elk.layered.allowNonFlowPortsToSwitchSides" value="true"/>
     <persistentEntries key="org.eclipse.elk.spacing.portsSurrounding" value="[top=12.0,left=10.0,bottom=0.0,right=10.0]"/>
     <persistentEntries key="de.cau.cs.kieler.klighd.expand" value="false"/>
     <persistentEntries key="org.eclipse.elk.nodeSize.constraints" value="[NODE_LABELS, PORTS, PORT_LABELS, MINIMUM_SIZE]"/>
@@ -1621,7 +1709,6 @@
     <persistentEntries key="org.eclipse.elk.portAlignment.south" value="CENTER"/>
     <persistentEntries key="org.eclipse.elk.partitioning.partition" value="1"/>
     <persistentEntries key="org.eclipse.elk.portConstraints" value="FIXED_SIDE"/>
-    <persistentEntries key="org.eclipse.elk.layered.allowNonFlowPortsToSwitchSides" value="true"/>
     <persistentEntries key="org.eclipse.elk.spacing.portsSurrounding" value="[top=12.0,left=10.0,bottom=0.0,right=10.0]"/>
     <persistentEntries key="de.cau.cs.kieler.klighd.expand" value="false"/>
     <persistentEntries key="org.eclipse.elk.nodeSize.constraints" value="[NODE_LABELS, PORTS, PORT_LABELS, MINIMUM_SIZE]"/>
@@ -1749,7 +1836,6 @@
     <persistentEntries key="org.eclipse.elk.portAlignment.south" value="CENTER"/>
     <persistentEntries key="org.eclipse.elk.partitioning.partition" value="1"/>
     <persistentEntries key="org.eclipse.elk.portConstraints" value="FIXED_SIDE"/>
-    <persistentEntries key="org.eclipse.elk.layered.allowNonFlowPortsToSwitchSides" value="true"/>
     <persistentEntries key="org.eclipse.elk.spacing.portsSurrounding" value="[top=12.0,left=10.0,bottom=0.0,right=10.0]"/>
     <persistentEntries key="de.cau.cs.kieler.klighd.expand" value="false"/>
     <persistentEntries key="org.eclipse.elk.nodeSize.constraints" value="[NODE_LABELS, PORTS, PORT_LABELS, MINIMUM_SIZE]"/>
@@ -1877,7 +1963,6 @@
     <persistentEntries key="org.eclipse.elk.portAlignment.south" value="CENTER"/>
     <persistentEntries key="org.eclipse.elk.partitioning.partition" value="1"/>
     <persistentEntries key="org.eclipse.elk.portConstraints" value="FIXED_SIDE"/>
-    <persistentEntries key="org.eclipse.elk.layered.allowNonFlowPortsToSwitchSides" value="true"/>
     <persistentEntries key="org.eclipse.elk.spacing.portsSurrounding" value="[top=12.0,left=10.0,bottom=0.0,right=10.0]"/>
     <persistentEntries key="de.cau.cs.kieler.klighd.expand" value="false"/>
     <persistentEntries key="org.eclipse.elk.nodeSize.constraints" value="[NODE_LABELS, PORTS, PORT_LABELS, MINIMUM_SIZE]"/>
@@ -2005,7 +2090,6 @@
     <persistentEntries key="org.eclipse.elk.portAlignment.south" value="CENTER"/>
     <persistentEntries key="org.eclipse.elk.partitioning.partition" value="1"/>
     <persistentEntries key="org.eclipse.elk.portConstraints" value="FIXED_SIDE"/>
-    <persistentEntries key="org.eclipse.elk.layered.allowNonFlowPortsToSwitchSides" value="true"/>
     <persistentEntries key="org.eclipse.elk.spacing.portsSurrounding" value="[top=12.0,left=10.0,bottom=0.0,right=10.0]"/>
     <persistentEntries key="de.cau.cs.kieler.klighd.expand" value="false"/>
     <persistentEntries key="org.eclipse.elk.nodeSize.constraints" value="[NODE_LABELS, PORTS, PORT_LABELS, MINIMUM_SIZE]"/>
@@ -2133,7 +2217,6 @@
     <persistentEntries key="org.eclipse.elk.portAlignment.south" value="CENTER"/>
     <persistentEntries key="org.eclipse.elk.partitioning.partition" value="1"/>
     <persistentEntries key="org.eclipse.elk.portConstraints" value="FIXED_SIDE"/>
-    <persistentEntries key="org.eclipse.elk.layered.allowNonFlowPortsToSwitchSides" value="true"/>
     <persistentEntries key="org.eclipse.elk.spacing.portsSurrounding" value="[top=12.0,left=10.0,bottom=0.0,right=10.0]"/>
     <persistentEntries key="de.cau.cs.kieler.klighd.expand" value="true"/>
     <persistentEntries key="org.eclipse.elk.nodeSize.constraints" value="[NODE_LABELS, PORTS, PORT_LABELS, MINIMUM_SIZE]"/>
@@ -2260,7 +2343,6 @@
     <persistentEntries key="org.eclipse.elk.portAlignment.south" value="CENTER"/>
     <persistentEntries key="org.eclipse.elk.partitioning.partition" value="1"/>
     <persistentEntries key="org.eclipse.elk.portConstraints" value="FIXED_ORDER"/>
-    <persistentEntries key="org.eclipse.elk.layered.allowNonFlowPortsToSwitchSides" value="true"/>
     <persistentEntries key="org.eclipse.elk.spacing.individual" value="org.eclipse.elk.spacing.portsSurrounding:[top=0.0,left=0.0,bottom=0.0,right=0.0]"/>
     <data xsi:type="krendering:KRectangle" >
         <styles xsi:type="krendering:KLineWidth" lineWidth="1.300000">
@@ -2322,7 +2404,6 @@
     <persistentEntries key="org.eclipse.elk.portAlignment.south" value="CENTER"/>
     <persistentEntries key="org.eclipse.elk.partitioning.partition" value="1"/>
     <persistentEntries key="org.eclipse.elk.portConstraints" value="FIXED_SIDE"/>
-    <persistentEntries key="org.eclipse.elk.layered.allowNonFlowPortsToSwitchSides" value="true"/>
     <persistentEntries key="org.eclipse.elk.spacing.individual" value="org.eclipse.elk.spacing.portsSurrounding:[top=0.0,left=0.0,bottom=0.0,right=0.0]"/>
     <data xsi:type="krendering:KRectangle" >
         <styles xsi:type="krendering:KLineWidth" lineWidth="1.300000">
@@ -2375,7 +2456,6 @@
     <persistentEntries key="org.eclipse.elk.portAlignment.south" value="CENTER"/>
     <persistentEntries key="org.eclipse.elk.partitioning.partition" value="1"/>
     <persistentEntries key="org.eclipse.elk.portConstraints" value="FIXED_SIDE"/>
-    <persistentEntries key="org.eclipse.elk.layered.allowNonFlowPortsToSwitchSides" value="true"/>
     <persistentEntries key="org.eclipse.elk.spacing.individual" value="org.eclipse.elk.spacing.portsSurrounding:[top=0.0,left=0.0,bottom=0.0,right=0.0]"/>
     <data xsi:type="krendering:KRectangle" >
         <styles xsi:type="krendering:KLineWidth" lineWidth="1.300000">
@@ -2426,9 +2506,8 @@
 <children   width="20.000000" height="20.000000" >
     <persistentEntries key="org.eclipse.elk.portAlignment.north" value="CENTER"/>
     <persistentEntries key="org.eclipse.elk.portAlignment.south" value="CENTER"/>
-    <persistentEntries key="org.eclipse.elk.partitioning.partition" value="0"/>
+    <persistentEntries key="org.eclipse.elk.partitioning.partition" value="1"/>
     <persistentEntries key="org.eclipse.elk.portConstraints" value="FIXED_SIDE"/>
-    <persistentEntries key="org.eclipse.elk.layered.allowNonFlowPortsToSwitchSides" value="true"/>
     <persistentEntries key="org.eclipse.elk.spacing.individual" value="org.eclipse.elk.spacing.portsSurrounding:[top=0.0,left=0.0,bottom=0.0,right=0.0]"/>
     <data xsi:type="krendering:KPolygon" >
         <styles xsi:type="krendering:KLineWidth" lineWidth="1.300000">
@@ -2502,7 +2581,6 @@
     <persistentEntries key="org.eclipse.elk.portAlignment.south" value="CENTER"/>
     <persistentEntries key="org.eclipse.elk.partitioning.partition" value="1"/>
     <persistentEntries key="org.eclipse.elk.portConstraints" value="FIXED_SIDE"/>
-    <persistentEntries key="org.eclipse.elk.layered.allowNonFlowPortsToSwitchSides" value="true"/>
     <persistentEntries key="org.eclipse.elk.spacing.portsSurrounding" value="[top=0.0,left=10.0,bottom=0.0,right=10.0]"/>
     <persistentEntries key="org.eclipse.elk.nodeSize.constraints" value="[NODE_LABELS, PORTS, PORT_LABELS, MINIMUM_SIZE]"/>
     <data xsi:type="krendering:KPolygon" >
@@ -2597,7 +2675,6 @@
     <persistentEntries key="org.eclipse.elk.portAlignment.south" value="CENTER"/>
     <persistentEntries key="org.eclipse.elk.partitioning.partition" value="1"/>
     <persistentEntries key="org.eclipse.elk.portConstraints" value="FIXED_SIDE"/>
-    <persistentEntries key="org.eclipse.elk.layered.allowNonFlowPortsToSwitchSides" value="true"/>
     <persistentEntries key="org.eclipse.elk.spacing.individual" value="org.eclipse.elk.spacing.portsSurrounding:[top=0.0,left=0.0,bottom=0.0,right=0.0]"/>
     <data xsi:type="krendering:KRectangle" >
         <styles xsi:type="krendering:KLineWidth" lineWidth="1.300000">
@@ -2652,7 +2729,6 @@
     <persistentEntries key="org.eclipse.elk.portAlignment.south" value="CENTER"/>
     <persistentEntries key="org.eclipse.elk.partitioning.partition" value="1"/>
     <persistentEntries key="org.eclipse.elk.portConstraints" value="FIXED_SIDE"/>
-    <persistentEntries key="org.eclipse.elk.layered.allowNonFlowPortsToSwitchSides" value="true"/>
     <persistentEntries key="org.eclipse.elk.spacing.individual" value="org.eclipse.elk.spacing.portsSurrounding:[top=0.0,left=0.0,bottom=0.0,right=0.0]"/>
     <data xsi:type="krendering:KRectangle" >
         <styles xsi:type="krendering:KLineWidth" lineWidth="1.300000">
@@ -2705,7 +2781,6 @@
     <persistentEntries key="org.eclipse.elk.portAlignment.south" value="CENTER"/>
     <persistentEntries key="org.eclipse.elk.partitioning.partition" value="1"/>
     <persistentEntries key="org.eclipse.elk.portConstraints" value="FIXED_SIDE"/>
-    <persistentEntries key="org.eclipse.elk.layered.allowNonFlowPortsToSwitchSides" value="true"/>
     <persistentEntries key="org.eclipse.elk.spacing.individual" value="org.eclipse.elk.spacing.portsSurrounding:[top=0.0,left=0.0,bottom=0.0,right=0.0]"/>
     <data xsi:type="krendering:KPolygon" >
         <styles xsi:type="krendering:KLineWidth" lineWidth="1.300000">
@@ -2797,7 +2872,6 @@
     <persistentEntries key="org.eclipse.elk.portAlignment.south" value="CENTER"/>
     <persistentEntries key="org.eclipse.elk.partitioning.partition" value="1"/>
     <persistentEntries key="org.eclipse.elk.portConstraints" value="FIXED_SIDE"/>
-    <persistentEntries key="org.eclipse.elk.layered.allowNonFlowPortsToSwitchSides" value="true"/>
     <persistentEntries key="org.eclipse.elk.spacing.individual" value="org.eclipse.elk.spacing.portsSurrounding:[top=0.0,left=0.0,bottom=0.0,right=0.0]"/>
     <data xsi:type="krendering:KRectangle" >
         <styles xsi:type="krendering:KLineWidth" lineWidth="1.300000">
@@ -2861,7 +2935,6 @@
     <persistentEntries key="org.eclipse.elk.portAlignment.south" value="CENTER"/>
     <persistentEntries key="org.eclipse.elk.partitioning.partition" value="1"/>
     <persistentEntries key="org.eclipse.elk.portConstraints" value="FIXED_SIDE"/>
-    <persistentEntries key="org.eclipse.elk.layered.allowNonFlowPortsToSwitchSides" value="true"/>
     <persistentEntries key="org.eclipse.elk.spacing.individual" value="org.eclipse.elk.spacing.portsSurrounding:[top=0.0,left=0.0,bottom=0.0,right=0.0]"/>
     <data xsi:type="krendering:KRectangle" >
         <styles xsi:type="krendering:KLineWidth" lineWidth="1.300000">
@@ -2923,7 +2996,6 @@
     <persistentEntries key="org.eclipse.elk.portAlignment.south" value="CENTER"/>
     <persistentEntries key="org.eclipse.elk.partitioning.partition" value="1"/>
     <persistentEntries key="org.eclipse.elk.portConstraints" value="FIXED_SIDE"/>
-    <persistentEntries key="org.eclipse.elk.layered.allowNonFlowPortsToSwitchSides" value="true"/>
     <persistentEntries key="org.eclipse.elk.spacing.individual" value="org.eclipse.elk.spacing.portsSurrounding:[top=0.0,left=0.0,bottom=0.0,right=0.0]"/>
     <data xsi:type="krendering:KRectangle" >
         <styles xsi:type="krendering:KLineWidth" lineWidth="1.300000">
@@ -2985,7 +3057,6 @@
     <persistentEntries key="org.eclipse.elk.portAlignment.south" value="CENTER"/>
     <persistentEntries key="org.eclipse.elk.partitioning.partition" value="1"/>
     <persistentEntries key="org.eclipse.elk.portConstraints" value="FIXED_SIDE"/>
-    <persistentEntries key="org.eclipse.elk.layered.allowNonFlowPortsToSwitchSides" value="true"/>
     <persistentEntries key="org.eclipse.elk.spacing.individual" value="org.eclipse.elk.spacing.portsSurrounding:[top=0.0,left=0.0,bottom=0.0,right=0.0]"/>
     <data xsi:type="krendering:KRectangle" >
         <styles xsi:type="krendering:KLineWidth" lineWidth="1.300000">

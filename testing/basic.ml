@@ -21,6 +21,7 @@ type op_node = {
 type endPoint = {
 	node : knode;
 	port : kport;
+	var : bool;
 	mutable labels : string list;
 }
 (*
@@ -96,7 +97,6 @@ let defaultNode ?(part="1") ?(order=false) kgraph =
 		node#addProperty (PersistentEntry.constraintPortOrder ())
 	else
 		node#addProperty (PersistentEntry.constraintPortSide ());
-	node#addProperty (PersistentEntry.allowSwitch ()); 
 	node
 
 let defaultStateNode ?(part="1") kgraph = 
@@ -154,6 +154,7 @@ let invisibleInputPort kgraph knode =
 let invisibleControlPort kgraph knode = 
 	let port = invisiblePort kgraph knode in
 	port#addProperty (PersistentEntry.createPortNorth ());
+	(*port#addProperty (PersistentEntry.allowSwitch ()); *)
 	port
 
 let visibleControlPort ?(ofs=0.0) kgraph node = 
@@ -167,6 +168,7 @@ let visibleControlPort ?(ofs=0.0) kgraph node =
 	port#setNode node;
 	port#addData cont;
 	port#addProperty (PersistentEntry.createPortNorth ());
+	(*port#addProperty (PersistentEntry.allowSwitch ()); *)
 	port	
 
 
@@ -235,14 +237,14 @@ let simpleOpNode ?(ho_mar=0.0) ?(order=false) kgraph text relX relY=
 	node
 
 
-let simpleXorNode kgraph = 
-	binopNode kgraph (simpleOpNode kgraph "=1" 0.5 0.6)
+let simpleXorNode ?(mult=2) kgraph = 
+	multOpNode kgraph (simpleOpNode kgraph "=1" 0.5 0.6) mult
 
-let simpleAndNode kgraph = 
-	binopNode kgraph (simpleOpNode kgraph "&amp;" 0.5 0.6)
+let simpleAndNode ?(mult=2) kgraph = 
+	multOpNode kgraph (simpleOpNode kgraph "&amp;" 0.5 0.6) mult
 
-let simpleOrNode kgraph = 
-	binopNode kgraph (simpleOpNode kgraph "&#x2265;1" 0.5 0.6)
+let simpleOrNode ?(mult=2) kgraph = 
+	multOpNode kgraph (simpleOpNode kgraph "&#x2265;1" 0.5 0.6) mult
 
 let simpleSelectNode kgraph i = 
 	unopNode kgraph (simpleOpNode ~ho_mar:2.0 kgraph ("["^i^"]") 0.5 0.5)
@@ -372,6 +374,7 @@ let simpleMuxNode kgraph =
 	
 	let op = binopNode kgraph node in
 	let p1 = visibleControlPort ~ofs:(-3.5) kgraph node in
+	p1#addProperty (PersistentEntry.allowSwitch ());
 	List.iteri (fun i port ->
 		let label = new label in
 		label#setText (string_of_int i);
@@ -380,12 +383,11 @@ let simpleMuxNode kgraph =
 
 let simpleCondNode kgraph n_cond = 
 	let cont = simpleMuxShape () in
-	let node = defaultNode kgraph in
+	let node = defaultNode ~order:true kgraph in
 	node#setHeight 40.0;
 	node#addData cont;
 	node#addProperty (PersistentEntry.nodeSize "[NODE_LABELS, PORTS, PORT_LABELS, MINIMUM_SIZE]");
 	node#addProperty (PersistentEntry.addPortSpace "0.0" "0.0" "10.0" "10.0");
-	
 	(*resetPortsSurrounding node;
 	*)
 	let op = multOpNode kgraph node (n_cond + 1) in
@@ -466,7 +468,7 @@ let simpleUnTupleNode kgraph n =
 	in
 	{node = node ; inputs = [input] ; outputs = create n; control = []}
 
-let simpleConstNode kgraph text = 
+let simpleConstNode ?(const=true) kgraph text = 
 	let c1 = Point.create_coord Left in
 	let c2 = Point.create_coord Top in
 	let c3 = Point.create_coord Bottom in
@@ -482,7 +484,7 @@ let simpleConstNode kgraph text =
 	
 	let d = Polygon [p1;p2;p3;p4;p5;p1] in
 
-	let node = defaultNode ~part:"0" kgraph in
+	let node = defaultNode ~part:(if const then "1" else "0") kgraph in
 	resetPortsSurrounding node;
 	
 	let cont = simpleOpContWtT () in
@@ -492,7 +494,10 @@ let simpleConstNode kgraph text =
 	let p = invisibleOutputPort kgraph node in
 	{node = node ; inputs =[] ; outputs = [p] ; control = []}
 
-let simpleSinkNode kgraph text = 
+let simpleInputVarNode kgraph text = 
+	simpleConstNode ~const:false kgraph text
+
+let simpleSinkNode ?(used=true) kgraph text = 
 	let c1 = Point.create_coord Left in
 	let c2 = Point.create_coord ~pos_val:(Rel 0.5) Top in
 	let c3 = Point.create_coord Bottom in
@@ -509,7 +514,7 @@ let simpleSinkNode kgraph text =
 	let d = Polygon [p1;p2;p3;p4;p5;p1] in
 
 	let cont = simpleOpContWtT () in
-	let node = defaultNode ~part:"2" kgraph in
+	let node = defaultNode ~part:(if used then "2" else "1") kgraph in
 	cont#setContainer d;
 	cont#addContainerRendering (simpleText ~ho_mar:(5.0) text 0.5 0.5);
 	node#addData cont;
@@ -737,12 +742,24 @@ let simpleBubleNode ?(init=false) kgraph =
 
 
 let ramNode kgraph = 
-	let node = simpleOpNode ~order:true kgraph "ram" 0.5 0.5 in
+	let node = simpleOpNode ~order:true kgraph "ram" 0.5 0.1 in
+	node#setHeight 90.0;
+	node#setWidth 70.0;
 	let opNode = multOpNode kgraph node 4 in
-	opNode
+	node#addProperty (PersistentEntry.portLabelPlacement "[INSIDE,NEXT_TO_PORT_IF_POSSIBLE]");
+	let labels = 
+		List.map (fun name ->
+			let label = new label in
+			label#setText name; label) ["read_addr";"write?";"write_addr";"write_data"]
+	in
+	
+	List.iter2 (fun port lab -> port#addLabel lab) opNode.inputs labels;
+	opNode	
 
 let romNode kgraph = 
 	let node = simpleOpNode ~order:true kgraph "rom" 0.5 0.5 in
+	node#setHeight 60.0;
+	node#setWidth 30.0;
 	multOpNode kgraph node 1
 
 let junction mult =
@@ -767,7 +784,7 @@ let arrow_decorator ?(h=false) alone =
 	else if h then place#setAbsolute (-15.0) else place#setAbsolute (-10.0);
 	place#setXOffset (-10.0);
 	place#setYOffset (-4.0);
-	place#setRotateWithLine false;
+	place#setRotateWithLine true;
 	place#setWidth 12.0;
 	place#setHeight 8.0;
 	place#setRelative 1.0;
@@ -1042,6 +1059,7 @@ let main _ =
 	let _ = function_node kgraph "fulladder" ["a";"b"] ["c";"r";"e"] 5 in
 	let _ = function_node kgraph "fulladder" ["a";"b"] ["c";"r";"e"] 15 in
 
+	let _ = ramNode kgraph in
 
 	let main = function_node kgraph "main" [] [] 0 in
 

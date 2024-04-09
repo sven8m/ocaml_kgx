@@ -17,7 +17,6 @@ let print_port ff port =
 	Format.fprintf ff "@]@,</ports>@,"
 
 let findPortId port node =
-	Format.printf "iao : %d %d@." (node#getId) (List.length node#getPorts);
 	let rec aux i pl = match pl with
 	| [] -> failwith "not found"
 	| p :: q -> if p#getId = port#getId then i else aux (i + 1) q
