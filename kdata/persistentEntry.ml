@@ -70,6 +70,12 @@ let activatePartition () =
 let borderOffset v = 
 	{key = "org.eclipse.elk.port.borderOffset" ; value = string_of_float v}
 
+let layerConstraint s = 
+	{key = "org.eclipse.elk.layered.layering.layerConstraint" ; value = s}
+
+let separateComponent b =
+	{key = "org.eclipse.elk.separateConnectedComponents" ; value = string_of_bool b}
+
 let print_property ff p = 
 	Format.fprintf ff "<persistentEntries key=\"%s\" value=\"%s\"/>@," p.key p.value
 
