@@ -11,9 +11,9 @@ let create_actionCollapse () =
 	create_action ~trig:"DOUBLECLICK" "de.cau.cs.kieler.klighd.actions.CollapseExpandAction" 
 
 let print_action ff action = 
-	Format.fprintf ff "<actions actionId=\"%s\"" action.actionId;
+	Format.fprintf ff "@,<actions actionId=\"%s\"" action.actionId;
 	begin match action.trigger with
 	| None -> ()
 	| Some t -> Format.fprintf ff " trigger=\"%s\"" t;
 	end;
-	Format.fprintf ff "/>@,"
+	Format.fprintf ff "/>"

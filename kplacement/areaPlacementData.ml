@@ -17,16 +17,16 @@ let print_placement_area ff data =
 	begin match data#getTopLeft with
 	| None -> ()
 	| Some p ->
-		Format.fprintf ff "@[<v 4><topLeft>@,%a@]@,</topLeft>@," print_point p
+		Format.fprintf ff "@,@[<v 4><topLeft>@,%a@]@,</topLeft>" print_point p
 	end;
 	begin match data#getBotRight with 
 	| None -> ()
 	| Some p ->
-		Format.fprintf ff "@[<v 4><bottomRight>@,%a@]@,</bottomRight>@," print_point p
+		Format.fprintf ff "@,@[<v 4><bottomRight>@,%a@]@,</bottomRight>" print_point p
 	end
 
 let print_areaPlacement ff place =
-	Format.fprintf ff "@[<v 4><placementData xsi:type=\"krendering:KAreaPlacementData\">@,";
+	Format.fprintf ff "@,@[<v 4><placementData xsi:type=\"krendering:KAreaPlacementData\">";
 	print_placement_area ff place;
-	Format.fprintf ff "@]@,</placementData>@,"
+	Format.fprintf ff "@]@,</placementData>"
 

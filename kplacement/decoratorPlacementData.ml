@@ -33,10 +33,10 @@ end
 let print_decoratorPlacementInfo ff place = 
 	Print_utils.print_float_opt "absolute" ff place#getAbsolute;
 	Print_utils.print_float_opt "relative" ff place#getRelative;
-	Format.fprintf ff "xOffset=\"%f\" yOffset=\"%f\" " place#getXOffset place#getYOffset;
+	Format.fprintf ff " xOffset=\"%f\" yOffset=\"%f\"" place#getXOffset place#getYOffset;
 	Print_utils.print_float_opt "width" ff place#getWidth;
 	Print_utils.print_float_opt "height" ff place#getHeight;
 	if place#isRotateWithLine then
-		Format.fprintf ff "rotateWithLine=\"true\""
+		Format.fprintf ff " rotateWithLine=\"true\""
 let print_decoratorPlacement ff place = 
-	Format.fprintf ff "<placementData xsi:type=\"krendering:KDecoratorPlacementData\" %a/>@," print_decoratorPlacementInfo place	
+	Format.fprintf ff "@,<placementData xsi:type=\"krendering:KDecoratorPlacementData\"%a/>" print_decoratorPlacementInfo place	

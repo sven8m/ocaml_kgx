@@ -17,15 +17,15 @@ end
 let print_gridPlacementInfo ff data = 
 	begin match data#getMinWidth with
 	| None -> ()
-	| Some f -> Format.fprintf ff "minCellWidth=\"%f\" " f
+	| Some f -> Format.fprintf ff " minCellWidth=\"%f\"" f
 	end;
 	begin match data#getMinHeight with
 	| None -> ()
-	| Some f -> Format.fprintf ff "minCellHeight=\"%f\" " f
+	| Some f -> Format.fprintf ff " minCellHeight=\"%f\"" f
 	end
 
 let print_gridPlacement ff place = 
-	Format.fprintf ff "@[<v 4><placementData xsi:type=\"krendering:KGridPlacementData\" %a>@," print_gridPlacementInfo place;
-	print_placement_area ff place;
-	Format.fprintf ff "@]@,</placementData>@,"
+	Format.fprintf ff "@,@[<v 4><placementData xsi:type=\"krendering:KGridPlacementData\"%a>" print_gridPlacementInfo place;
+	print_placement_area ff (place :> areaPlacementData);
+	Format.fprintf ff "@]@,</placementData>"
 

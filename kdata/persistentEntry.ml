@@ -77,7 +77,7 @@ let separateComponent b =
 	{key = "org.eclipse.elk.separateConnectedComponents" ; value = string_of_bool b}
 
 let print_property ff p = 
-	Format.fprintf ff "<persistentEntries key=\"%s\" value=\"%s\"/>@," p.key p.value
+	Format.fprintf ff "@,<persistentEntries key=\"%s\" value=\"%s\"/>" p.key p.value
 
 let print_properties ff p = 
 	List.iter (fun p -> print_property ff p) p#getProperties

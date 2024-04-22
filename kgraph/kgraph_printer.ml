@@ -10,11 +10,11 @@ open Kedge
 open PersistentEntry
 
 let print_port ff port = 
-	Format.fprintf ff "@[<v 4><ports %a>@," Object_pos.print_obj_pos (port :> Object_pos.obj_pos) ;
+	Format.fprintf ff "@,@[<v 4><ports%a>" Object_pos.print_obj_pos (port :> Object_pos.obj_pos) ;
 	List.iter (print_property ff) port#getProperties;
 	List.iter (print_label ff) port#getLabels;
 	List.iter (print_data_node ff) port#getData;
-	Format.fprintf ff "@]@,</ports>@,"
+	Format.fprintf ff "@]@,</ports>"
 
 let findPortId port node =
 	let rec aux i pl = match pl with
@@ -28,21 +28,21 @@ let print_sourcePort ff kedge =
 	| None -> ()
 	| Some p ->
 		let node = p#getNodeOpt () in
-		Format.fprintf ff "sourcePort=\"%s/@ports.%d\"" (node#getPath) (findPortId p node)
+		Format.fprintf ff " sourcePort=\"%s/@ports.%d\"" (node#getPath) (findPortId p node)
 
 let print_targetPort ff kedge = 
 	match kedge#getTargetPort with
 	| None -> ()
 	| Some p ->
 		let node = p#getNodeOpt () in
-		Format.fprintf ff "targetPort=\"%s/@ports.%d\"" node#getPath (findPortId p node)
+		Format.fprintf ff " targetPort=\"%s/@ports.%d\"" node#getPath (findPortId p node)
 
 let print_kedge ff kedge =	
-	Format.fprintf ff "@[<v 4><outgoingEdges target=\"%s\" %a %a>@," (kedge#getTargetOpt ())#getPath print_sourcePort kedge print_targetPort kedge;
+	Format.fprintf ff "@,@[<v 4><outgoingEdges target=\"%s\"%a%a>" (kedge#getTargetOpt ())#getPath print_sourcePort kedge print_targetPort kedge;
 	List.iter (print_property ff) kedge#getProperties;
 	List.iter (print_label ff) kedge#getLabels;
 	List.iter (print_data_node ff) kedge#getData;
-	Format.fprintf ff "@]@,</outgoingEdges>@,"
+	Format.fprintf ff "@]@,</outgoingEdges>"
 
 let rec print_knode ff (knode :knode) =
 	
@@ -62,9 +62,9 @@ let rec print_knode ff (knode :knode) =
 	in
 	let incoming = match (compute_incomingList knode#getIncomingEdges) with
 	| "" -> ""
-	| s -> "incomingEdges=\""^s^"\""
+	| s -> " incomingEdges=\""^s^"\""
 	in
-	Format.fprintf ff "@[<v 4><children %a %s>@," Object_pos.print_obj_pos (knode :> Object_pos.obj_pos) incoming;	
+	Format.fprintf ff "@,@[<v 4><children%a%s>" Object_pos.print_obj_pos (knode :> Object_pos.obj_pos) incoming;	
 	List.iter (print_property ff) knode#getProperties;
 	List.iter (print_label ff) knode#getLabels;
 	(*printing data*)
@@ -75,7 +75,7 @@ let rec print_knode ff (knode :knode) =
 
 	List.iter (print_kedge ff) knode#getOutgoingEdges;
 	List.iter (print_port ff) knode#getPorts;
-	Format.fprintf ff "@]@,</children>@,"
+	Format.fprintf ff "@]@,</children>"
 
 
 let graph_to_kgx ff (kgraph : kgraph) = 
@@ -89,9 +89,9 @@ let graph_to_kgx ff (kgraph : kgraph) =
 	
 	Compute_path.compute_path_kgraph kgraph;
 
-	Format.fprintf ff "%s@[<v 0>@," header;
+	Format.fprintf ff "@[<v 0>%s@," header;
 	List.iter (print_property ff) kgraph#getProperties;
 	List.iter (Format.fprintf ff "%a" print_knode) kgraph#getNodes;
 	
-	Format.fprintf ff "@]%s@." finish;
+	Format.fprintf ff "@,%s@]@." finish;
 

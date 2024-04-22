@@ -32,21 +32,21 @@ let container_to_string c =
 let print_container_infos ff c = 
 	match c with
 	| Rect -> ()
-	| RoundRect (x,y) -> Format.fprintf ff "cornerWidth = \"%f\" cornerHeight = \"%f\"" x y
+	| RoundRect (x,y) -> Format.fprintf ff " cornerWidth=\"%f\" cornerHeight=\"%f\"" x y
 	| Spline -> ()
-	| Text t -> Format.fprintf ff "text=\"%s\"" t
+	| Text t -> Format.fprintf ff " text=\"%s\"" t
 	| PolyLine _ -> ()
 	| Ellipse -> ()
 	| Default -> ()
 	| Polygon _ -> ()
-	| RoundPolyline (x,_) -> Format.fprintf ff "bendRadius = \"%f\"" x
+	| RoundPolyline (x,_) -> Format.fprintf ff " bendRadius=\"%f\"" x
 
 let print_container_content ff c = 
 	match c with
 	| RoundPolyline (_,pl) | PolyLine pl | Polygon pl ->
 		List.iter (fun point ->
-			Format.fprintf ff "@[<v 4><points>@,%a@]@,</points>@," Point.print_point point) pl
+			Format.fprintf ff "@,@[<v 4><points>%a@]@,</points>" Point.print_point point) pl
 	| _ -> ()
 	
 let print_container ff c =
-	Format.fprintf ff "%s\" %a" (container_to_string c) print_container_infos c	
+	Format.fprintf ff "%s\"%a" (container_to_string c) print_container_infos c	

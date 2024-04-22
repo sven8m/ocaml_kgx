@@ -29,5 +29,5 @@ let create_coloring ?(grad_angle) ?(target) color =
 (*printing*)
 let print_color ff color t =
 	let c = if t then "targetColor" else "color" in
-	Format.fprintf ff "<%s red=\"%d\" green=\"%d\" blue=\"%d\"/>@," c color.red color.green color.blue
+	Format.fprintf ff "@,<%s red=\"%d\" green=\"%d\" blue=\"%d\"/>" c color.red color.green color.blue
 

@@ -29,10 +29,10 @@ let vertical_to_string (v : vertical) = match v with
 let print_HorizontalAlignment ff a = 
 	match a#getHorizontalAlignment with
 	| UNDEF -> ()
-	| h -> Format.fprintf ff "horizontalAlignment=\"%s\" " (horizontal_to_string h)
+	| h -> Format.fprintf ff " horizontalAlignment=\"%s\"" (horizontal_to_string h)
 	
 let print_VerticalAlignment ff a =
 	begin match (a#getVerticalAlignment : vertical) with
 	| UNDEF -> ()
-	| v -> Format.fprintf ff "verticalAlignment=\"%s\" " (vertical_to_string v)
+	| v -> Format.fprintf ff " verticalAlignment=\"%s\"" (vertical_to_string v)
 	end

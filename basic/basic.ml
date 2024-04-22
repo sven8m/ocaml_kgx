@@ -10,20 +10,23 @@ open Kport
 open Label
 open Kedge
 
-type op_node = {
-	node : knode;
-	inputs : kport list;
-	outputs : kport list;
-	control : kport list
-}
-
-
 type endPoint = {
 	node : knode;
 	port : kport;
 	var : bool;
 	mutable labels : string list;
 }
+
+type op_node = {
+	node : knode;
+	inputs : endPoint list;
+	outputs : endPoint list;
+	control : endPoint list
+}
+
+let mk_endpoint ?(var=false) ?(lab=[]) node port = 
+	{node = node ; port = port ; var = var ; labels = lab}
+
 (*
 type utils = {	
 	function_node : knode;
@@ -37,6 +40,7 @@ type utils = {
 }
 
 type env = {
+	reg_env : endPoint Ast.IdentEnv.t;
 	input_env : endPoint Ast.IdentEnv.t;
 	output_env : endPoint Ast.IdentEnv.t;
 }
@@ -220,36 +224,38 @@ let multOpNode ?(no=false) kgraph node n =
 	let rec create n = 
 		match n with
 		| 0 -> []
-		| _ -> (invisibleInputPort kgraph node) :: create (n-1)
+		| _ -> (mk_endpoint node (invisibleInputPort kgraph node)) :: create (n-1)
 	in
 	let inputs = create n in
 	let po = match no with
 	| false ->
-		invisibleOutputPort kgraph node
+		mk_endpoint node (invisibleOutputPort kgraph node)
 	| true ->
-		notOutputPort kgraph node
+		mk_endpoint node (notOutputPort kgraph node)
 	in
 	{node = node ; inputs = inputs ; outputs = [po] ; control = []}
 
 let binopNode ?(no=false) kgraph node = 
-	let p1 = invisibleInputPort kgraph node in
-	let p2 = invisibleInputPort kgraph node in
+	let p1 = mk_endpoint node (invisibleInputPort kgraph node) in
+	let p2 = mk_endpoint node (invisibleInputPort kgraph node) in
 	let po = match no with
 	| false -> 
 		invisibleOutputPort kgraph node
 	| true ->
 		notOutputPort kgraph node
 	in
+	let po = mk_endpoint node po in
 	{node = node ; inputs = [p1;p2] ; outputs = [po] ; control = []}
 
 let unopNode ?(no=false) kgraph node = 
-	let p1 = invisibleInputPort kgraph node in
+	let p1 = mk_endpoint node (invisibleInputPort kgraph node) in
 	let po = match no with
 	| false ->
 		invisibleOutputPort kgraph node
 	| true ->
 		notOutputPort kgraph node
 	in
+	let po = mk_endpoint node po in
 	{node = node ; inputs = [p1] ; outputs = [po] ; control = []}
 
 let resetPortsSurrounding node = 
@@ -298,30 +304,9 @@ let rectangleAsPolygon () =
 	
 	Polygon [p1;p2;p3;p4;p1]
 
-let decoratorNot () = 
-	let cont = new containerRendering in
-	cont#setContainer Ellipse;
-	cont#addStyle (create_style ~on_sel:true (LineWidth 2.0));
-	cont#addStyle (create_style (LineWidth 1.3));
-	cont#addStyle (create_style (Shadow (2.0,2.0)));
-	let color = create_color 0 0 0 in
-	cont#addStyle (create_style (Background (create_coloring color)));
-
-	let pd = new DecoratorPlacementData.decoratorPlacementData in
-	pd#setYOffset (-2.5);
-	pd#setRelative 0.625;
-	pd#setHeight 5.0;
-	pd#setWidth 5.0;
-	
-	cont#setPlacement (Decorator pd);
-
-	cont
 let simpleNandNode kgraph =
 	let node = simpleOpNode kgraph "&amp;" 0.5 0.6 in
-
-	(*node#setContainer (rectangleAsPolygon ());fulladder
-	node#addData (decoratorNot ());
-*)	binopNode ~no:true kgraph node
+	binopNode ~no:true kgraph node
 
 let triangle () = 
 	let c1 = Point.create_coord Left in
@@ -365,14 +350,6 @@ let simpleBufferNode kgraph =
 let simpleNotNode kgraph = 
 	unopNode ~no:true kgraph (simpleOpNode kgraph "1" 0.5 0.6)
 
-
-(*	let node = simpleBufferNode kgraph in
-	node#setContainer (rectangleAsPolygon ());
-
-	node#addData (decoratorNot ());
-	node
-*)
-
 let muxContainer () = 
 	let c1 = Point.create_coord Left in
 	let c2 = Point.create_coord Top in
@@ -403,12 +380,12 @@ let simpleMuxNode kgraph =
 	node#addProperty (PersistentEntry.nodeSize "[NODE_LABELS, PORTS, PORT_LABELS, MINIMUM_SIZE]");
 	
 	let op = binopNode kgraph node in
-	let p1 = visibleControlPort ~ofs:(-3.5) kgraph node in
-	p1#addProperty (PersistentEntry.allowSwitch ());
-	List.iteri (fun i port ->
+	let p1 = mk_endpoint node (visibleControlPort ~ofs:(-3.5) kgraph node) in
+	p1.port#addProperty (PersistentEntry.allowSwitch ());
+	List.iteri (fun i endPoint ->
 		let label = new label in
 		label#setText (string_of_int i);
-		port#addLabel label) op.inputs;
+		endPoint.port#addLabel label) op.inputs;
 	{op with control = [p1]}
 
 let simpleCondNode kgraph n_cond = 
@@ -426,21 +403,22 @@ let simpleCondNode kgraph n_cond =
 		| _ ->
 			let real = n_cond - n in
 			let delta = if real >= 10 then
-				8.0 -. 0.02 *. (float_of_int n_cond)
-			else 8.0 -. 0.04 *. (float_of_int n_cond)
+				8.0 -. 0.013 *. (float_of_int n_cond)
+			else 8.0 -. 0.045 *. (float_of_int n_cond)
 			in
-			let ofs = if real >= 10 then 0.0 else 4.0 in
+			let ofs = if real >= 10 then (-5.0) -. 0.013 *. (float_of_int n_cond) else 4.0 in
 			(visibleControlPort ~ofs:(-.ofs -. delta *. (float_of_int (n_cond - n))) kgraph node) :: (create (n-1)) in
 		create n_cond
 	in
-	List.iteri (fun i port ->
+	let control_ports = List.map (fun port -> mk_endpoint node port) control_ports in
+	List.iteri (fun i endPoint ->
 		let label = new label in
 		label#setText (string_of_int (i+1));
-		port#addLabel label) control_ports;
-	List.iteri (fun i port ->
+		endPoint.port#addLabel label) control_ports;
+	List.iteri (fun i endPoint ->
 		let label = new label in
 		label#setText (if i = (n_cond) then "else" else string_of_int (i+1));
-		port#addLabel label) op.inputs;
+		endPoint.port#addLabel label) op.inputs;
 	{op with control = control_ports}
 
 let simpleMatchNode kgraph constr_list = 
@@ -454,11 +432,11 @@ let simpleMatchNode kgraph constr_list =
 	(*resetPortsSurrounding node;
 	*)
 	let op = multOpNode kgraph node (List.length constr_list) in
-	let control_port = visibleControlPort ~ofs:(-.3.0 -. 3.0 *. (float_of_int (List.length constr_list))) kgraph node in
-	List.iter2 (fun port name ->
+	let control_port = mk_endpoint node (visibleControlPort ~ofs:(-.3.0 -. 3.0 *. (float_of_int (List.length constr_list))) kgraph node) in
+	List.iter2 (fun endPoint name ->
 		let label = new label in
 		label#setText name;
-		port#addLabel label)
+		endPoint.port#addLabel label)
 	op.inputs constr_list;
 	{op with control = [control_port]}
 
@@ -468,11 +446,11 @@ let simpleTupleNode kgraph n =
 
 let simpleUnTupleNode kgraph n =
 	let node = simpleOpNode kgraph "()" 0.5 0.5 in
-	let input = invisibleInputPort kgraph node in
+	let input = mk_endpoint node (invisibleInputPort kgraph node) in
 	let rec create n = 
 		match n with
 		| 0 -> []
-		| _ -> (invisibleOutputPort kgraph node) :: (create (n-1))
+		| _ -> (mk_endpoint node (invisibleOutputPort kgraph node)) :: (create (n-1))
 	in
 	{node = node ; inputs = [input] ; outputs = create n; control = []}
 
@@ -499,7 +477,7 @@ let simpleConstNode ?(const=true) kgraph text =
 	cont#setContainer d;
 	cont#addContainerRendering (simpleText ~ho_mar:(5.0) text 0.5 0.5);
 	node#addData cont;	
-	let p = invisibleOutputPort kgraph node in
+	let p = mk_endpoint ~var:(not const) node (invisibleOutputPort kgraph node) in
 	{node = node ; inputs =[] ; outputs = [p] ; control = []}
 
 let simpleInputVarNode kgraph text = 
@@ -528,13 +506,13 @@ let simpleSinkNode ?(used=true) kgraph text =
 	node#addData cont;
 	resetPortsSurrounding node;
 	
-	let p = invisibleInputPort kgraph node in
+	let p = mk_endpoint ~var:true node (invisibleInputPort kgraph node) in
 	{node = node ; inputs =[p] ; outputs = [] ; control = []}
 
 
 let simpleFbyNode kgraph =
 	let op = unopNode kgraph (simpleOpNode ~ho_mar:5.0 kgraph "fby" 0.5 0.5) in
-	let c = visibleControlPort kgraph op.node in
+	let c = mk_endpoint op.node (visibleControlPort kgraph op.node) in
 	{op with control = [c]}
 
 let createPort kgraph node text = 
@@ -604,22 +582,22 @@ let function_node ?(res=false) ?(aut=false) ?(m=false) kgraph name inputs output
 	let inputs = List.map (fun input ->
 		let port = createPort kgraph main_node input in 
 		port#addProperty (PersistentEntry.createPortWest ());
-		port
+		mk_endpoint ~var:true main_node port
 		) inputs in
 	
 	let outputs = List.map (fun output ->
 		let port = createPort kgraph main_node output in
 		port#addProperty (PersistentEntry.createPortEast ());
-		port
+		mk_endpoint ~var:true main_node port
 		) outputs in
 	{node = main_node ; inputs = inputs ; outputs = outputs ; control = []}
 
 let functionReset ?(res=false) ?(m=false) kgraph name inputs outputs layer = 
 	let op = function_node ~res:res ~m:m kgraph name inputs outputs layer in
-	{op with control = [visibleControlPort kgraph op.node]}
+	{op with control = [mk_endpoint op.node (visibleControlPort kgraph op.node)]}
 
 let addReset kgraph (opNode : op_node) = 
-	{opNode with control = [visibleControlPort kgraph opNode.node]}
+	{opNode with control = [mk_endpoint opNode.node (visibleControlPort kgraph opNode.node)]}
 
 
 let state_color layer =
@@ -759,7 +737,7 @@ let ramNode kgraph =
 			label#setText name; label) ["read_addr";"write?";"write_addr";"write_data"]
 	in
 	
-	List.iter2 (fun port lab -> port#addLabel lab) opNode.inputs labels;
+	List.iter2 (fun endPoint lab -> endPoint.port#addLabel lab) opNode.inputs labels;
 	opNode	
 
 let romNode kgraph = 
@@ -999,7 +977,7 @@ let automaton_edge kgraph source target name reset beginning =
 	label#addProperty (PersistentEntry.edgeLabelPlacement "CENTER");
 	edge#addLabel label
 	
-let new_edge ?(mult=false) kgraph source target = 
+let new_edge ?(mult=false) kgraph (source : endPoint) (target : endPoint) = 
 	let edge = new kedge kgraph in
 	edge#setSource source.node;
 	edge#setSourcePort source.port;
@@ -1071,7 +1049,7 @@ let main _ =
 
 	let cond = simpleCondNode kgraph 3 in
 	let a = simpleCondNode kgraph 4 in
-	let b = simpleCondNode kgraph 7 in
+(*	let b = simpleCondNode kgraph 7 in
 	let c = simpleCondNode kgraph 10 in
 	let d = simpleCondNode kgraph 25 in
 	let e = simpleCondNode kgraph 50 in
@@ -1079,17 +1057,17 @@ let main _ =
 	c.node#setParent main.node;
 	d.node#setParent main.node;
 	e.node#setParent main.node;
-
+*)
 	cond.node#setParent main.node;
 	a.node#setParent main.node;
 
 	let matchNode = simpleMatchNode kgraph ["A";"B";"C";"else"] in
 	matchNode.node#setParent main.node;
-	let matchNode2 = simpleMatchNode kgraph ["A";"B";"C";"else";"B";"C";"else";"B";"C";"else";"B";"C";"else";"B";"C";"else"] in
+(*	let matchNode2 = simpleMatchNode kgraph ["A";"B";"C";"else";"B";"C";"else";"B";"C";"else";"B";"C";"else";"B";"C";"else"] in
 	matchNode2.node#setParent main.node;
 	let matchNode3 = simpleMatchNode kgraph ["A";"B";"C";"else";"B";"C";"else"] in
 	matchNode3.node#setParent main.node;
-
+*)
 	let _ = simpleBubleNode kgraph in 
 	let _ = simpleFbyNode kgraph in
 

@@ -22,10 +22,10 @@ end
 let print_float_opt message ff value = 
 	match value with
 	| None -> ()
-	| Some f -> Format.fprintf ff "%s=\"%f\"" message f
+	| Some f -> Format.fprintf ff " %s=\"%f\"" message f
 
 let print_obj_pos ff obj =
-	Format.fprintf ff "%a %a %a %a" 
+	Format.fprintf ff "%a%a%a%a" 
 		(print_float_opt "xpos") obj#getXpos 
 		(print_float_opt "ypos") obj#getYpos
 		(print_float_opt "width") obj#getWidth

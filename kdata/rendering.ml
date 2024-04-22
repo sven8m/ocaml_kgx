@@ -44,21 +44,21 @@ end
 (* printing *)
 
 let rec print_container_rendering ff cont = 
-	Format.fprintf ff "@[<v 4><children xsi:type=\"krendering:%a>@," print_container cont#getContainer;
+	Format.fprintf ff "@,@[<v 4><children xsi:type=\"krendering:%a>" print_container cont#getContainer;
 	print_data ff (cont :> data);
 	print_container_content ff cont#getContainer;
-	Format.fprintf ff "@]@,</children>@,"
+	Format.fprintf ff "@]@,</children>"
 
 and print_child_area ff ca = 
-	Format.fprintf ff "@[<v 4><children xsi:type=\"krendering:KChildArea\">@,";
+	Format.fprintf ff "@,@[<v 4><children xsi:type=\"krendering:KChildArea\">";
 	print_data ff ca;
-	Format.fprintf ff "@]@,</children>@,"
+	Format.fprintf ff "@]@,</children>"
 
 and print_junction ff j = 
-	Format.fprintf ff "@[<v 4><junctionPointRendering xsi:type=\"krendering:%a>@," print_container j#getContainer;
+	Format.fprintf ff "@,@[<v 4><junctionPointRendering xsi:type=\"krendering:%a>" print_container j#getContainer;
 	print_data ff (j :> data);
 	print_container_content ff j#getContainer;
-	Format.fprintf ff "@]@,</junctionPointRendering>@,"
+	Format.fprintf ff "@]@,</junctionPointRendering>"
 
 and print_data ff data =
 	
@@ -77,7 +77,7 @@ and print_data ff data =
 	List.iter (print_junction ff) data#getJunctions
 
 let print_data_node ff cont = 
-	Format.fprintf ff "@[<v 4><data xsi:type=\"krendering:%a>@," print_container cont#getContainer;
+	Format.fprintf ff "@,@[<v 4><data xsi:type=\"krendering:%a>" print_container cont#getContainer;
 	print_data ff (cont:>data);
 	print_container_content ff cont#getContainer; 
-	Format.fprintf ff "@]@,</data>@,"	
+	Format.fprintf ff "@]@,</data>"	

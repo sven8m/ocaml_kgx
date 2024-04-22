@@ -36,12 +36,12 @@ let print_pos_val ff pos =
 	match pos with
 	| Undef -> ()
 	| Abs f ->
-		Format.fprintf ff "absolute=\"%f\"" f
+		Format.fprintf ff " absolute=\"%f\"" f
 	| Rel f ->
-		Format.fprintf ff "relative=\"%f\"" f
+		Format.fprintf ff " relative=\"%f\"" f
 
 let print_coord ff coord v =
-	Format.fprintf ff "<%s xsi:type=\"krendering:%s\" %a/>@," v (coord_type_to_string coord.c_type) print_pos_val coord.c_val
+	Format.fprintf ff "@,<%s xsi:type=\"krendering:%s\"%a/>" v (coord_type_to_string coord.c_type) print_pos_val coord.c_val
 
 let print_point ff point = 
 	print_coord ff point.x "x";

@@ -50,7 +50,7 @@ let line_style_to_string s = match s with
 
 let print_style ff style =
 
-	Format.fprintf ff "@[<v 4><styles xsi:type=\"krendering:%s\"" (style_to_string style.style);
+	Format.fprintf ff "@,@[<v 4><styles xsi:type=\"krendering:%s\"" (style_to_string style.style);
 	if style.on_selection then
 		Format.fprintf ff " selection=\"true\"";
 	begin match style.style with
@@ -78,4 +78,4 @@ let print_style ff style =
 			print_color ff coloring.target_color true;
 	| _ -> ()
 	end;
-	Format.fprintf ff "@]@,</styles>@,"
+	Format.fprintf ff "@]@,</styles>"
