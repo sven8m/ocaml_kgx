@@ -19,10 +19,36 @@ type endPoint = {
 
 type op_node = {
 	node : knode;
-	inputs : endPoint list;
-	outputs : endPoint list;
+	inner_inputs : endPoint list;
+	outer_inputs : endPoint list;
+	inner_outputs : endPoint list;
+	outer_outputs : endPoint list;
 	control : endPoint list
 }
+
+let mk_op_node ?(control = []) ?(inner_inputs) ?(outer_inputs) ?(inner_outputs) ?(outer_outputs) node inputs outputs =
+	let inner_inputs = match inner_inputs with
+	| None -> inputs
+	| Some inputs -> inputs
+	in
+	let outer_inputs = match outer_inputs with
+	| None -> inputs
+	| Some inputs -> inputs
+	in
+	let inner_outputs = match inner_outputs with
+	| None -> outputs
+	| Some outputs -> outputs
+	in
+	let outer_outputs = match outer_outputs with
+	| None -> outputs
+	| Some outputs -> outputs
+	in
+	{node = node ; 
+	inner_inputs = inner_inputs;
+	outer_inputs = outer_inputs;
+	inner_outputs = inner_outputs;
+	outer_outputs = outer_outputs;
+	control = control}
 
 let mk_endpoint ?(var=false) ?(lab=[]) node port = 
 	{node = node ; port = port ; var = var ; labels = lab}
@@ -233,7 +259,7 @@ let multOpNode ?(no=false) kgraph node n =
 	| true ->
 		mk_endpoint node (notOutputPort kgraph node)
 	in
-	{node = node ; inputs = inputs ; outputs = [po] ; control = []}
+	mk_op_node node inputs [po] 
 
 let binopNode ?(no=false) kgraph node = 
 	let p1 = mk_endpoint node (invisibleInputPort kgraph node) in
@@ -245,7 +271,7 @@ let binopNode ?(no=false) kgraph node =
 		notOutputPort kgraph node
 	in
 	let po = mk_endpoint node po in
-	{node = node ; inputs = [p1;p2] ; outputs = [po] ; control = []}
+	mk_op_node node [p1;p2] [po]
 
 let unopNode ?(no=false) kgraph node = 
 	let p1 = mk_endpoint node (invisibleInputPort kgraph node) in
@@ -256,7 +282,7 @@ let unopNode ?(no=false) kgraph node =
 		notOutputPort kgraph node
 	in
 	let po = mk_endpoint node po in
-	{node = node ; inputs = [p1] ; outputs = [po] ; control = []}
+	mk_op_node node [p1] [po]
 
 let resetPortsSurrounding node = 
 	node#addProperty (PersistentEntry.create_property "org.eclipse.elk.spacing.individual" "org.eclipse.elk.spacing.portsSurrounding:[top=0.0,left=0.0,bottom=0.0,right=0.0]")
@@ -385,7 +411,7 @@ let simpleMuxNode kgraph =
 	List.iteri (fun i endPoint ->
 		let label = new label in
 		label#setText (string_of_int i);
-		endPoint.port#addLabel label) op.inputs;
+		endPoint.port#addLabel label) op.outer_inputs;
 	{op with control = [p1]}
 
 let simpleCondNode kgraph n_cond = 
@@ -418,7 +444,7 @@ let simpleCondNode kgraph n_cond =
 	List.iteri (fun i endPoint ->
 		let label = new label in
 		label#setText (if i = (n_cond) then "else" else string_of_int (i+1));
-		endPoint.port#addLabel label) op.inputs;
+		endPoint.port#addLabel label) op.outer_inputs;
 	{op with control = control_ports}
 
 let simpleMatchNode kgraph constr_list = 
@@ -437,7 +463,7 @@ let simpleMatchNode kgraph constr_list =
 		let label = new label in
 		label#setText name;
 		endPoint.port#addLabel label)
-	op.inputs constr_list;
+	op.outer_inputs constr_list;
 	{op with control = [control_port]}
 
 let simpleTupleNode kgraph n = 
@@ -452,7 +478,7 @@ let simpleUnTupleNode kgraph n =
 		| 0 -> []
 		| _ -> (mk_endpoint node (invisibleOutputPort kgraph node)) :: (create (n-1))
 	in
-	{node = node ; inputs = [input] ; outputs = create n; control = []}
+	mk_op_node node [input] (create n)
 
 let simpleConstNode ?(const=true) kgraph text = 
 	let c1 = Point.create_coord Left in
@@ -478,7 +504,7 @@ let simpleConstNode ?(const=true) kgraph text =
 	cont#addContainerRendering (simpleText ~ho_mar:(5.0) text 0.5 0.5);
 	node#addData cont;	
 	let p = mk_endpoint ~var:(not const) node (invisibleOutputPort kgraph node) in
-	{node = node ; inputs =[] ; outputs = [p] ; control = []}
+	mk_op_node node [] [p]
 
 let simpleInputVarNode kgraph text = 
 	simpleConstNode ~const:false kgraph text
@@ -507,7 +533,7 @@ let simpleSinkNode ?(used=true) kgraph text =
 	resetPortsSurrounding node;
 	
 	let p = mk_endpoint ~var:true node (invisibleInputPort kgraph node) in
-	{node = node ; inputs =[p] ; outputs = [] ; control = []}
+	mk_op_node node [p] []
 
 
 let simpleFbyNode kgraph =
@@ -590,7 +616,7 @@ let function_node ?(res=false) ?(aut=false) ?(m=false) kgraph name inputs output
 		port#addProperty (PersistentEntry.createPortEast ());
 		mk_endpoint ~var:true main_node port
 		) outputs in
-	{node = main_node ; inputs = inputs ; outputs = outputs ; control = []}
+	mk_op_node main_node inputs outputs
 
 let functionReset ?(res=false) ?(m=false) kgraph name inputs outputs layer = 
 	let op = function_node ~res:res ~m:m kgraph name inputs outputs layer in
@@ -737,7 +763,7 @@ let ramNode kgraph =
 			label#setText name; label) ["read_addr";"write?";"write_addr";"write_data"]
 	in
 	
-	List.iter2 (fun endPoint lab -> endPoint.port#addLabel lab) opNode.inputs labels;
+	List.iter2 (fun endPoint lab -> endPoint.port#addLabel lab) opNode.outer_inputs labels;
 	opNode	
 
 let romNode kgraph = 

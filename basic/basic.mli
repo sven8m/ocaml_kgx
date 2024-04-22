@@ -9,8 +9,10 @@ type endPoint = {
 (**type for a graphical operation node *)
 type op_node = {
 	node : ObjectSig.knodeSig; (**graphical knode *)
-	inputs : endPoint list; (**input ports, placed left *)
-	outputs : endPoint list; (**output ports, placed right *)
+	inner_inputs : endPoint list; (**input ports, placed left, for the inside of the operation node *)
+	outer_inputs : endPoint list; (**input ports, placed left, for the incoming inputs *)
+	inner_outputs : endPoint list; (**output ports, placed right , for the outputs comming from inside the operation node*)
+	outer_outputs : endPoint list; (**output ports, placed right, used outside the operation node *)
 	control : endPoint list; (**control ports, placed top or down *)
 }
 
