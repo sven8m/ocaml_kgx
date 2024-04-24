@@ -67,12 +67,22 @@ val invisibleOutputPort : Kgraph.kgraph -> Knode.knode -> Kport.kport
 val invisibleInputPort : Kgraph.kgraph -> Knode.knode -> Kport.kport
 (** [invisibleInputPort kgraph node] creates an invisible port linked to the [node] on the western side. *)
 
-val invisibleControlPort : Kgraph.kgraph -> Knode.knode -> Kport.kport
+val invisibleControlPort : ?ofs:float -> Kgraph.kgraph -> Knode.knode -> Kport.kport
 (** [invisibleControlPort kgraph node] creates an invisible port linked to the [node] on the north or south side. *)
 
 val visibleControlPort : ?ofs:float -> Kgraph.kgraph -> Knode.knode -> Kport.kport
 (** [visibleControlPort kgraph node] creates a port linked to the [node] on the north or south side. It is a 5*5 black box.
 	Option [ofs] gives a border offset. *)
+
+val visiblePort : Kgraph.kgraph -> Knode.knode -> Kport.kport
+(** [visiblePort kgraph node] creates a port linked to the [node] that is visible (5*5 black box) *)
+
+val visibleOutputPort : Kgraph.kgraph -> Knode.knode -> Kport.kport
+(** [visibleOutputPort kgraph node] creates a visible port linked to the [node] on the eastern side. *)
+
+val visibleInputPort : Kgraph.kgraph -> Knode.knode -> Kport.kport
+(** [visibleInputPort kgraph node] creates a visible port linked to the [node] on the western side. *)
+
 val notOutputPort : Kgraph.kgraph -> Knode.knode -> Kport.kport
 (** [notOutputPort kgraph node] creates a port kinked to the [node] on the eastern side, that is a circle. *)
 
@@ -105,45 +115,41 @@ val simpleOpNode :
 	Option [ho_mar] to specify if the text should have an horizontal margin.
 	Option [order] to specify that the ports have fixed order.*)
 
-val simpleXorNode :
-	?mult:int -> Kgraph.kgraph -> op_node
-(** [simpleXorNode kgraph] creates an op_node corresponding to a xor node.
-	Option [mult] to specify the number of input ports (default 2). *)
+val simpleXorNode : Kgraph.kgraph -> Knode.knode
+(** [simpleXorNode kgraph] creates a rectangle with text [=1]*)
 
-val simpleAndNode : ?mult:int -> Kgraph.kgraph -> op_node
-(** [simpleAndNode kgraph] creates an op_node corresponding to an and node.
-	Option [mult] to specify the number of input ports (default 2). *)
+val simpleAndNode : Kgraph.kgraph -> Knode.knode
+(** [simpleAndNode kgraph] creates a rectangle with text [&] *)
 
-val simpleOrNode : ?mult:int -> Kgraph.kgraph -> op_node
-(** [simpleOrNode kgraph] creates an op_node corresponding to an or node.
-	Option [mult] to specify the number of input ports (default 2). *)
+val simpleOrNode : Kgraph.kgraph -> Knode.knode
+(** [simpleOrNode kgraph] creates a rectangle with text [>=1] *)
 
-val simpleSelectNode : Kgraph.kgraph -> string -> op_node
-(** [simpleSelectNode kgraph i] creates an op_node corresponding to a selection node on position [i]. *)
+val simpleSelectNode : Kgraph.kgraph -> string -> Knode.knode
+(** [simpleSelectNode kgraph i] creates a rectangle with text [i]. *)
 
-val simpleSliceNode : Kgraph.kgraph -> string -> string -> op_node
-(** [simpleSliceNode kgraph i j] creates an op_node corresponding to a slice from i to j node.*)
+val simpleSliceNode : Kgraph.kgraph -> string -> string -> Knode.knode
+(** [simpleSliceNode kgraph i j] creates a rectangle with text [i..j] .*)
 
-val simpleConcatNode : Kgraph.kgraph -> op_node
-(** [simpleConcatNode kgraph] creates an op_node corresponding to a concatenation node. *)
+val simpleConcatNode : Kgraph.kgraph -> Knode.knode
+(** [simpleConcatNode kgraph] creates a rectangle with text [.]  *)
 
 val rectangleAsPolygon : unit -> Container.container
 (** [rectangleAsPolygon ()] creates a container that has the form of a rectangle but is formed by a polygon. *)
 
-val simpleNandNode : Kgraph.kgraph -> op_node
-(** [simpleNandNode kgraph] creates an op_node corresponding to a nand node. *)
+val simpleNandNode : Kgraph.kgraph -> Knode.knode
+(** [simpleNandNode kgraph] creates a node with text [&] *)
 
 val triangle : unit -> Container.container
 (** [triangle ()] creates a container that has the shape of a triangle*)
 
-val simpleRegNode : Kgraph.kgraph -> op_node
-(** [simpleRegNode kgraph] creates an op_node corresponding to a reg node. *)
+val simpleRegNode : Kgraph.kgraph -> Knode.knode
+(** [simpleRegNode kgraph] creates a rectangle with a triangle at the bottom. *)
 
-val simpleBufferNode : Kgraph.kgraph -> op_node
-(** [simpleBufferNode kgraph] creates an op_node corresponding to a buffer node. *)
+val simpleBufferNode : Kgraph.kgraph -> Knode.knode
+(** [simpleBufferNode kgraph] creates a rectangle with text [1] *)
 
-val simpleNotNode : Kgraph.kgraph -> op_node
-(** [simpleNotNode kgraph] creates an op_node corresponding to a negation node. *)
+val simpleNotNode : Kgraph.kgraph -> Knode.knode
+(** [simpleNotNode kgraph] creates a rectangle with text [1] *)
 
 val muxContainer : unit -> Container.container
 (** Creates a polygon that has the shape for a mux*)
@@ -151,37 +157,39 @@ val muxContainer : unit -> Container.container
 val simpleMuxShape : unit -> Rendering.containerRendering
 (** Creates a container Rendering that has the shape of a mux *)
 
-val simpleMuxNode : Kgraph.kgraph -> op_node
-(** [simpleMuxNode kgraph] creates an op_node corresponding to a mux node. *)
+val simpleMuxNode : Kgraph.kgraph -> Knode.knode
+(** [simpleMuxNode kgraph] creates an node with mux shape *)
 
-val simpleCondNode : Kgraph.kgraph -> int -> op_node
-(** [simpleCondNode kgraph n] creates an op_node corresponding to a conditional node with [n] conditions. *)
+val simpleCondNode : Kgraph.kgraph -> Knode.knode
+(** [simpleCondNode kgraph] creates a node with mux shape *)
 
-val simpleMatchNode : Kgraph.kgraph -> string list -> op_node
-(** [simpleCondNode kgraph sl] creates an op_node corresponding to a match node where [sl] is the list of constructors that are matched. *)
+val simpleMatchNode : Kgraph.kgraph -> Knode.knode
+(** [simpleMatchNode kgraph] creates a node with mux shape *) 
 
-val simpleTupleNode : Kgraph.kgraph -> int -> op_node
-(** [simpleTupleNode kgraph n] creates an op_node corresponding to a tuple node with [n] inputs. *)
+val simpleTupleNode : Kgraph.kgraph -> Knode.knode
+(** [simpleTupleNode kgraph] creates a node with text [()] *)
 
-val simpleUnTupleNode : Kgraph.kgraph -> int -> op_node
-(** [simpleUnTupleNode kgraph n] creates an op_node corresponding to an untuple node with [n] outputs. *)
+val simpleUnTupleNode : Kgraph.kgraph -> Knode.knode
+(** [simpleUnTupleNode kgraph ] creates a node with text [()] *)
 
-val simpleConstNode : ?const:bool -> Kgraph.kgraph -> string -> op_node
-(** [simpleConstNode kgraph s] creates an op_node corresponding to a constant node with text [s].
-	Option [const] (default [true]) statues if the node should not be put left or do.*)
+val simpleConstNode : ?const:bool -> Kgraph.kgraph -> string -> Knode.knode
+(** [simpleConstNode kgraph s] creates a node with shape rectangular which right border is a triangle, with text [s].
+	If [const] is [false] (default [true]), the node is put left on the layout. *)
 
-val simpleInputVarNode : Kgraph.kgraph -> string -> op_node
-(** [simpleInputVarNode kgraph s] creates an op_node corresponding to a node for a variable [s] as input. It is put on the left on the layout. *)
+val simpleInputVarNode : Kgraph.kgraph -> string -> Knode.knode
+(** [simpleInputVarNode kgraph s] creates a node with same shape as constNode, with text [s]. It is put on the left on the layout. *)
 
-val simpleSinkNode : ?used:bool -> Kgraph.kgraph -> string -> op_node
-(** [simpleSinkNode kgraph s] creates an op_node corresponding to a node for a sink node with text [s]. 
-	Option [used] states if the node should be put on the right of the layout. *)
+val simpleSinkNode : ?used:bool -> Kgraph.kgraph -> string -> Knode.knode
+(** [simpleSinkNode kgraph s] creates an node with rectangular shape, with left border as a triangle, with text [s]. 
+	Option [used] (default [true]) states if the node should be put on the right of the layout. *)
 
-val simpleFbyNode : Kgraph.kgraph -> op_node
-(** [simpleFbyNode kgraph] creates an op_node corresponding to a followed-by node. *)
+val simpleFbyNode : Kgraph.kgraph -> Knode.knode
+(** [simpleFbyNode kgraph] creates a node with rectangular shape and text [fby] *)
 
+(*
 val createPort : Kgraph.kgraph -> Knode.knode -> string -> Kport.kport
 (** [createPort kgraph node s] creates a basic port with label [s] and linked to the node [node].*)
+*)
 
 val layered_color : int -> int -> int -> int -> Coloring.color
 (** [layered_color red blue green layer] creates a color depending on the [layer].*)
@@ -198,19 +206,19 @@ val match_color : int -> Coloring.color
 val reset_color : int -> Coloring.color
 (** [reset_color layer] creates the background color of a reset node depending on the [layer]*)
 
-val function_node : ?res:bool -> ?aut:bool -> ?m:bool -> Kgraph.kgraph -> string -> string list -> string list -> int -> op_node
-(** [function_node kgraph name input_names output_names layer] creates a function node with function title [name], input ports labeled with [input_names],
-	output ports labeled with [output_names], and the background depending on the [layer].
+val function_node : ?res:bool -> ?aut:bool -> ?m:bool -> Kgraph.kgraph -> string -> int -> Knode.knode
+(** [function_node kgraph name layer] creates a function node with function title [name] and the background depending on the [layer].
 	Option [res] (default [false]) indicates if the node is a reset node (adequate color)
 	Option [aut] (default [false])  indicates if the node is an automaton node (adequate color)
 	Option [m] (default [false])  indicates if the node is a match node (adequate color)*)
 
-val functionReset : ?res:bool -> ?m:bool -> Kgraph.kgraph -> string -> string list -> string list -> int -> op_node
-(** Same as [function_node], but there is an additional control port. *)
+val functionReset : ?res:bool -> ?m:bool -> Kgraph.kgraph -> string -> int -> Knode.knode
+(** Same as [function_node], but for nodes which will have a reset port. *)
 
-val addReset : Kgraph.kgraph -> op_node -> op_node
+(*
+val addReset : Kgraph.kgraph -> op_node -> Knode.knode
 (** [addReset kgraph opNode] adds a control port to the node corresponding to opNode *)
-
+*)
 val state_color : int -> Coloring.color
 (** [state_color layer] creates the background color of a state node depending on the [layer]*)
 
@@ -235,11 +243,11 @@ val simpleBubleNode : ?init:bool -> Kgraph.kgraph -> Knode.knode
 (** [simpleBubleNode kgraph] creates a black ellipse node with size 30.
 	Option [init] changes the size to 40*)
 
-val ramNode : Kgraph.kgraph -> op_node
-(** [ramNode kgraph] creates a ram node. *)
+val ramNode : Kgraph.kgraph -> Knode.knode
+(** [ramNode kgraph] creates a ram node with title [ram]. *)
 
-val romNode : Kgraph.kgraph -> op_node
-(** [romNode kgraph] creates a rom node. *)	
+val romNode : Kgraph.kgraph -> Knode.knode
+(** [romNode kgraph] creates a rectangular node with title [rom]. *)	
 
 val junction : bool -> Rendering.containerRendering
 (** [junction mult] creates a junction buble of size 4, 5 if [mult] is true (default [false])*)
@@ -265,18 +273,23 @@ val green_triangle : bool -> Rendering.containerRendering
 (** [green_triangle b] creates a decorator whose shape is a triangle, placed at the beginning iff [b] is true *)
 
 val seq_edge : ?half:bool -> ?sourcePort:Kport.kport option -> ?targetPort:Kport.kport option ->
-	Kgraph.kgraph  -> Knode.knode -> Knode.knode -> string -> unit
-(** [seq_edge kgraph source target lab] creates a directed edge from [source] to [target] with label [lab] with
+	Kgraph.kgraph  -> Knode.knode -> Knode.knode -> Intermediate_graph.edge_label list -> unit
+(** [seq_edge kgraph source target lab] creates a directed edge from [source] to [target] with labels [lab] with
 	shape rounded Polyline. 
 	Option [half] (default [false]) to remove the arrow
 	Option [sourcePort] and [targetPort] (default [None]) to specify a source or target port for the edge*)
 
-val automaton_edge : Kgraph.kgraph -> Knode.knode -> Knode.knode -> string -> bool -> bool -> unit
-(** [automaton_edge source target lab res b] creates a directed edge from [source] to [target] with label [lab] with 
-	shape spline and with red_dot at beginning if [b] is true else if [res] then red_dot at the end else history_dot at the end *)
+val automaton_edge : Kgraph.kgraph -> Intermediate_graph.edge_type -> Knode.knode -> Knode.knode -> Intermediate_graph.edge_label list  -> unit
+(** [automaton_edge e_type source target lab] creates a directed edge (with arrow decorator at the end) from [source] to [target] with labels [lab] with 
+	shape spline. 
+	If the type is [Aut_begin], then there is a red_dot at beginning.
+	If the type is [Aut_end], then there is a red_dot at the end.
+	If the type is [Aut_begin_history], then there is a red_dot at beginning and a history_dot at the end.
+	If the type is [Aut_end_history], then there is a history_dot at the end. *)
 
-val new_edge : ?mult:bool -> Kgraph.kgraph -> endPoint -> endPoint -> Kedge.kedge
-(** [new_edge kgraph source target] creates a polyline from [source.node] with port [source.port] to [target.node] with port [target.port]
+val new_edge : ?mult:bool -> Kgraph.kgraph -> Knode.knode -> Kport.kport -> Knode.knode -> Kport.kport -> Intermediate_graph.edge_label list -> unit
+(** [new_edge kgraph sourceNode sourcePort targetNode targetPort labels] creates a polyline from [sourceNode] with port [sourcePort] to [targetNode] with port [targetPort],
+	with labels [labels] on the edge with position according to the second argument of the label.
 	Option [mult] indicates that the line should be thicker. *)
 
 val init_kgraph : unit -> Kgraph.kgraph

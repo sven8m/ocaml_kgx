@@ -15,7 +15,7 @@ class knode graph : knodeSig = object (self)
 		children <- List.filter (fun (n : knode) -> n#getId <> node#getId ) children
 	method addChild node = 
 		children <- node :: children
-	method getChildren = children
+	method getChildren = List.rev children
 
 	method getParent = parent
 
@@ -37,19 +37,19 @@ class knode graph : knodeSig = object (self)
 		parent <- Some par;
 		par#addChild (self :> knode)
 
-	method getIncomingEdges = incomingEdges
+	method getIncomingEdges = List.rev incomingEdges
 	method addIncomingEdge edge = 
 		incomingEdges <- edge :: incomingEdges
 	method delIncomingEdge edge = 
 		incomingEdges <- List.filter (fun e -> e#getId <> edge#getId) incomingEdges
 
-	method getOutgoingEdges =  outgoingEdges
+	method getOutgoingEdges = List.rev outgoingEdges
 	method addOutgoingEdge edge = 
 		outgoingEdges <- edge :: outgoingEdges 
 	method delOutgoingEdge edge = 
 		outgoingEdges <- List.filter (fun e -> e#getId <> edge#getId) outgoingEdges
 
-	method getPorts = ports
+	method getPorts = List.rev ports
 	method addPort port = 
 		ports <- port :: ports
 	method delPort port = 
