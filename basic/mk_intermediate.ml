@@ -76,6 +76,30 @@ let addNames node node_type =
 	| Ram -> 
 		addOuterNames node#getInputs ["read_addr";"write?";"write_addr";"write_data"]
 	| _ -> ()
+
+let createLinkEdge sourcePort targetNode targetPort = 
+	let edge = new iEdge in
+	edge#setTarget targetNode;
+	edge#setTargetPort targetPort;
+	edge#setType Link;
+	sourcePort#addEdge edge
+
+let linkCreation node = 
+	begin match node#getType with
+	| Fby | Reg -> ()
+	| _ ->
+		List.iter (fun outer_input ->
+			List.iter (fun outer_output ->
+				createLinkEdge outer_input#getPort outer_output#getNode	outer_output#getPort)
+			node#getOutputs
+		) node#getInputs;
+	end;
+	List.iter (fun outer_control ->
+		List.iter (fun outer_output ->
+			createLinkEdge outer_control#getPort outer_output#getNode outer_output#getPort)
+		node#getOutputs
+	) node#getControl
+
 let simpleOpNode node_type layer =
 	let nb_inputs,nb_outputs, nb_control = number_ports node_type in
 	let node = new iNode in
@@ -85,6 +109,7 @@ let simpleOpNode node_type layer =
 	node#addOutputList (create_n_ports ~no:(is_output_not node_type) nb_outputs node Output);
 	node#addControlList (create_n_ports ~vis:true nb_control node Control);
 	addNames node node_type;
+	linkCreation node;
 	node
 
 let simpleFunctionNode ?(control=false) node_type input_names output_names layer = 

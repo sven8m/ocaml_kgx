@@ -1,5 +1,5 @@
 (library 
   (public_name intermediate_to_kgraph)
-  (flags ())
+;  (flags ())
   (libraries kdata kgraph kplacement))
 

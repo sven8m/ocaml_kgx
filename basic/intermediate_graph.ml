@@ -8,7 +8,7 @@ type port_type =
 
 type edge_type = 
 	Simple | Mult | Aut_begin | Aut_end | Aut_begin_history | Aut_end_history
-	| Seq | Seq_half
+	| Seq | Seq_half | Link
 
 type label_placement = Tail | Center | Head | Undef
 
@@ -20,8 +20,12 @@ class element = object
 		let i = !id_cnt in
 		incr id_cnt;
 		i
+	val mutable inCycle = false
 	method getId = id
+	method getInCycle = inCycle
+	method setInCycle b = inCycle <- b
 end
+
 and iEndPoint n p = object
 	val mutable node = (n : iNode)
 	val mutable port = (p : iPort)
@@ -124,6 +128,7 @@ and iOuterPort p = object
 end
 
 and iEdge = object
+	inherit element
 	val mutable labels = ([] : edge_label list)
 	val mutable e_type = Simple
 	val mutable target = (None : iNode option)
