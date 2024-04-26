@@ -1,5 +1,9 @@
-(library 
-  (public_name intermediate_to_kgraph)
+;(library 
+;  (public_name intermediate_to_kgraph)
 ;  (flags ())
-  (libraries kdata kgraph kplacement))
+;  (libraries kdata kgraph kplacement graph_utils))
 
+(executable
+  (name testing)
+  (promote (until-clean))
+  (libraries kdata kgraph kplacement))

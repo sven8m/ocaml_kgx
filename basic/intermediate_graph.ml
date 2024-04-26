@@ -8,7 +8,7 @@ type port_type =
 
 type edge_type = 
 	Simple | Mult | Aut_begin | Aut_end | Aut_begin_history | Aut_end_history
-	| Seq | Seq_half | Link
+	| Seq | Seq_half | Link | AutLink
 
 type label_placement = Tail | Center | Head | Undef
 

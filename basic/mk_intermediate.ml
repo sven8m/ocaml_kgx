@@ -77,11 +77,11 @@ let addNames node node_type =
 		addOuterNames node#getInputs ["read_addr";"write?";"write_addr";"write_data"]
 	| _ -> ()
 
-let createLinkEdge sourcePort targetNode targetPort = 
+let createLinkEdge ?(aut=false) sourcePort targetNode targetPort = 
 	let edge = new iEdge in
 	edge#setTarget targetNode;
 	edge#setTargetPort targetPort;
-	edge#setType Link;
+	edge#setType (if aut then AutLink else Link);
 	sourcePort#addEdge edge
 
 let linkCreation node = 

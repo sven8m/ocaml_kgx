@@ -345,7 +345,7 @@ let simpleMatchNode ?(cycle=false) kgraph =
 let simpleTupleNode ?(cycle=false) kgraph = 
 	simpleOpNode ~cycle:cycle kgraph "()" 0.5 0.5 
 
-let simpleConstNode ?(const=true) kgraph text = 
+let simpleConstNode ?(cycle=false) ?(const=true) kgraph text = 
 	let c1 = Point.create_coord Left in
 	let c2 = Point.create_coord Top in
 	let c3 = Point.create_coord Bottom in
@@ -364,16 +364,16 @@ let simpleConstNode ?(const=true) kgraph text =
 	let node = defaultNode ~layer:(if const then "NONE" else "FIRST") kgraph in
 	resetPortsSurrounding node;
 	
-	let cont = simpleOpContWtT () in
+	let cont = simpleOpContWtT ~cycle:cycle () in
 	cont#setContainer d;
 	cont#addContainerRendering (simpleText ~ho_mar:(5.0) text 0.5 0.5);
 	node#addData cont;	
 	node
 
-let simpleInputVarNode kgraph text = 
-	simpleConstNode ~const:false kgraph text
+let simpleInputVarNode ?(cycle=false) kgraph text = 
+	simpleConstNode ~cycle:cycle ~const:false kgraph text
 
-let simpleSinkNode ?(used=true) kgraph text = 
+let simpleSinkNode ?(cycle=false) ?(used=true) kgraph text = 
 	let c1 = Point.create_coord Left in
 	let c2 = Point.create_coord ~pos_val:(Rel 0.5) Top in
 	let c3 = Point.create_coord Bottom in
@@ -389,7 +389,7 @@ let simpleSinkNode ?(used=true) kgraph text =
 	
 	let d = Polygon [p1;p2;p3;p4;p5;p1] in
 
-	let cont = simpleOpContWtT () in
+	let cont = simpleOpContWtT ~cycle:cycle () in
 	let node = defaultNode ~layer:(if used then "LAST" else "NONE") kgraph in
 	cont#setContainer d;
 	cont#addContainerRendering (simpleText ~ho_mar:(5.0) text 0.5 0.5);
@@ -420,7 +420,10 @@ let function_node ?(cycle=false) ?(res=false) ?(aut=false) ?(m=false) kgraph nam
 	let main_node= defaultNode kgraph in
 	if aut then begin
 		main_node#addProperty (PersistentEntry.create_property "org.eclipse.elk.edgeRouting" "SPLINES"); 
-	end;
+		(*main_node#addProperty (PersistentEntry.create_property "org.eclipse.elk.hierarchyHandling" "INCLUDE_CHILDREN");
+	*)(*end else begin
+		main_node#addProperty (PersistentEntry.create_property "org.eclipse.elk.hierarchyHandling" "SEPARATE_CHILDREN");
+*)	end;	
 	let cont = new containerRendering in
 	let ca = new data in
 	ca#setPlacement (place ());
@@ -651,7 +654,8 @@ let arrow_decorator ?(cycle=false) ?(tiny=false) ?(h=false) alone =
 	cont#addStyle (create_style (Background (create_coloring normal_color )));
 	cont#addStyle (create_style (Foreground (create_coloring normal_color )));
 	let select_color = 
-		if cycle then opLineColor cycle 
+		if cycle then opLineColor cycle
+		else if tiny then create_color 100 255 100
 		else create_color 100 100 255 in
 	cont#addStyle (create_style ~on_sel:true (Background (create_coloring select_color)));
 	cont#addStyle (create_style ~on_sel:true (Foreground (create_coloring select_color)));
@@ -896,7 +900,7 @@ let init_kgraph () =
 
 let main _ = 
 	let kgraph = new kgraph in
-	
+(*	
 	let _ = simpleOrNode kgraph in
 	let _ = simpleAndNode kgraph in
 	let _ = simpleXorNode kgraph in
@@ -944,6 +948,17 @@ let main _ =
 	let _ = stateNode kgraph "oo" 0 in
 	
 	let _ = terminalSyncNode kgraph in
+*)
+	let node0 = function_node kgraph "main" 0 in	
+	let node1 = function_node ~aut:true kgraph "aut" 0 in
+	let node2 = stateNode kgraph "A" 2 in
+	let node3 = simpleOrNode kgraph in
+	node2#setParent node1;
+	node3#setParent node2;
+	node1#setParent node0;
+	let p1 = visibleInputPort kgraph node1 in 
+	let p3 = visibleInputPort kgraph node3 in
+	linkEdge kgraph node1 p1 node3 p3;	
 
 	let oc = open_out "basic.kgx" in
 

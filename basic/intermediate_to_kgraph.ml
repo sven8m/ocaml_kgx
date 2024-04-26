@@ -39,6 +39,8 @@ let rec translate_edge ?(sourcePort) kg sourceNode edge =
 				let targetPort = passOpt targetPort in
 				linkEdge ~cycle:edge#getInCycle kg sourceNode sourcePort targetNode targetPort;
 			end
+		| AutLink -> 
+			()
 	end
 
 and translate_port kg (port : iPort) = 
@@ -134,12 +136,12 @@ and translate_node kg node =
 		| Rom ->
 			romNode ~cycle:node#getInCycle kg
 		| Const (s,var) ->
-			simpleConstNode ~const:(not var) kg s
+			simpleConstNode ~cycle:node#getInCycle ~const:(not var) kg s
 		| Tuple _ | UnTuple _ -> simpleTupleNode ~cycle:node#getInCycle kg
 		| Sink (s,used) ->
-			simpleSinkNode ~used:used kg s
+			simpleSinkNode ~cycle:node#getInCycle ~used:used kg s
 		| Var s ->
-			simpleInputVarNode kg s	
+			simpleInputVarNode ~cycle:node#getInCycle kg s	
 		| Sync init ->
 			simpleSyncNode ~cycle:node#getInCycle ~init:init kg
 		| Final ->

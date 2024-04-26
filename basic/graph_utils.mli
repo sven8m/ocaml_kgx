@@ -156,14 +156,14 @@ val simpleMatchNode : ?cycle:bool -> Kgraph.kgraph -> Knode.knode
 val simpleTupleNode : ?cycle:bool -> Kgraph.kgraph -> Knode.knode
 (** [simpleTupleNode kgraph] creates a node with text [()] *)
 
-val simpleConstNode : ?const:bool -> Kgraph.kgraph -> string -> Knode.knode
+val simpleConstNode : ?cycle:bool -> ?const:bool -> Kgraph.kgraph -> string -> Knode.knode
 (** [simpleConstNode kgraph s] creates a node with shape rectangular which right border is a triangle, with text [s].
 	If [const] is [false] (default [true]), the node is put left on the layout. *)
 
-val simpleInputVarNode : Kgraph.kgraph -> string -> Knode.knode
+val simpleInputVarNode : ?cycle:bool -> Kgraph.kgraph -> string -> Knode.knode
 (** [simpleInputVarNode kgraph s] creates a node with same shape as constNode, with text [s]. It is put on the left on the layout. *)
 
-val simpleSinkNode : ?used:bool -> Kgraph.kgraph -> string -> Knode.knode
+val simpleSinkNode : ?cycle:bool -> ?used:bool -> Kgraph.kgraph -> string -> Knode.knode
 (** [simpleSinkNode kgraph s] creates an node with rectangular shape, with left border as a triangle, with text [s]. 
 	Option [used] (default [true]) states if the node should be put on the right of the layout. *)
 
