@@ -33,13 +33,13 @@ let rec translate_edge ?(sourcePort) kg sourceNode edge =
 			automaton_edge kg edge#getType sourceNode targetNode edge#getLabels;
 		| Seq | Seq_half ->
 			seq_edge ~half:(edge#getType=Seq_half) ~sourcePort:sourcePort ~targetPort:targetPort kg sourceNode targetNode edge#getLabels 
-		| Link -> 
+		| DepLink -> 
 			if !Cli_options.do_show_link then begin
 				let sourcePort = passOpt sourcePort in
 				let targetPort = passOpt targetPort in
 				linkEdge ~cycle:edge#getInCycle kg sourceNode sourcePort targetNode targetPort;
 			end
-		| AutLink -> 
+		| DepAutLink | Link -> 
 			()
 	end
 

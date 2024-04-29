@@ -77,23 +77,32 @@ let addNames node node_type =
 		addOuterNames node#getInputs ["read_addr";"write?";"write_addr";"write_data"]
 	| _ -> ()
 
-let createLinkEdge ?(aut=false) sourcePort targetNode targetPort = 
+let createLinkEdge ?(dep=true) ?(aut=false) sourcePort targetNode targetPort = 
 	let edge = new iEdge in
+	let eT = match dep, aut with
+	| true,true -> DepAutLink
+	| true,false -> DepLink
+	| _ -> Link
+	in
 	edge#setTarget targetNode;
 	edge#setTargetPort targetPort;
-	edge#setType (if aut then AutLink else Link);
-	sourcePort#addEdge edge
+	edge#setType eT;
+	edge#setSource (sourcePort#getParent);
+	edge#setSourcePort sourcePort;
+	sourcePort#addEdge edge;
+	targetPort#addBackEdge edge
 
-let linkCreation node = 
-	begin match node#getType with
-	| Fby | Reg -> ()
-	| _ ->
-		List.iter (fun outer_input ->
-			List.iter (fun outer_output ->
-				createLinkEdge outer_input#getPort outer_output#getNode	outer_output#getPort)
-			node#getOutputs
-		) node#getInputs;
-	end;
+let linkCreation node =
+	let input_dep = match node#getType with
+	| Fby | Reg -> false
+	| _ -> true
+	in	
+	List.iter (fun outer_input ->
+		List.iter (fun outer_output ->
+			createLinkEdge ~dep:input_dep outer_input#getPort outer_output#getNode outer_output#getPort)
+		node#getOutputs
+	) node#getInputs;
+	
 	List.iter (fun outer_control ->
 		List.iter (fun outer_output ->
 			createLinkEdge outer_control#getPort outer_output#getNode outer_output#getPort)
@@ -131,11 +140,14 @@ let new_edge edge_type (source : iEndPoint) target =
 	edge#setType edge_type;
 	edge#setTarget target#getNode;
 	edge#setTargetPort target#getPort;
+	edge#setSource source#getNode;
+	edge#setSourcePort source#getPort;
 	List.iter (fun l ->
 		edge#addLabel (l , Tail)) source#eatLabels;
 	List.iter (fun l ->
 		edge#addLabel (l, Head)) target#eatLabels;
-	(source#getPort)#addEdge edge
+	(source#getPort)#addEdge edge;
+	(target#getPort)#addBackEdge edge
 
 let automaton_edge_type reset beginning = 
 	match reset , beginning with
@@ -149,20 +161,27 @@ let automaton_edge source target lab reset beginning =
 	let edge = new iEdge in
 	edge#setType edge_type;
 	edge#setTarget target;
+	edge#setSource source;
 	edge#addLabel (lab , Center);
-	source#addEdge edge
+	source#addEdge edge;
+	target#addBackEdge edge
 
 let seq_edge ?(half=false) ?(sourcePort=None) ?(targetPort=None) sourceNode targetNode label = 
 	let edge_type = if half then Seq_half else Seq in
 	let edge = new iEdge in
 	edge#setType edge_type;
 	edge#setTarget targetNode;
+	edge#setSource sourceNode;
 	edge#addLabel (label, Center);
 	begin match targetPort with
-	| None -> ()
-	| Some p -> edge#setTargetPort p
+	| None -> targetNode#addBackEdge edge
+	| Some p -> 
+		edge#setTargetPort p;
+		p#addBackEdge edge
 	end;
 	match sourcePort with
 	| None -> sourceNode#addEdge edge
-	| Some (p : iPort) -> p#addEdge edge
+	| Some (p : iPort) -> 
+		edge#setSourcePort p;
+		p#addEdge edge
 

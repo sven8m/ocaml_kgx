@@ -8,7 +8,7 @@ type port_type =
 
 type edge_type = 
 	Simple | Mult | Aut_begin | Aut_end | Aut_begin_history | Aut_end_history
-	| Seq | Seq_half | Link | AutLink
+	| Seq | Seq_half | DepLink | DepAutLink | Link
 
 type label_placement = Tail | Center | Head | Undef
 
@@ -47,8 +47,21 @@ and iEndPoint n p = object
 		l
 end
 
-and iNode = object
+and iEdgeContainer = object
 	inherit element
+	
+	val mutable edges = ([] : iEdge list)
+	val mutable back_edges = ([] : iEdge list)
+
+
+	method getEdges = List.rev edges
+	method backEdges = List.rev back_edges
+	method addEdge e = edges <- e :: edges
+	method addBackEdge e = back_edges <- e :: back_edges
+end
+
+and iNode = object
+	inherit iEdgeContainer
 
 	val mutable n_type = Buffer
 	val mutable children = ([] : iNode list)
@@ -56,7 +69,6 @@ and iNode = object
 	val mutable outputs = ([] : iOuterPort list)
 	val mutable control = ([] : iOuterPort list)
 	val mutable ports = ([] : iPort list)
-	val mutable edges = ([] : iEdge list)
 	val mutable layer = 0
 
 	method getType = n_type
@@ -65,7 +77,6 @@ and iNode = object
 	method getOutputs = List.rev outputs
 	method getControl = List.rev control
 	method getPorts = List.rev ports
-	method getEdges = List.rev edges
 	method getLayer = layer
 	
 	method setType t = n_type <- t
@@ -78,25 +89,23 @@ and iNode = object
 	method addControlList l = control <- (List.rev l) @ control
 	method addPort p = ports <- p :: ports
 	method setPorts pl = ports <- List.rev pl
-	method addEdge e = edges <- e :: edges
 	method setLayer l = layer <- l
 end
 
 and iPort node = object
-	inherit element
+	inherit iEdgeContainer
+
 	val mutable name = ""
 	val mutable p_type = (Undefined : port_type)
 	val mutable visible = true
 	val mutable no = false
 	val mutable parent = (node : iNode)
-	val mutable edges = ([] : iEdge list)
 	val mutable ofs = 0.0
 
 	method getName = name
 	method getType = p_type
 	method isVisible = visible
 	method getParent = parent
-	method getEdges = List.rev edges
 	method isNot = no
 	method getOffset = ofs
 	
@@ -104,7 +113,6 @@ and iPort node = object
 	method setType t = p_type <- t
 	method setVisible b = visible <- b
 	method setParent p = parent <- p
-	method addEdge e = edges <- e :: edges
 	method setNot b = no <- b
 	method setOffset o = ofs <- o
 end
@@ -133,19 +141,27 @@ and iEdge = object
 	val mutable e_type = Simple
 	val mutable target = (None : iNode option)
 	val mutable targetPort = (None : iPort option)
-	
+	val mutable source = (None : iNode option)
+	val mutable sourcePort = (None : iPort option)
+
 	method getLabels = labels
 	method getType = e_type
 	method getTarget = match target with
 	| None -> assert false
 	| Some t -> t
 	method getTargetPort = targetPort
+	method getSource = match source with
+	| None -> assert false
+	| Some t -> t
+	method getSourcePort = sourcePort
 
 	method addLabel l = labels <- l :: labels
 	method resetLabel = labels <- []
 	method setType t = e_type <- t
 	method setTarget t = target <- Some t
 	method setTargetPort p = targetPort <- Some p
+	method setSource s = source <- Some s
+	method setSourcePort p = sourcePort <- Some p
 end
 
 and iGraph = object
