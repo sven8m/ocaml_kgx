@@ -15,7 +15,7 @@ type label_placement = Tail | Center | Head | Undef
 type edge_label = string * label_placement
 let id_cnt = ref 0
 
-class element = object
+class iElement = object
 	val id = 
 		let i = !id_cnt in
 		incr id_cnt;
@@ -48,14 +48,14 @@ and iEndPoint n p = object
 end
 
 and iEdgeContainer = object
-	inherit element
+	inherit iElement
 	
 	val mutable edges = ([] : iEdge list)
 	val mutable back_edges = ([] : iEdge list)
 
 
 	method getEdges = List.rev edges
-	method backEdges = List.rev back_edges
+	method getBackEdges = List.rev back_edges
 	method addEdge e = edges <- e :: edges
 	method addBackEdge e = back_edges <- e :: back_edges
 end
@@ -136,7 +136,7 @@ and iOuterPort p = object
 end
 
 and iEdge = object
-	inherit element
+	inherit iElement
 	val mutable labels = ([] : edge_label list)
 	val mutable e_type = Simple
 	val mutable target = (None : iNode option)

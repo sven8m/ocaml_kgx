@@ -1,6 +1,6 @@
 (library 
-  (public_name intermediate_to_kgraph)
-  (name intermediate_to_kgraph)
+  (public_name interLib)
+  (name interLib)
   (wrapped false)
   (flags ())
   (libraries kdata kgraph kplacement))

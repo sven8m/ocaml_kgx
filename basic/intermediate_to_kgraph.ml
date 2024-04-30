@@ -6,7 +6,7 @@ let nodeTbl = Hashtbl.create 42
 
 
 let go_deeper layer = 
-	(!Cli_options.do_rec_viz = (-1) || layer = 0 || (layer <= !Cli_options.do_rec_viz))
+	(!InterLib_options.do_rec_viz = (-1) || layer = 0 || (layer <= !InterLib_options.do_rec_viz))
 
 let passOpt el = 
 	match el with
@@ -34,7 +34,7 @@ let rec translate_edge ?(sourcePort) kg sourceNode edge =
 		| Seq | Seq_half ->
 			seq_edge ~half:(edge#getType=Seq_half) ~sourcePort:sourcePort ~targetPort:targetPort kg sourceNode targetNode edge#getLabels 
 		| DepLink -> 
-			if !Cli_options.do_show_link then begin
+			if !InterLib_options.do_show_link then begin
 				let sourcePort = passOpt sourcePort in
 				let targetPort = passOpt targetPort in
 				linkEdge ~cycle:edge#getInCycle kg sourceNode sourcePort targetNode targetPort;
