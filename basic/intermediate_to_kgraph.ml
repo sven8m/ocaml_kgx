@@ -28,7 +28,7 @@ let rec translate_edge ?(sourcePort) kg sourceNode edge =
 		| Simple | Mult ->
 			let sourcePort = passOpt sourcePort in
 			let targetPort = passOpt targetPort in
-			new_edge ~cycle:edge#getInCycle ~mult:(edge#getType=Mult) kg sourceNode sourcePort targetNode targetPort edge#getLabels
+			new_edge ~custom:(edge:>iInformation) ~mult:(edge#getType=Mult) kg sourceNode sourcePort targetNode targetPort edge#getLabels
 		| Aut_begin | Aut_end | Aut_begin_history | Aut_end_history ->
 			automaton_edge kg edge#getType sourceNode targetNode edge#getLabels;
 		| Seq | Seq_half ->
@@ -37,7 +37,7 @@ let rec translate_edge ?(sourcePort) kg sourceNode edge =
 			if !InterLib_options.do_show_link then begin
 				let sourcePort = passOpt sourcePort in
 				let targetPort = passOpt targetPort in
-				linkEdge ~cycle:edge#getInCycle kg sourceNode sourcePort targetNode targetPort;
+				linkEdge ~custom:(edge:>iInformation) kg sourceNode sourcePort targetNode targetPort;
 			end
 		| DepAutLink | Link -> 
 			()
@@ -49,19 +49,18 @@ and translate_port kg (port : iPort) =
 	else begin
 		let kn = Hashtbl.find nodeTbl port#getParent#getId in	
 		let kp = match port#isNot, port#getType, port#isVisible with
-		| true, _ , _ -> notOutputPort ~cycle:port#getInCycle kg kn
-		| _, Input, true -> visibleInputPort ~cycle:port#getInCycle kg kn
-		| _, Input, false -> invisibleInputPort ~cycle:port#getInCycle kg kn
-		| _, Output, true -> visibleOutputPort ~cycle:port#getInCycle kg kn
-		| _, Output, false -> invisibleOutputPort ~cycle:port#getInCycle kg kn
-		| _, Control, _ -> visibleControlPort ~cycle:port#getInCycle ~ofs:(port#getOffset) kg kn
-		| _, Undefined,true -> visiblePort ~cycle:port#getInCycle kg kn
-		| _, Undefined,false -> invisiblePort ~cycle:port#getInCycle kg kn in
+		| true, _ , _ -> notOutputPort ~custom:(port:>iInformation) kg kn
+		| _, Input, true -> visibleInputPort ~custom:(port:>iInformation) kg kn
+		| _, Input, false -> invisibleInputPort ~custom:(port:>iInformation) kg kn
+		| _, Output, true -> visibleOutputPort ~custom:(port:>iInformation) kg kn
+		| _, Output, false -> invisibleOutputPort ~custom:(port:>iInformation) kg kn
+		| _, Control, _ -> visibleControlPort ~custom:(port:>iInformation) ~ofs:(port#getOffset) kg kn
+		| _, Undefined,true -> visiblePort ~custom:(port:>iInformation) kg kn
+		| _, Undefined,false -> invisiblePort ~custom:(port:>iInformation) kg kn in
 		Hashtbl.replace portTbl port#getId kp;
 		if port#getName <> "" then begin
 			Format.printf "%s@." port#getName;
-			let lab = new Label.label in
-			lab#setText port#getName;
+			let lab = portLabel ~custom:(port:>iInformation) port#getName in
 			kp#addLabel lab;
 		end;
 		kp
@@ -86,66 +85,68 @@ and translate_node kg node =
 		revInputPorts node;
 		let kn = match node#getType with
 		| And _ ->
-			simpleAndNode ~cycle:node#getInCycle kg
+			simpleAndNode ~custom:(node:>iInformation) kg
 		| Or _ -> 
-			simpleOrNode ~cycle:node#getInCycle kg
+			simpleOrNode ~custom:(node:>iInformation) kg
 		| Xor _ -> 
-			simpleXorNode ~cycle:node#getInCycle kg
+			simpleXorNode ~custom:(node:>iInformation) kg
 		| Nand -> 
-			simpleNandNode ~cycle:node#getInCycle kg
+			simpleNandNode ~custom:(node:>iInformation) kg
 		| Mux ->
-			simpleMuxNode ~cycle:node#getInCycle kg
+			simpleMuxNode ~custom:(node:>iInformation) kg
 		| Reg ->
-			simpleRegNode ~cycle:node#getInCycle kg
+			simpleRegNode ~custom:(node:>iInformation) kg
 		| Buffer | Not ->
-			simpleBufferNode ~cycle:node#getInCycle kg
+			simpleBufferNode ~custom:(node:>iInformation) kg
 		| Fby ->
-			simpleFbyNode ~cycle:node#getInCycle kg
+			simpleFbyNode ~custom:(node:>iInformation) kg
 		| Cond _->
-			simpleCondNode ~cycle:node#getInCycle kg
+			simpleCondNode ~custom:(node:>iInformation) kg
 		| Every s ->
-			function_node ~cycle:node#getInCycle kg s node#getLayer 	
+			function_node ~custom:(node:>iInformation) kg s node#getLayer 	
 		| Fct s ->
-			function_node ~cycle:node#getInCycle kg s node#getLayer
+			function_node ~custom:(node:>iInformation) kg s node#getLayer
 		| Slice (i,j) ->
-			simpleSliceNode ~cycle:node#getInCycle kg i j
+			simpleSliceNode ~custom:(node:>iInformation) kg i j
 		| Select i ->
-			simpleSelectNode ~cycle:node#getInCycle kg i
+			simpleSelectNode ~custom:(node:>iInformation) kg i
 		| Concat ->
-			simpleConcatNode ~cycle:node#getInCycle kg
+			simpleConcatNode ~custom:(node:>iInformation) kg
 		| Match _ ->
-			simpleMatchNode ~cycle:node#getInCycle kg
+			simpleMatchNode ~custom:(node:>iInformation) kg
 		| Match_node ->
-			function_node ~cycle:node#getInCycle ~m:true kg "match" node#getLayer
+			function_node ~custom:(node:>iInformation) ~m:true kg "match" node#getLayer
 		| Match_state s ->
-			function_node ~cycle:node#getInCycle kg s node#getLayer
+			function_node ~custom:(node:>iInformation) kg s node#getLayer
 		| Reset ->
-			function_node ~cycle:node#getInCycle ~res:true kg "reset" node#getLayer
+			function_node ~custom:(node:>iInformation) ~res:true kg "reset" node#getLayer
 		| Aut ->
-			function_node ~cycle:node#getInCycle ~aut:true kg "automaton" node#getLayer	
+			function_node ~custom:(node:>iInformation) ~aut:true kg "automaton" node#getLayer	
 		| Aut_state (s,init) ->
-			stateNode ~cycle:node#getInCycle ~init:init kg s node#getLayer
+			stateNode ~custom:(node:>iInformation) ~init:init kg s node#getLayer
 		| For ->
-			simpleSeqBlockNode ~cycle:node#getInCycle kg "for"
+			simpleSeqBlockNode ~custom:(node:>iInformation) kg "for"
 		| While ->
-			simpleSeqBlockNode ~cycle:node#getInCycle kg "while"
+			simpleSeqBlockNode ~custom:(node:>iInformation) kg "while"
 		| Pause init ->
 			simpleBubleNode ~init:init kg 
 		| Ram ->
-			ramNode ~cycle:node#getInCycle kg
+			ramNode ~custom:(node:>iInformation) kg
 		| Rom ->
-			romNode ~cycle:node#getInCycle kg
+			romNode ~custom:(node:>iInformation) kg
 		| Const (s,var) ->
-			simpleConstNode ~cycle:node#getInCycle ~const:(not var) kg s
-		| Tuple _ | UnTuple _ -> simpleTupleNode ~cycle:node#getInCycle kg
+			simpleConstNode ~custom:(node:>iInformation) ~const:(not var) kg s
+		| Tuple _ | UnTuple _ -> simpleTupleNode ~custom:(node:>iInformation) kg
 		| Sink (s,used) ->
-			simpleSinkNode ~cycle:node#getInCycle ~used:used kg s
+			simpleSinkNode ~custom:(node:>iInformation) ~used:used kg s
 		| Var s ->
-			simpleInputVarNode ~cycle:node#getInCycle kg s	
+			simpleInputVarNode ~custom:(node:>iInformation) kg s	
 		| Sync init ->
-			simpleSyncNode ~cycle:node#getInCycle ~init:init kg
+			simpleSyncNode ~custom:(node:>iInformation) ~init:init kg
 		| Final ->
 			terminalSyncNode kg		
+		| Link -> 
+			simpleLinkNode kg
 		in
 		Hashtbl.replace nodeTbl node#getId kn;
 		List.iter (fun port ->

@@ -3,6 +3,7 @@ type node_type =
 	Cond of int | Every of string | Fct of string | Slice of (string * string) | Select of string | Concat | Match of string list | Match_node
 	| Match_state of string | Reset | Aut | Aut_state of (string * bool) | For | While | Pause of bool | Ram | Rom | Const of (string * bool)
 	| Tuple of int | UnTuple of int | Sink of (string * bool) | Var of string | Sync of bool | Final
+	| Link
 type port_type = 
 	Input | Output | Control | Undefined
 
@@ -15,15 +16,22 @@ type label_placement = Tail | Center | Head | Undef
 type edge_label = string * label_placement
 let id_cnt = ref 0
 
+class iInformation = object
+	val mutable inCycle = false
+	val mutable isDead = false
+	method getInCycle = inCycle
+	method setInCycle b = inCycle <- b
+	method getDead = isDead
+	method setDead b= isDead <- b
+end 
+
 class iElement = object
+	inherit iInformation
 	val id = 
 		let i = !id_cnt in
 		incr id_cnt;
 		i
-	val mutable inCycle = false
 	method getId = id
-	method getInCycle = inCycle
-	method setInCycle b = inCycle <- b
 end
 
 and iEndPoint n p = object

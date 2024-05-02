@@ -38,6 +38,7 @@ let number_ports node_type = match node_type with
 	| While -> 0,0,0
 	| Final -> 0,0,0
 	| Every _ | Fct _ | Match_node | Match_state _ | Reset | Aut | Aut_state _ -> assert false
+	| Link  -> 1,1,0
 
 let is_output_not node_type = match node_type with
 	| Nand | Not -> true
