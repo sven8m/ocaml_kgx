@@ -83,6 +83,7 @@ let createLinkEdge ?(dep=true) ?(aut=false) sourcePort targetNode targetPort =
 	let eT = match dep, aut with
 	| true,true -> DepAutLink
 	| true,false -> DepLink
+	| false,true -> AutLink
 	| _ -> Link
 	in
 	edge#setTarget targetNode;
@@ -100,6 +101,7 @@ let linkCreation node =
 	in	
 	List.iter (fun outer_input ->
 		List.iter (fun outer_output ->
+			if (node#getType = Link) then Format.printf "hiaoooooooooooooooooooooooooo@.";
 			createLinkEdge ~dep:input_dep outer_input#getPort outer_output#getNode outer_output#getPort)
 		node#getOutputs
 	) node#getInputs;

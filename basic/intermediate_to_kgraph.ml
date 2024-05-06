@@ -14,16 +14,16 @@ let passOpt el =
 	| Some el -> el
 
 let rec translate_edge ?(sourcePort) kg sourceNode edge = 
-	Format.printf "%d@." edge#getTarget#getLayer;
+	(*Format.printf "%d@." edge#getTarget#getLayer;*)
 	if go_deeper (edge#getTarget#getLayer - 1) then begin
-		Format.printf "findin...@.";
+		(*Format.printf "findin...@.";*)
 		let targetNode = Hashtbl.find nodeTbl edge#getTarget#getId in
-		Format.printf "found node...@.";
+		(*Format.printf "found node...@.";*)
 		let targetPort = match edge#getTargetPort with
 		| None -> None
 		| Some p -> Some (Hashtbl.find portTbl p#getId)
 		in
-		Format.printf "found@.";
+		(*Format.printf "found@.";*)
 		match edge#getType with
 		| Simple | Mult ->
 			let sourcePort = passOpt sourcePort in
@@ -34,13 +34,17 @@ let rec translate_edge ?(sourcePort) kg sourceNode edge =
 		| Seq | Seq_half ->
 			seq_edge ~half:(edge#getType=Seq_half) ~sourcePort:sourcePort ~targetPort:targetPort kg sourceNode targetNode edge#getLabels 
 		| DepLink -> 
-			if !InterLib_options.do_show_link then begin
+			if !InterLib_options.do_show_link || !InterLib_options.do_show_all then begin
 				let sourcePort = passOpt sourcePort in
 				let targetPort = passOpt targetPort in
 				linkEdge ~custom:(edge:>iInformation) kg sourceNode sourcePort targetNode targetPort;
 			end
-		| DepAutLink | Link -> 
-			()
+		| DepAutLink | Link | AutLink -> 
+			if !InterLib_options.do_show_all then begin
+				let sourcePort = passOpt sourcePort in
+				let targetPort = passOpt targetPort in
+				linkEdge ~custom:(edge:>iInformation) kg sourceNode sourcePort targetNode targetPort
+			end
 	end
 
 and translate_port kg (port : iPort) = 
@@ -69,7 +73,7 @@ and translate_port kg (port : iPort) =
 and translate_port_edges kg port =
 	let kn = Hashtbl.find nodeTbl port#getParent#getId in
 	let kp = Hashtbl.find portTbl port#getId in
-	Format.printf "high : %d@." port#getParent#getLayer;
+	(*Format.printf "high : %d@." port#getParent#getLayer; *)
 	List.iter (fun edge -> translate_edge kg ~sourcePort:kp kn edge) port#getEdges
 
 (** [revInputports node] reverse the order for the ports of type [Input] *)

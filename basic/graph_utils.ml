@@ -92,12 +92,14 @@ let defaultStateNode ?(layer) kgraph =
 	node
 
 
-let simpleOpContWtT ?(custom=default_informations) () =
+let simpleOpContWtT ?(inv=false) ?(custom=default_informations) () =
 	let cont = new containerRendering in
 	cont#setContainer Rect;
 	cont#addStyle (create_style (LineWidth 1.3));
 	cont#addStyle (create_style ~on_sel:true (LineWidth 2.0));
 	cont#addStyle (create_style (Foreground (create_coloring (opLineColor custom))));
+	if inv then
+		cont#addStyle (create_style Invisibility);
 	let color = create_color 200 200 250 in
 	cont#addStyle (create_style (Background (create_coloring color)));
 	cont#addStyle (create_style (Shadow (2.0,2.0)));
@@ -218,18 +220,18 @@ let resetPortsSurrounding node =
 let addPortSpace node = 
 	node#addProperty (PersistentEntry.addPortSpace "12.0" "0.0" "10.0" "10.0")
 
-let simpleOpNode ?(custom=default_informations) ?(center=false) ?(title=false) ?(ho_mar=0.0) ?(order=false) kgraph text relX relY= 
+let simpleOpNode ?(inv=false) ?(custom=default_informations) ?(center=false) ?(title=false) ?(ho_mar=0.0) ?(order=false) kgraph text relX relY= 
 	let node = defaultNode ~order:order kgraph in
-	let cont = simpleOpContWtT ~custom:custom () in
-	cont#addContainerRendering (if title then functionTitle ~custom:custom ~center:center text else simpleText ~custom:custom ~ho_mar:ho_mar text relX relY);
+	let cont = simpleOpContWtT ~inv:inv ~custom:custom () in
+	if not inv then cont#addContainerRendering (if title then functionTitle ~custom:custom ~center:center text else simpleText ~custom:custom ~ho_mar:ho_mar text relX relY);
 	node#addData cont;
 	resetPortsSurrounding node;
 	node
 
 
 let simpleLinkNode ?(custom=default_informations) kgraph = 
-	let node = simpleOpNode ~custom:custom kgraph "L" 0.5 0.5 in
-	node#addProperty (PersistentEntry.create_property "org.eclipse.elk.noLayout" "true");
+	let node = simpleOpNode ~inv:(not !InterLib_options.do_show_all) ~custom:custom kgraph "L" 0.5 0.5 in
+	node#addProperty (PersistentEntry.create_property "org.eclipse.elk.noLayout" (string_of_bool (not !InterLib_options.do_show_all)));
 	node
 
 let simpleXorNode ?(custom=default_informations) kgraph = 
@@ -461,7 +463,7 @@ let function_node ?(custom=default_informations) ?(res=false) ?(aut=false) ?(m=f
 	cont#addStyle (create_style (Shadow (4.0 , 4.0)));
 	main_node#addData cont;
 	
-	main_node#addProperty (PersistentEntry.expand (string_of_bool (layer=0)));
+	main_node#addProperty (PersistentEntry.expand (string_of_bool (!InterLib_options.do_show_all || (layer=0))));
 	main_node#addProperty (PersistentEntry.nodeSize "[NODE_LABELS, PORTS, PORT_LABELS, MINIMUM_SIZE]");
 	main_node#addProperty (PersistentEntry.activatePartition ());
 	if layer > 0 then main_node#addProperty (PersistentEntry.portLabelPlacement "[INSIDE, NEXT_TO_PORT_IF_POSSIBLE]");
@@ -490,7 +492,7 @@ let stateNode ?(custom=default_informations) ?(init=false) kgraph name layer =
 	cont#addStyle (create_style ~on_sel:true (LineWidth (if init then 4.5 else 1.5)));
 	cont#addContainerRendering (functionTitle ~custom:custom ~ho_mar:6.0 name);
 		
-	node#addProperty (PersistentEntry.expand (string_of_bool (layer=0)));
+	node#addProperty (PersistentEntry.expand (string_of_bool (!InterLib_options.do_show_all || (layer=0))));
 	node#addProperty (PersistentEntry.nodeSize "[NODE_LABELS, PORTS, PORT_LABELS, MINIMUM_SIZE]");
 
 	cont#setContainer (RoundRect (10.0 , 10.0));
@@ -539,9 +541,9 @@ let simpleSyncNode ?(custom=default_informations) ?(init=false) kgraph =
 	cont#addStyle (create_style (LineWidth (if init then 3.0 else 1.0)));
 	cont#addStyle (create_style ~on_sel:true (LineWidth (if init then 4.5 else 1.5)));
 	cont#addStyle (create_style (Shadow (4.0,4.0)));	
-	node#addProperty (PersistentEntry.expand "false");
+	node#addProperty (PersistentEntry.expand (string_of_bool (!InterLib_options.do_show_all)));
 	node#addProperty (PersistentEntry.nodeSize "[NODE_LABELS, PORTS, PORT_LABELS, MINIMUM_SIZE]");
-
+	resetPortsSurrounding node;
 	cont#setContainer (RoundRect (10.0 , 10.0));
 	node#addData cont;
 	node
@@ -566,7 +568,7 @@ let simpleSeqBlockNode ?(custom=default_informations) kgraph name =
 	cont#addStyle (create_style (Shadow (4.0 , 4.0)));
 	node#addData cont;
 	
-	node#addProperty (PersistentEntry.expand "false");
+	node#addProperty (PersistentEntry.expand (string_of_bool (!InterLib_options.do_show_all)));
 	
 	node
 
