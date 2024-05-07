@@ -5,6 +5,7 @@ let portTbl = Hashtbl.create 42
 let nodeTbl = Hashtbl.create 42
 
 
+(** [go_deeper layer] checks if the layer has to be shown *)
 let go_deeper layer = 
 	(!InterLib_options.do_rec_viz = (-1) || layer = 0 || (layer <= !InterLib_options.do_rec_viz))
 
@@ -13,17 +14,16 @@ let passOpt el =
 	| None -> assert false
 	| Some el -> el
 
-let rec translate_edge ?(sourcePort) kg sourceNode edge = 
-	(*Format.printf "%d@." edge#getTarget#getLayer;*)
+
+(** [translate_edge kg sourceNode edge] takes an iEdge [edge] and translates it to a [KEdge], given the KGraph [kg], the source KNode [sourceNode]
+and the potential source KPort [sourcePort] *)
+let rec translate_edge ?(sourcePort) (kg : Kgraph.kgraph) sourceNode edge = 
 	if go_deeper (edge#getTarget#getLayer - 1) then begin
-		(*Format.printf "findin...@.";*)
 		let targetNode = Hashtbl.find nodeTbl edge#getTarget#getId in
-		(*Format.printf "found node...@.";*)
 		let targetPort = match edge#getTargetPort with
 		| None -> None
 		| Some p -> Some (Hashtbl.find portTbl p#getId)
 		in
-		(*Format.printf "found@.";*)
 		match edge#getType with
 		| Simple | Mult ->
 			let sourcePort = passOpt sourcePort in
@@ -47,7 +47,8 @@ let rec translate_edge ?(sourcePort) kg sourceNode edge =
 			end
 	end
 
-and translate_port kg (port : iPort) = 
+(** [translate_port kg port] takes an iPort [port] and translates it to a KPort given the Kgraph [kg] *)
+and translate_port (kg : Kgraph.kgraph) (port : iPort) = 
 	if Hashtbl.mem portTbl port#getId then
 		Hashtbl.find portTbl port#getId
 	else begin
@@ -63,25 +64,25 @@ and translate_port kg (port : iPort) =
 		| _, Undefined,false -> invisiblePort ~custom:(port:>iInformation) kg kn in
 		Hashtbl.replace portTbl port#getId kp;
 		if port#getName <> "" then begin
-			Format.printf "%s@." port#getName;
 			let lab = portLabel ~custom:(port:>iInformation) port#getName in
 			kp#addLabel lab;
 		end;
 		kp
 	end
 
+(** [translate_port_edges kg port] takes an iPort [port] and translates its outgoing edges into KEdges *)
 and translate_port_edges kg port =
 	let kn = Hashtbl.find nodeTbl port#getParent#getId in
 	let kp = Hashtbl.find portTbl port#getId in
-	(*Format.printf "high : %d@." port#getParent#getLayer; *)
 	List.iter (fun edge -> translate_edge kg ~sourcePort:kp kn edge) port#getEdges
 
 (** [revInputports node] reverse the order for the ports of type [Input] *)
-and revInputPorts node = 	
+and revInputPorts (node : iNode) = 	
 	let input_ports , other_ports = List.partition (fun port ->
 		port#getType = Input) node#getPorts in
 	node#setPorts (other_ports @ (List.rev input_ports))
 
+(** [translate_node kg node] takes an iNode [node] and translates it into a KNode, its ports into KPorts, and recursively its children. (not the edges) *)
 and translate_node kg node =
 	if Hashtbl.mem nodeTbl node#getId then
 		Hashtbl.find nodeTbl node#getId
@@ -162,6 +163,7 @@ and translate_node kg node =
 		kn
 	end
 
+(** [translate_node_edges kg node] takes an iNode [node] and translates its edges it into KEdges *)
 and translate_node_edges kg (node : iNode) = 
 	let kn = Hashtbl.find nodeTbl node#getId in
 	List.iter (fun edge -> translate_edge kg kn edge) node#getEdges;
@@ -170,10 +172,10 @@ and translate_node_edges kg (node : iNode) =
 	if (go_deeper node#getLayer) then
 		List.iter (fun child ->
 			translate_node_edges kg child) node#getChildren
-	
+
+(** [translate_graph ig] translates the iGraph [ig] into the corresponding Kgraph *)
 let translate_graph (ig : iGraph) = 
 	let kg = init_kgraph () in
-	List.iter (fun node -> ignore (translate_node kg node)) ig#getNodes;
-	Format.printf "creation done@.";
-	List.iter (fun node -> translate_node_edges kg node) ig#getNodes;
+	List.iter (fun node -> ignore (translate_node kg node)) ig#getNodes; (*only the structure *)
+	List.iter (fun node -> translate_node_edges kg node) ig#getNodes; (*now add the edges *)
 	kg

@@ -1,9 +1,41 @@
-type node_type = 
-	| And of int | Or of int | Xor of int | Nand | Mux | Reg | Buffer | Not | Fby | 
-	Cond of int | Every of string | Fct of string | Slice of (string * string) | Select of string | Concat | Match of string list | Match_node
-	| Match_state of string | Reset | Aut | Aut_state of (string * bool) | For | While | Pause of bool | Ram | Rom | Const of (string * bool)
-	| Tuple of int | UnTuple of int | Sink of (string * bool) | Var of string | Sync of bool | Final
+(** Defines the types for the intermediate graph. *)
+
+type node_type =
+	| And of int (**[n] is number of inputs *)
+	| Or of int (**[n] is number of inputs *)
+	| Xor of int (**[n] is number of inputs *)
+	| Nand
+	| Mux
+	| Reg
+	| Buffer
+	| Not
+	| Fby
+	| Cond of int (** [n] is number of conditions *)
+	| Every of string (** [s] is the function name *)
+	| Fct of string (** [s] is the function name *)
+	| Slice of (string * string) (**[i , j] are the slice indexes*)
+	| Select of string (**[i] is the select index*)
+	| Concat
+	| Match of string list (**[sl] are the patterns names*)
+	| Match_node
+	| Match_state of string (**[s] is the states name *)
+	| Reset
+	| Aut
+	| Aut_state of (string * bool) (**[s,b]. [s] is the states name, [b] if the state is initial*)
+	| For
+	| While
+	| Pause of bool (**[b] is [true] if the state is initial*)
+	| Ram
+	| Rom
+	| Const of (string * bool) (**[s,b]. [s] is the constant, [b] is [true] if the constant is a variable *)
+	| Tuple of int (**[n] is the number of inputs *)
+	| UnTuple of int (**[n] is the number of outputs *)
+	| Sink of (string * bool) (**[s,b]. [s] is the name, [b] is [true] if the variable is used. *)
+	| Var of string (**[s] is the name *)
+	| Sync of bool (**[b] is [true] if the node is initial.*)
+	| Final
 	| Link
+
 type port_type = 
 	Input | Output | Control | Undefined
 
