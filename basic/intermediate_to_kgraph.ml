@@ -30,7 +30,7 @@ let rec translate_edge ?(sourcePort) (kg : Kgraph.kgraph) sourceNode edge =
 			let targetPort = passOpt targetPort in
 			new_edge ~custom:(edge:>iInformation) ~mult:(edge#getType=Mult) kg sourceNode sourcePort targetNode targetPort edge#getLabels
 		| Aut_begin | Aut_end | Aut_begin_history | Aut_end_history ->
-			automaton_edge kg edge#getType sourceNode targetNode edge#getLabels;
+			automaton_edge ~custom:(edge:>iInformation) kg edge#getType sourceNode targetNode edge#getLabels;
 		| Seq | Seq_half ->
 			seq_edge ~half:(edge#getType=Seq_half) ~sourcePort:sourcePort ~targetPort:targetPort kg sourceNode targetNode edge#getLabels 
 		| DepLink -> 
@@ -173,9 +173,34 @@ and translate_node_edges kg (node : iNode) =
 		List.iter (fun child ->
 			translate_node_edges kg child) node#getChildren
 
+
+let compare_edges edge1 edge2 = 
+	if edge1#getInCycle = edge2#getInCycle then begin
+		match edge1#getDead , edge2#getDead with
+		| false, false | true,true -> 0
+		| false, true -> -1
+		| true,false -> 1
+	end else begin
+		match edge1#getInCycle , edge2#getInCycle with
+		| false,false | true,true -> 0
+		| false,true -> -1
+		| true,false -> 1
+	end
+
+let sort_edges (eC : iEdgeContainer) = 
+	let edges = eC # getEdges in
+	let edges = List.sort compare_edges edges in
+	eC #setEdges edges
+
+let rec sort_edges_node node = 
+	sort_edges (node:>iEdgeContainer);
+	List.iter (fun port ->
+		sort_edges (port:>iEdgeContainer)) node#getPorts;
+	List.iter sort_edges_node node#getChildren
 (** [translate_graph ig] translates the iGraph [ig] into the corresponding Kgraph *)
 let translate_graph (ig : iGraph) = 
 	let kg = init_kgraph () in
+	List.iter sort_edges_node ig#getNodes;
 	List.iter (fun node -> ignore (translate_node kg node)) ig#getNodes; (*only the structure *)
 	List.iter (fun node -> translate_node_edges kg node) ig#getNodes; (*now add the edges *)
 	kg

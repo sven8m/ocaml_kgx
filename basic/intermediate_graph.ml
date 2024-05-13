@@ -98,6 +98,7 @@ and iEdgeContainer = object
 	method getBackEdges = List.rev back_edges
 	method addEdge e = edges <- e :: edges
 	method addBackEdge e = back_edges <- e :: back_edges
+	method setEdges el = edges <- List.rev el
 end
 
 and iNode = object

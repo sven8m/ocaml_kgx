@@ -843,7 +843,7 @@ let seq_edge ?(half=false) ?(sourcePort=None) ?(targetPort=None) kgraph source t
 		edge#addLabel label
 	) labels
 
-let automaton_edge kgraph e_type source target labels = 
+let automaton_edge ?(custom=default_informations) kgraph e_type source target labels = 
 	let edge = new kedge kgraph in
 	edge#setSource source;
 	edge#setTarget target;
@@ -853,26 +853,27 @@ let automaton_edge kgraph e_type source target labels =
 	cont#addStyle (create_style (LineWidth 2.));
 	cont#addStyle (create_style ~on_sel:true (LineWidth 3.));
 	let color = create_color 100 100 255 in
+	cont#addStyle (create_style (Foreground (create_coloring (opLineColor custom))));
 	cont#addStyle (create_style ~on_sel:true (Foreground (create_coloring color)));
 	begin match e_type with
 	| Intermediate_graph.Aut_begin ->
 		cont#addContainerRendering (red_dot true);
-		cont#addContainerRendering (arrow_decorator true);
+		cont#addContainerRendering (arrow_decorator ~custom:custom true);
 	| Aut_end ->
 		cont#addContainerRendering (red_dot false);
-		cont#addContainerRendering (arrow_decorator false);
+		cont#addContainerRendering (arrow_decorator ~custom:custom false);
 	| Aut_begin_history ->
 		cont#addContainerRendering (red_dot true);
 		cont#addContainerRendering (history_dot ());
-		cont#addContainerRendering (arrow_decorator ~h:true false);
+		cont#addContainerRendering (arrow_decorator ~custom:custom ~h:true false);
 	| Aut_end_history ->
 		cont#addContainerRendering (history_dot ());
-		cont#addContainerRendering (arrow_decorator ~h:true false);
+		cont#addContainerRendering (arrow_decorator ~custom:custom ~h:true false);
 	| _ -> assert false
 	end;
 	edge#addData cont;
 	List.iter (fun label -> 
-		let label = labelOfInterLabel label in
+		let label = labelOfInterLabel ~custom:custom label in
 		edge#addLabel label
 	) labels
 
