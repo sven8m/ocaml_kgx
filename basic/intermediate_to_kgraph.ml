@@ -17,8 +17,8 @@ let passOpt el =
 
 (** [translate_edge kg sourceNode edge] takes an iEdge [edge] and translates it to a [KEdge], given the KGraph [kg], the source KNode [sourceNode]
 and the potential source KPort [sourcePort] *)
-let rec translate_edge ?(sourcePort) (kg : Kgraph.kgraph) sourceNode edge = 
-	if go_deeper (edge#getTarget#getLayer - 1) then begin
+let rec translate_edge ?(sourcePort) (kg : Kgraph.kgraph) sourceNode (edge : iEdge) = 
+	if go_deeper (edge#getTarget#getLayer - 1) && ((edge#getSource)#getType <> Link || !InterLib_options.do_show_all) then begin
 		let targetNode = Hashtbl.find nodeTbl edge#getTarget#getId in
 		let targetPort = match edge#getTargetPort with
 		| None -> None
