@@ -1,8 +1,0 @@
-
-(executable
- (name okgx)
- (promote (until-clean))
- (flags ())
- (libraries basic))
-
-
