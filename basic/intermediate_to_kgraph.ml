@@ -141,7 +141,8 @@ and translate_node kg node =
 			romNode ~custom:(node:>iInformation) kg
 		| Const (s,var) ->
 			simpleConstNode ~custom:(node:>iInformation) ~const:(not var) kg s
-		| Tuple _ | UnTuple _ -> simpleTupleNode ~custom:(node:>iInformation) kg
+		| Tuple _ -> simpleTupleNode ~custom:(node:>iInformation) kg
+		| UnTuple n -> Format.printf "ola@."; simpleTupleNode ~height:(20.0 *. (float_of_int (n+1))) ~custom:(node:>iInformation) kg
 		| Sink (s,used) ->
 			simpleSinkNode ~custom:(node:>iInformation) ~used:used kg s
 		| Var s ->

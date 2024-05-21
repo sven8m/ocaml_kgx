@@ -62,10 +62,10 @@ let opLineColor custom =
 		create_color 100 100 100
 	else create_color 0 0 0
 
-let defaultNode ?(layer) ?(order=false) kgraph = 
+let defaultNode ?(height=20.0) ?(layer) ?(order=false) kgraph = 
 	let node = new knode kgraph in
 	node#setWidth 20.0;
-	node#setHeight 20.0;	
+	node#setHeight height;	
 	node#addProperty (PersistentEntry.portAlignmentNorth "CENTER");
 	node#addProperty (PersistentEntry.portAlignmentSouth "CENTER");
 	node#addProperty (PersistentEntry.separateComponent false);
@@ -220,8 +220,8 @@ let resetPortsSurrounding node =
 let addPortSpace node = 
 	node#addProperty (PersistentEntry.addPortSpace "12.0" "0.0" "10.0" "10.0")
 
-let simpleOpNode ?(inv=false) ?(custom=default_informations) ?(center=false) ?(title=false) ?(ho_mar=0.0) ?(order=false) kgraph text relX relY= 
-	let node = defaultNode ~order:order kgraph in
+let simpleOpNode ?(height=20.0) ?(inv=false) ?(custom=default_informations) ?(center=false) ?(title=false) ?(ho_mar=0.0) ?(order=false) kgraph text relX relY= 
+	let node = defaultNode ~height:height ~order:order kgraph in
 	let cont = simpleOpContWtT ~inv:inv ~custom:custom () in
 	if not inv then cont#addContainerRendering (if title then functionTitle ~custom:custom ~center:center text else simpleText ~custom:custom ~ho_mar:ho_mar text relX relY);
 	node#addData cont;
@@ -356,8 +356,8 @@ let simpleMatchNode ?(custom=default_informations) kgraph =
 	node#addProperty (PersistentEntry.addPortSpace "0.0" "0.0" "10.0" "10.0");
 	node
 
-let simpleTupleNode ?(custom=default_informations) kgraph = 
-	simpleOpNode ~custom:custom kgraph "()" 0.5 0.5 
+let simpleTupleNode ?(height=20.0) ?(custom=default_informations) kgraph = 
+	simpleOpNode ~height:height ~custom:custom kgraph "()" 0.5 0.5 
 
 let simpleConstNode ?(custom=default_informations) ?(const=true) kgraph text = 
 	let c1 = Point.create_coord Left in
