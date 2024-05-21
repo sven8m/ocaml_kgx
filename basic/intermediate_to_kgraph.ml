@@ -152,6 +152,19 @@ and translate_node kg node =
 			terminalSyncNode kg		
 		| Link -> 
 			simpleLinkNode kg
+		(* for z *)
+		| Add _ ->
+			simpleAddNode ~custom:(node:>iInformation) kg
+		| Minus ->
+			simpleMinusNode ~custom:(node:>iInformation) kg
+		| Mult _ ->
+			simpleTimesNode ~custom:(node:>iInformation) kg
+		| Div ->
+			simpleDivNode ~custom:(node:>iInformation) kg
+		| Last ->
+			simpleLastNode ~custom:(node:>iInformation) kg
+		| Deconstr name ->
+			simpleDeConstrNode ~custom:(node:>iInformation) kg name
 		in
 		Hashtbl.replace nodeTbl node#getId kn;
 		List.iter (fun port ->

@@ -44,6 +44,11 @@ let number_ports node_type = match node_type with
 	| Final -> 0,0,0
 	| Every _ | Fct _ | Match_node | Match_state _ | Reset | Aut | Aut_state _ -> assert false
 	| Link  -> 1,1,0
+	(* for z *)
+	| Add n | Mult n -> n, 1, 0
+	| Minus | Div -> 2,1,0
+	| Last -> 1,1,0
+	| Deconstr _ -> 1,1,0
 
 (** [is_output_not nt] return true if the node type [nt] is [Nand] or [Not] *)
 let is_output_not node_type = match node_type with

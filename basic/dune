@@ -8,4 +8,5 @@
 ;(executable
 ;  (name testing)
 ;  (promote (until-clean))
+;  (flags ())
 ;  (libraries kdata kgraph kplacement))

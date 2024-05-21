@@ -414,6 +414,101 @@ let simpleSinkNode ?(custom=default_informations) ?(used=true) kgraph text =
 let simpleFbyNode ?(custom=default_informations) kgraph =
 	simpleOpNode ~custom:custom ~ho_mar:5.0 kgraph "fby" 0.5 0.5 
 
+let simpleAddNode ?(custom=default_informations) kgraph = 
+	simpleOpNode ~custom:custom kgraph "+" 0.5 0.5
+
+let simpleMinusNode ?(custom=default_informations) kgraph = 
+	simpleOpNode ~custom:custom ~order:true kgraph "-" 0.5 0.5
+
+let simpleTimesNode ?(custom=default_informations) kgraph = 
+	simpleOpNode ~custom:custom kgraph "*" 0.6 0.5
+
+let simpleDivNode ?(custom=default_informations) kgraph = 
+	simpleOpNode ~custom:custom ~order:true kgraph "/" 0.5 0.5
+
+let simpleLastNode ?(custom=default_informations) kgraph = 
+	simpleOpNode ~custom:custom kgraph "last" 0.5 0.5
+
+
+let simpleDeConstrNode ?(custom=default_informations) kgraph name = 
+	let node = defaultNode kgraph in
+	let cont = simpleOpContWtT ~custom:custom () in	
+	let circle = new containerRendering in
+	circle#setContainer Ellipse;
+	circle#addStyle (create_style (LineWidth 1.0));
+	circle#addStyle (create_style ~on_sel:true (LineWidth 2.0));
+	circle#addStyle (create_style (Foreground (create_coloring (opLineColor custom))));
+	circle#addStyle (create_style (Background (create_coloring (opLineColor custom))));
+
+	let dim = 5.0 in
+	let pd = new PointPlacementData.pointPlacementData in
+	pd#setMinHeight dim;
+	pd#setMinWidth dim;
+	pd#setHorizontalAlignment CENTER;
+	pd#setVerticalAlignment CENTER;
+	let c1 = Point.create_coord ~pos_val:(Abs (dim *. 2.5)) Right in
+	let c2 = Point.create_coord ~pos_val:(Rel 0.5) Top in
+	let point = Point.create_point c1 c2 in
+	pd#setRefPoint point;
+	circle#setPlacement (Point pd);
+	cont#addContainerRendering circle;
+
+	let line = new containerRendering in
+	line#addStyle (create_style (LineWidth 1.0));
+	line#addStyle (create_style ~on_sel:true (LineWidth 1.5));
+	line#addStyle (create_style (Foreground (create_coloring (opLineColor custom))));
+	line#addStyle (create_style (Background (create_coloring (opLineColor custom))));
+
+	let c1 = Point.create_coord Left in
+	let c2 = Point.create_coord Right in
+	let c3 = Point.create_coord Top in
+
+	let p1 = Point.create_point c1 c3 in
+	let p2 = Point.create_point c2 c3 in
+	line#setContainer (PolyLine [p1;p2]);
+	
+	let pd = new PointPlacementData.pointPlacementData in
+	pd#setMinHeight 1.0;
+	pd#setMinWidth (dim*.2.1);
+	pd#setHorizontalAlignment CENTER;
+	pd#setVerticalAlignment TOP;
+	let c1 = Point.create_coord ~pos_val:(Abs (dim *. 1.05)) Right in
+	let c2 = Point.create_coord ~pos_val:(Rel 0.5) Top in
+	let point = Point.create_point c1 c2 in
+	pd#setRefPoint point;
+	line#setPlacement (Point pd);
+	cont#addContainerRendering line;
+
+
+	let name = " "^ name ^ "       " in
+	let t = simpleText ~s:8 ~custom:custom name 0.5 0.5 in
+	cont#addContainerRendering t;
+
+	
+	let quad = new containerRendering in
+	quad#setContainer Rect;
+	quad#addStyle (create_style (LineWidth 1.0));
+	quad#addStyle (create_style (LineStyle DASH));
+	quad#addStyle (create_style ~on_sel:true (LineWidth 1.5));
+	quad#addStyle (create_style (Foreground (create_coloring (opLineColor custom))));
+	
+	let pd = new PointPlacementData.pointPlacementData in
+	pd#setMinHeight (dim*.2.);
+	pd#setMinWidth (dim*.2.);
+	pd#setHorizontalAlignment CENTER;
+	pd#setVerticalAlignment CENTER;
+	let c1 = Point.create_coord ~pos_val:(Abs (dim *. 2.5)) Right in
+	let c2 = Point.create_coord ~pos_val:(Rel 0.5) Top in
+	let point = Point.create_point c1 c2 in
+	pd#setRefPoint point;
+	quad#setPlacement (Point pd);
+	cont#addContainerRendering quad;
+
+	node#addData cont;
+	resetPortsSurrounding node;	
+	node
+
+
 let layered_color red green blue layer = 
 	let layer = if layer >= 5 then 5 else layer in
 	create_color (max 0 (red - 10 * layer)) (max 0 (green - 10 * layer)) (max 0 (blue - 10 * layer))
@@ -970,7 +1065,7 @@ let main _ =
 	
 	let _ = terminalSyncNode kgraph in
 *)
-	let node0 = function_node kgraph "main" 0 in	
+(*	let node0 = function_node kgraph "main" 0 in	
 	let node1 = function_node ~aut:true kgraph "aut" 0 in
 	let node2 = stateNode kgraph "A" 2 in
 	let node3 = simpleOrNode kgraph in
@@ -980,7 +1075,9 @@ let main _ =
 	let p1 = visibleInputPort kgraph node1 in 
 	let p3 = visibleInputPort kgraph node3 in
 	linkEdge kgraph node1 p1 node3 p3;	
-
+*)
+	let _ = simpleDeConstrNode kgraph "hi" in
+	let _ = simpleDeConstrNode kgraph "hiohiohiohiohiohoihoihoihihoihoihoho" in
 	let oc = open_out "basic.kgx" in
 
 	let ff = Format.formatter_of_out_channel oc in

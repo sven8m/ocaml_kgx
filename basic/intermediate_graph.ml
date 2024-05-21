@@ -35,6 +35,13 @@ type node_type =
 	| Sync of bool (**[b] is [true] if the node is initial.*)
 	| Final
 	| Link
+(* for z *)
+	| Add of int
+	| Mult of int
+	| Minus 
+	| Div 
+	| Last
+	| Deconstr of string (**[s]. [s] is the name of [s x]*)
 
 type port_type = 
 	Input | Output | Control | Undefined
