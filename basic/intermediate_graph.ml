@@ -42,9 +42,10 @@ type node_type =
 	| Div 
 	| Last
 	| Deconstr of string * int (**[s,n]. [s] is the name of [s x], [n] is the number of arguments *)
+	| Constr of string * int (**[s,n]. [s] is name of [s x], [n] is the number of arguments *)
 
 type port_type = 
-	Input | Output | Control | Undefined | OutputTop 
+	Input | Output | Control | Undefined | OutputTop | InputTop
 
 type edge_type = 
 	Simple | Mult | Aut_begin | Aut_end | Aut_begin_history | Aut_end_history
@@ -52,7 +53,6 @@ type edge_type =
 
 type label_placement = Tail | Center | Head | Undef
 
-type edge_label = string * label_placement
 let id_cnt = ref 0
 
 class iInformation = object
@@ -64,6 +64,23 @@ class iInformation = object
 	method setDead b= isDead <- b
 end 
 
+class iEdgeLabel s = object
+	val mutable name = (s : string)
+	val mutable position = Undef
+	val mutable forced_position = Undef
+	
+	method setName s = name <- s
+	method getName = name
+
+	method getPosition = 
+		match forced_position with
+		| Undef -> position
+		| _ -> forced_position
+	
+	method setPosition p = position <- p
+	method setForcedPosition p = forced_position <- p
+end
+
 class iElement = object
 	inherit iInformation
 	val id = 
@@ -73,11 +90,12 @@ class iElement = object
 	method getId = id
 end
 
+
 and iEndPoint n p = object
 	val mutable node = (n : iNode)
 	val mutable port = (p : iPort)
 	val mutable var = false
-	val mutable labels = ([] : string list)
+	val mutable labels = ([] : iEdgeLabel list)
 
 	method getNode = node
 	method getPort = port
@@ -185,7 +203,7 @@ end
 
 and iEdge = object
 	inherit iElement
-	val mutable labels = ([] : edge_label list)
+	val mutable labels = ([] : iEdgeLabel list)
 	val mutable e_type = Simple
 	val mutable target = (None : iNode option)
 	val mutable targetPort = (None : iPort option)

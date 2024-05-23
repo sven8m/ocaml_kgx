@@ -429,7 +429,7 @@ let simpleLastNode ?(custom=default_informations) kgraph =
 	simpleOpNode ~custom:custom kgraph "last" 0.5 0.5
 
 
-let constrBox ?(custom=default_informations) cont n =
+let constrBox ?(custom=default_informations) ?(vert=false) cont n =
 
 	let rightDelta = 1.0 +. n *. 3.0 in
 	let dim = 5.0 in
@@ -472,7 +472,7 @@ let constrBox ?(custom=default_informations) cont n =
 	quad#setPlacement (Point pd);
 	cont#addContainerRendering quad;
 	
-	let high = n <> 0.0 in
+	let high = n <> 0.0 || vert in
 	let line = new containerRendering in
 	line#addStyle (create_style (LineWidth 1.0));
 	line#addStyle (create_style ~on_sel:true (LineWidth 1.7));
@@ -546,30 +546,32 @@ let constrPort ?(custom=default_informations) kgraph knode n =
 	port
 *)
 
-let simpleDeConstrNode ?(custom=default_informations) kgraph name num = 
+let simpleDeConstrNode ?(custom=default_informations) ?(vert=false) ?(right_ofs=27.35) kgraph name num = 
 	let node = defaultNode ~order:true kgraph in
 	let cont = simpleOpContWtT ~custom:custom () in
 	let rec addBox n = match n with
 		| -1 -> ()
 		| _ -> 
-			constrBox ~custom:custom cont (float_of_int n);
+			constrBox ~custom:custom ~vert:vert cont (float_of_int n);
 			addBox (n - 1)
 	in
 	addBox (num - 1);
 	let num = float_of_int num in
 	
 	let t = simpleText ~s:8 ~custom:custom name 0.5 0.5 in
-	t#setPlacement (place ~top:0.0 ~left:5.0 ~right:(1.0 +. 3.0 *.num *. 5.0 +. 2.0) ~bottom:0.0 ());	
+	t#setPlacement (place ~top:0.0 ~left:5.0 ~right:(1.0 +. 3.0 *.num *. 5.0 +. 5.0) ~bottom:0.0 ());	
 	cont#addContainerRendering t;
 
 	node#addData cont;
 
 	node#addProperty (PersistentEntry.create_property "org.eclipse.elk.spacing.individual" 
-	"org.eclipse.elk.spacing.portPort:15.0;,;org.eclipse.elk.spacing.portsSurrounding:[top=0.0,left=0.0,bottom=0.0,right=27.35]");
-	
+	("org.eclipse.elk.spacing.portPort:15.0;,;org.eclipse.elk.spacing.portsSurrounding:[top=0.0,left=0.0,bottom=0.0,right="^(string_of_float right_ofs)^"]"));
+
 	node#addProperty (PersistentEntry.create_property "org.eclipse.elk.portAlignment.north" "END");
 	node
 
+let simpleConstrNode ?(custom=default_informations) kgraph name num =
+	simpleDeConstrNode ~custom:custom ~vert:true ~right_ofs:12.35 kgraph name num
 
 let layered_color red green blue layer = 
 	let layer = if layer >= 5 then 5 else layer in
@@ -952,7 +954,7 @@ let green_triangle st =
 	cont#setPlacement (Decorator place);
 	cont
 
-let labelOfInterLabel ?(custom=default_informations) (name, pos) = 
+let labelOfEdgeLabel ?(custom=default_informations) name pos = 
 	let label = new label in
 	label#setText name;
 	label#addStyle (create_style (Foreground (create_coloring (opLineColor custom))));
@@ -974,7 +976,7 @@ let portLabel ?(custom=default_informations) name =
 	label#addStyle (create_style (Foreground (create_coloring (opLineColor custom))));
 	label
 
-let seq_edge ?(half=false) ?(sourcePort=None) ?(targetPort=None) kgraph source target labels = 
+let seq_edge ?(half=false) ?(sourcePort=None) ?(targetPort=None) kgraph source target = 
 	let edge = new kedge kgraph in
 	edge#setSource source;
 	edge#setTarget target;
@@ -995,12 +997,9 @@ let seq_edge ?(half=false) ?(sourcePort=None) ?(targetPort=None) kgraph source t
 	cont#addStyle (create_style ~on_sel:true (Foreground (create_coloring color)));
 	if (not half) then cont#addContainerRendering (arrow_decorator true);
 	edge#addData cont;
-	List.iter (fun lab ->
-		let label = labelOfInterLabel lab in
-		edge#addLabel label
-	) labels
+	edge
 
-let automaton_edge ?(custom=default_informations) kgraph e_type source target labels = 
+let automaton_edge ?(custom=default_informations) kgraph e_type source target = 
 	let edge = new kedge kgraph in
 	edge#setSource source;
 	edge#setTarget target;
@@ -1029,12 +1028,9 @@ let automaton_edge ?(custom=default_informations) kgraph e_type source target la
 	| _ -> assert false
 	end;
 	edge#addData cont;
-	List.iter (fun label -> 
-		let label = labelOfInterLabel ~custom:custom label in
-		edge#addLabel label
-	) labels
+	edge
 
-let new_edge ?(custom=default_informations) ?(mult=false) kgraph sourceNode sourcePort targetNode targetPort labels = 
+let new_edge ?(custom=default_informations) ?(mult=false) kgraph sourceNode sourcePort targetNode targetPort = 
 	let edge = new kedge kgraph in
 	edge#setSource sourceNode;
 	edge#setSourcePort sourcePort;
@@ -1050,10 +1046,7 @@ let new_edge ?(custom=default_informations) ?(mult=false) kgraph sourceNode sour
 	cont#addStyle (create_style ~on_sel:true (Foreground (create_coloring color)));
 	cont#addJunction (junction ~custom:custom mult);
 	edge#addData cont;
-	List.iter (fun label ->
-		let label = labelOfInterLabel ~custom:custom label in
-		edge#addLabel label
-	) labels
+	edge
 
 let linkEdge ?(custom=default_informations) kgraph sourceNode sourcePort targetNode targetPort =
 	let edge = new kedge kgraph in

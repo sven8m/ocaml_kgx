@@ -24,27 +24,39 @@ let rec translate_edge ?(sourcePort) (kg : Kgraph.kgraph) sourceNode (edge : iEd
 		| None -> None
 		| Some p -> Some (Hashtbl.find portTbl p#getId)
 		in
-		match edge#getType with
+		let kedge = match edge#getType with
 		| Simple | Mult ->
 			let sourcePort = passOpt sourcePort in
 			let targetPort = passOpt targetPort in
-			new_edge ~custom:(edge:>iInformation) ~mult:(edge#getType=Mult) kg sourceNode sourcePort targetNode targetPort edge#getLabels
+			let kedge = new_edge ~custom:(edge:>iInformation) ~mult:(edge#getType=Mult) kg sourceNode sourcePort targetNode targetPort in
+			Some kedge
 		| Aut_begin | Aut_end | Aut_begin_history | Aut_end_history ->
-			automaton_edge ~custom:(edge:>iInformation) kg edge#getType sourceNode targetNode edge#getLabels;
+			Some (automaton_edge ~custom:(edge:>iInformation) kg edge#getType sourceNode targetNode)
 		| Seq | Seq_half ->
-			seq_edge ~half:(edge#getType=Seq_half) ~sourcePort:sourcePort ~targetPort:targetPort kg sourceNode targetNode edge#getLabels 
+			Some (seq_edge ~half:(edge#getType=Seq_half) ~sourcePort:sourcePort ~targetPort:targetPort kg sourceNode targetNode)
 		| DepLink -> 
 			if !InterLib_options.do_show_link || !InterLib_options.do_show_all then begin
 				let sourcePort = passOpt sourcePort in
 				let targetPort = passOpt targetPort in
 				linkEdge ~custom:(edge:>iInformation) kg sourceNode sourcePort targetNode targetPort;
-			end
+			end;
+			None
 		| DepAutLink | Link | AutLink -> 
 			if !InterLib_options.do_show_all then begin
 				let sourcePort = passOpt sourcePort in
 				let targetPort = passOpt targetPort in
 				linkEdge ~custom:(edge:>iInformation) kg sourceNode sourcePort targetNode targetPort
-			end
+			end;
+			None
+		in
+		begin match kedge with
+		| None -> ()
+		| Some kedge ->
+			List.iter (fun label ->
+				let klab = labelOfEdgeLabel ~custom:(edge:>iInformation) label#getName label#getPosition in
+				kedge#addLabel klab;
+			) edge#getLabels
+		end
 	end
 
 (** [translate_port kg port] takes an iPort [port] and translates it to a KPort given the Kgraph [kg] *)
@@ -61,6 +73,7 @@ and translate_port (kg : Kgraph.kgraph) (port : iPort) =
 		| _, Output, false -> invisibleOutputPort ~custom:(port:>iInformation) kg kn
 		| _, Control, _ -> visibleControlPort ~custom:(port:>iInformation) ~ofs:(port#getOffset) kg kn
 		| _ , OutputTop , _ -> invisibleControlPort ~custom:(port:>iInformation) kg kn
+		| _ , InputTop , _ -> invisibleControlPort ~custom:(port:>iInformation) kg kn
 		| _, Undefined,true -> visiblePort ~custom:(port:>iInformation) kg kn
 		| _, Undefined,false -> invisiblePort ~custom:(port:>iInformation) kg kn in
 		Hashtbl.replace portTbl port#getId kp;
@@ -166,6 +179,8 @@ and translate_node kg node =
 			simpleLastNode ~custom:(node:>iInformation) kg
 		| Deconstr (name , n) ->
 			simpleDeConstrNode ~custom:(node:>iInformation) kg name n
+		| Constr (name, n) ->
+			simpleConstrNode ~custom:(node:>iInformation) kg name n
 		in
 		Hashtbl.replace nodeTbl node#getId kn;
 		List.iter (fun port ->

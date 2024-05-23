@@ -60,9 +60,14 @@ let number_ports node_type = match node_type with
 	| Minus | Div -> 2,1,0
 	| Last -> 1,1,0
 	| Deconstr _ -> 1,1,0
+	| Constr _ -> 0,1,0
 
 let topOutputs node_type = match node_type with
 	| Deconstr (_,n) -> (n-1)
+	| _ -> 0
+
+let topInputs node_type = match node_type with
+	| Constr (_,n) -> n
 	| _ -> 0
 
 (** [is_output_not nt] return true if the node type [nt] is [Nand] or [Not] *)
@@ -152,6 +157,7 @@ let simpleOpNode node_type layer =
 	node#setType node_type;
 	node#setLayer layer;
 	node#addOutputList (create_n_ports (topOutputs node_type) node OutputTop);
+	node#addInputList (create_n_ports (topInputs node_type) node InputTop);
 	node#addInputList (create_n_ports nb_inputs node Input);
 	node#addOutputList (create_n_ports ~no:(is_output_not node_type) nb_outputs node Output);
 	node#addControlList (create_n_ports ~vis:true nb_control node Control);
@@ -186,10 +192,13 @@ let new_edge edge_type (source : iEndPoint) target =
 	edge#setTargetPort target#getPort;
 	edge#setSource source#getNode;
 	edge#setSourcePort source#getPort;
-	List.iter (fun l ->
-		edge#addLabel (l , Tail)) source#eatLabels;
-	List.iter (fun l ->
-		edge#addLabel (l, Head)) target#eatLabels;
+	List.iter (fun lab ->
+		lab#setPosition Tail;
+		edge#addLabel lab
+	) source#eatLabels;
+	List.iter (fun lab ->
+		lab#setPosition Head;
+		edge#addLabel lab) target#eatLabels;
 	(source#getPort)#addEdge edge;
 	(target#getPort)#addBackEdge edge
 
@@ -207,7 +216,9 @@ let automaton_edge source target lab reset beginning =
 	edge#setType edge_type;
 	edge#setTarget target;
 	edge#setSource source;
-	edge#addLabel (lab , Center);
+	let label = new iEdgeLabel lab in
+	label#setPosition Center;
+	edge#addLabel label;
 	source#addEdge edge;
 	target#addBackEdge edge
 
@@ -217,7 +228,9 @@ let seq_edge ?(half=false) ?(sourcePort=None) ?(targetPort=None) sourceNode targ
 	edge#setType edge_type;
 	edge#setTarget targetNode;
 	edge#setSource sourceNode;
-	edge#addLabel (label, Center);
+	let label = new iEdgeLabel label in
+	label#setPosition Center;
+	edge#addLabel label;
 	begin match targetPort with
 	| None -> targetNode#addBackEdge edge
 	| Some p -> 
@@ -229,4 +242,10 @@ let seq_edge ?(half=false) ?(sourcePort=None) ?(targetPort=None) sourceNode targ
 	| Some (p : iPort) -> 
 		edge#setSourcePort p;
 		p#addEdge edge
+
+let edgeLabel ?(pos=Undef) ?(forced=Undef) name = 
+	let lab = new iEdgeLabel name in
+	lab#setPosition pos;
+	lab#setForcedPosition forced;
+	lab
 
