@@ -60,6 +60,7 @@ and translate_port (kg : Kgraph.kgraph) (port : iPort) =
 		| _, Output, true -> visibleOutputPort ~custom:(port:>iInformation) kg kn
 		| _, Output, false -> invisibleOutputPort ~custom:(port:>iInformation) kg kn
 		| _, Control, _ -> visibleControlPort ~custom:(port:>iInformation) ~ofs:(port#getOffset) kg kn
+		| _ , OutputTop , _ -> invisibleControlPort ~custom:(port:>iInformation) kg kn
 		| _, Undefined,true -> visiblePort ~custom:(port:>iInformation) kg kn
 		| _, Undefined,false -> invisiblePort ~custom:(port:>iInformation) kg kn in
 		Hashtbl.replace portTbl port#getId kp;
@@ -163,8 +164,8 @@ and translate_node kg node =
 			simpleDivNode ~custom:(node:>iInformation) kg
 		| Last ->
 			simpleLastNode ~custom:(node:>iInformation) kg
-		| Deconstr name ->
-			simpleDeConstrNode ~custom:(node:>iInformation) kg name
+		| Deconstr (name , n) ->
+			simpleDeConstrNode ~custom:(node:>iInformation) kg name n
 		in
 		Hashtbl.replace nodeTbl node#getId kn;
 		List.iter (fun port ->

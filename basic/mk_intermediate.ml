@@ -17,6 +17,17 @@ let rec create_n_ports ?(no=false) ?(vis=false) n node ty =
 		let outer = new iOuterPort port in
 		outer :: (create_n_ports ~no:no ~vis:vis (n-1) node ty)
 
+let rec create_n_ports_special ?(no=false) ?(vis=true) n node ty =
+	match n with
+	| 0 -> []
+	| n -> 
+		let port = new iPort node in
+		port#setType (ty (n-1));
+		port#setVisible vis;
+		port#setNot no;
+		node#addPort port;
+		let outer = new iOuterPort port in
+		outer :: (create_n_ports_special ~no:no ~vis:vis (n-1) node ty)
 
 (** [outerToEndPoint outer] takes an iOuterPort and creates a corresponding iEndPoint *)
 let outerToEndPoint o = 
@@ -49,6 +60,10 @@ let number_ports node_type = match node_type with
 	| Minus | Div -> 2,1,0
 	| Last -> 1,1,0
 	| Deconstr _ -> 1,1,0
+
+let topOutputs node_type = match node_type with
+	| Deconstr (_,n) -> (n-1)
+	| _ -> 0
 
 (** [is_output_not nt] return true if the node type [nt] is [Nand] or [Not] *)
 let is_output_not node_type = match node_type with
@@ -136,6 +151,7 @@ let simpleOpNode node_type layer =
 	let node = new iNode in
 	node#setType node_type;
 	node#setLayer layer;
+	node#addOutputList (create_n_ports (topOutputs node_type) node OutputTop);
 	node#addInputList (create_n_ports nb_inputs node Input);
 	node#addOutputList (create_n_ports ~no:(is_output_not node_type) nb_outputs node Output);
 	node#addControlList (create_n_ports ~vis:true nb_control node Control);

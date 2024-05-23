@@ -41,10 +41,10 @@ type node_type =
 	| Minus 
 	| Div 
 	| Last
-	| Deconstr of string (**[s]. [s] is the name of [s x]*)
+	| Deconstr of string * int (**[s,n]. [s] is the name of [s x], [n] is the number of arguments *)
 
 type port_type = 
-	Input | Output | Control | Undefined
+	Input | Output | Control | Undefined | OutputTop 
 
 type edge_type = 
 	Simple | Mult | Aut_begin | Aut_end | Aut_begin_history | Aut_end_history

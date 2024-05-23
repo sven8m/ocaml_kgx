@@ -14,8 +14,8 @@ let default_informations = new iInformation
 
 let place ?(top=15.0) ?(left=10.0) ?(right=10.0) ?(bottom=10.0) () =
 	let p = new AreaPlacementData.areaPlacementData in
-	let c1 = create_coord ~pos_val:(Abs top) Left in
-	let c2 = create_coord ~pos_val:(Abs left) Top in
+	let c1 = create_coord ~pos_val:(Abs left) Left in
+	let c2 = create_coord ~pos_val:(Abs top) Top in
 	p#setTopLeft (create_point c1 c2);
 	let c3 = create_coord ~pos_val:(Abs right) Right in
 	let c4 = create_coord ~pos_val:(Abs bottom) Bottom in
@@ -176,9 +176,8 @@ let invisibleInputPort ?(custom=default_informations) kgraph knode =
 	port#addProperty (PersistentEntry.createPortWest ());
 	port
 
-let invisibleControlPort ?(custom=default_informations) ?(ofs=0.) kgraph knode = 
+let invisibleControlPort ?(custom=default_informations) kgraph knode = 
 	let port = invisiblePort ~custom:custom kgraph knode in
-	port#addProperty (PersistentEntry.borderOffset ofs);
 	port#addProperty (PersistentEntry.createPortNorth ());
 	(*port#addProperty (PersistentEntry.allowSwitch ()); *)
 	port
@@ -430,9 +429,10 @@ let simpleLastNode ?(custom=default_informations) kgraph =
 	simpleOpNode ~custom:custom kgraph "last" 0.5 0.5
 
 
-let simpleDeConstrNode ?(custom=default_informations) kgraph name = 
-	let node = defaultNode kgraph in
-	let cont = simpleOpContWtT ~custom:custom () in	
+let constrBox ?(custom=default_informations) cont n =
+
+	let rightDelta = 1.0 +. n *. 3.0 in
+	let dim = 5.0 in
 	let circle = new containerRendering in
 	circle#setContainer Ellipse;
 	circle#addStyle (create_style (LineWidth 1.0));
@@ -440,50 +440,18 @@ let simpleDeConstrNode ?(custom=default_informations) kgraph name =
 	circle#addStyle (create_style (Foreground (create_coloring (opLineColor custom))));
 	circle#addStyle (create_style (Background (create_coloring (opLineColor custom))));
 
-	let dim = 5.0 in
 	let pd = new PointPlacementData.pointPlacementData in
 	pd#setMinHeight dim;
 	pd#setMinWidth dim;
 	pd#setHorizontalAlignment CENTER;
 	pd#setVerticalAlignment CENTER;
-	let c1 = Point.create_coord ~pos_val:(Abs (dim *. 2.5)) Right in
+	let c1 = Point.create_coord ~pos_val:(Abs (dim *. (rightDelta +.1.5))) Right in
 	let c2 = Point.create_coord ~pos_val:(Rel 0.5) Top in
 	let point = Point.create_point c1 c2 in
 	pd#setRefPoint point;
 	circle#setPlacement (Point pd);
 	cont#addContainerRendering circle;
-
-	let line = new containerRendering in
-	line#addStyle (create_style (LineWidth 1.0));
-	line#addStyle (create_style ~on_sel:true (LineWidth 1.5));
-	line#addStyle (create_style (Foreground (create_coloring (opLineColor custom))));
-	line#addStyle (create_style (Background (create_coloring (opLineColor custom))));
-
-	let c1 = Point.create_coord Left in
-	let c2 = Point.create_coord Right in
-	let c3 = Point.create_coord Top in
-
-	let p1 = Point.create_point c1 c3 in
-	let p2 = Point.create_point c2 c3 in
-	line#setContainer (PolyLine [p1;p2]);
 	
-	let pd = new PointPlacementData.pointPlacementData in
-	pd#setMinHeight 1.0;
-	pd#setMinWidth (dim*.2.1);
-	pd#setHorizontalAlignment CENTER;
-	pd#setVerticalAlignment TOP;
-	let c1 = Point.create_coord ~pos_val:(Abs (dim *. 1.05)) Right in
-	let c2 = Point.create_coord ~pos_val:(Rel 0.5) Top in
-	let point = Point.create_point c1 c2 in
-	pd#setRefPoint point;
-	line#setPlacement (Point pd);
-	cont#addContainerRendering line;
-
-
-	let name = " "^ name ^ "       " in
-	let t = simpleText ~s:8 ~custom:custom name 0.5 0.5 in
-	cont#addContainerRendering t;
-
 	
 	let quad = new containerRendering in
 	quad#setContainer Rect;
@@ -491,21 +459,115 @@ let simpleDeConstrNode ?(custom=default_informations) kgraph name =
 	quad#addStyle (create_style (LineStyle DASH));
 	quad#addStyle (create_style ~on_sel:true (LineWidth 1.5));
 	quad#addStyle (create_style (Foreground (create_coloring (opLineColor custom))));
-	
+
 	let pd = new PointPlacementData.pointPlacementData in
 	pd#setMinHeight (dim*.2.);
 	pd#setMinWidth (dim*.2.);
 	pd#setHorizontalAlignment CENTER;
 	pd#setVerticalAlignment CENTER;
-	let c1 = Point.create_coord ~pos_val:(Abs (dim *. 2.5)) Right in
+	let c1 = Point.create_coord ~pos_val:(Abs (dim *. (rightDelta +. 1.5))) Right in
 	let c2 = Point.create_coord ~pos_val:(Rel 0.5) Top in
 	let point = Point.create_point c1 c2 in
 	pd#setRefPoint point;
 	quad#setPlacement (Point pd);
 	cont#addContainerRendering quad;
+	
+	let high = n <> 0.0 in
+	let line = new containerRendering in
+	line#addStyle (create_style (LineWidth 1.0));
+	line#addStyle (create_style ~on_sel:true (LineWidth 1.7));
+	line#addStyle (create_style (Foreground (create_coloring (opLineColor custom))));
+	line#addStyle (create_style (Background (create_coloring (opLineColor custom))));
+
+	let c1 = Point.create_coord Left in
+	let c2 = Point.create_coord Right in
+	let c3 = Point.create_coord Top in
+	let c4 = Point.create_coord Bottom in
+	if high  then begin
+		let p1 = Point.create_point c1 c4 in
+		let p2 = Point.create_point c1 c3 in
+		line#setContainer (PolyLine [p1;p2]);
+	end else begin
+		let p1 = Point.create_point c1 c3 in
+		let p2 = Point.create_point c2 c3 in
+		line#setContainer (PolyLine [p1;p2]);
+	end;
+
+	let pd = new PointPlacementData.pointPlacementData in
+	if high then begin 
+		pd#setMinHeight (dim*.2.);
+		pd#setMinWidth 1.0;
+		pd#setHorizontalAlignment LEFT;
+		pd#setVerticalAlignment CENTER;	
+	end else begin
+		pd#setMinHeight 1.0;
+		pd#setMinWidth (dim*.2.1);
+		pd#setVerticalAlignment TOP;
+		pd#setHorizontalAlignment CENTER;
+	end;
+	let c1 = if high then 
+		Point.create_coord ~pos_val:(Abs (dim *. (rightDelta +. 1.5))) Right 
+		else Point.create_coord ~pos_val:(Abs (dim *. 1.05)) Right in
+	let c2 = if high then
+		Point.create_coord ~pos_val:(Rel 0.25) Top 
+		else Point.create_coord ~pos_val:(Rel 0.5) Top in
+	let point = Point.create_point c1 c2 in
+	pd#setRefPoint point;
+	line#setPlacement (Point pd);
+	cont#addContainerRendering line
+
+(*
+let constrPort ?(custom=default_informations) kgraph knode n = 
+	let port = new kport kgraph in
+	let dim = 5.0 in
+	port#setNode knode;
+	port#setHeight dim;
+	port#setWidth dim;
+	let rightDelta = 1.0 +. n *. 3.0 in
+	let circle = new containerRendering in
+	circle#setContainer Ellipse;
+	circle#addStyle (create_style (LineWidth 1.0));
+	circle#addStyle (create_style ~on_sel:true (LineWidth 2.0));
+	circle#addStyle (create_style (Foreground (create_coloring (opLineColor custom))));
+	circle#addStyle (create_style (Background (create_coloring (opLineColor custom))));
+
+	let pd = new PointPlacementData.pointPlacementData in
+	pd#setMinHeight dim;
+	pd#setMinWidth dim;
+	pd#setHorizontalAlignment CENTER;
+	pd#setVerticalAlignment CENTER;
+	let c1 = Point.create_coord ~pos_val:(Abs (dim *. (rightDelta +.1.5))) Right in
+	let c2 = Point.create_coord ~pos_val:(Abs (2. *. dim)) Top in
+	let point = Point.create_point c1 c2 in
+	pd#setRefPoint point;
+	circle#setPlacement (Point pd);
+	port#addData circle;
+	port#addProperty (PersistentEntry.createPortEast ());
+	port
+*)
+
+let simpleDeConstrNode ?(custom=default_informations) kgraph name num = 
+	let node = defaultNode ~order:true kgraph in
+	let cont = simpleOpContWtT ~custom:custom () in
+	let rec addBox n = match n with
+		| -1 -> ()
+		| _ -> 
+			constrBox ~custom:custom cont (float_of_int n);
+			addBox (n - 1)
+	in
+	addBox (num - 1);
+	let num = float_of_int num in
+	
+	let t = simpleText ~s:8 ~custom:custom name 0.5 0.5 in
+	t#setPlacement (place ~top:0.0 ~left:5.0 ~right:(1.0 +. 3.0 *.num *. 5.0 +. 2.0) ~bottom:0.0 ());	
+	cont#addContainerRendering t;
 
 	node#addData cont;
-	resetPortsSurrounding node;	
+
+	node#addProperty (PersistentEntry.create_property "org.eclipse.elk.spacing.individual" 
+	"org.eclipse.elk.spacing.portPort:15.0;,;org.eclipse.elk.spacing.portsSurrounding:[top=0.0,left=0.0,bottom=0.0,right=27.35]");
+	
+	node#addProperty (PersistentEntry.create_property "org.eclipse.elk.portAlignment.north" "END");
 	node
 
 
@@ -1076,8 +1138,8 @@ let main _ =
 	let p3 = visibleInputPort kgraph node3 in
 	linkEdge kgraph node1 p1 node3 p3;	
 *)
-	let _ = simpleDeConstrNode kgraph "hi" in
-	let _ = simpleDeConstrNode kgraph "hiohiohiohiohiohoihoihoihihoihoihoho" in
+	let _ = simpleDeConstrNode kgraph "hi" 1 in
+	let _ = simpleDeConstrNode kgraph "hiohiohiohiohiohoihoihoihihoihoihoho" 1 in
 	let oc = open_out "basic.kgx" in
 
 	let ff = Format.formatter_of_out_channel oc in
