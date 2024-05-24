@@ -150,8 +150,8 @@ let linkCreation node =
 		node#getOutputs
 	) node#getControl
 
-(** [simpleOpNode node_type layer] creates an iNode corresponding to the [node_type], with number of ports, names and innerLinks depending on the [node_type]. The [layer] is used for coloring.*)
-let simpleOpNode node_type layer =
+(** [simpleOpNode node_type parent layer] creates an iNode corresponding to the [node_type], with number of ports, names and innerLinks depending on the [node_type], and parent [parent]. The [layer] is used for coloring.*)
+let simpleOpNode node_type parent layer =
 	let nb_inputs,nb_outputs, nb_control = number_ports node_type in
 	let node = new iNode in
 	node#setType node_type;
@@ -163,13 +163,18 @@ let simpleOpNode node_type layer =
 	node#addControlList (create_n_ports ~vis:true nb_control node Control);
 	addNames node node_type;
 	linkCreation node;
+	
+	parent#addChild node;
 	node
 
-(** [simpleFunctionNode node_type input_names output_names layer] creates an iNode for a [node_type] function, with 
+type fctParent = Node of iNode
+| Graph of iGraph
+
+(** [simpleFunctionNode node_type input_names output_names parent layer] creates an iNode for a [node_type] function, with 
 input ports having names [input_names], and output ports having names [output_names]. 
 
 Option [control] if there should be a control port on the node *)
-let simpleFunctionNode ?(control=false) node_type input_names output_names layer = 
+let simpleFunctionNode ?(control=false) node_type input_names output_names parent layer = 
 	let node = new iNode in
 	node#setType node_type;
 	node#setLayer layer;
@@ -178,6 +183,10 @@ let simpleFunctionNode ?(control=false) node_type input_names output_names layer
 	if control then node#addControlList (create_n_ports ~vis:true 1 node Control); 
 	addOuterNames node#getInputs input_names;
 	addOuterNames node#getOutputs output_names;
+	begin match parent with
+	| Node p -> p#addChild node;
+	| Graph g -> g#addNode node;
+	end;
 	node
 
 (** [addReset node] adds a port of type control to the [node] *)
