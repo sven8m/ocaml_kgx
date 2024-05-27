@@ -57,10 +57,13 @@ let number_ports node_type = match node_type with
 	| Link  -> 1,1,0
 	(* for z *)
 	| Add n | Mult n -> n, 1, 0
-	| Minus | Div -> 2,1,0
+	| Minus n -> n, 1, 0
+	| Div -> 2,1,0
 	| Last -> 1,1,0
 	| Deconstr _ -> 1,1,0
 	| Constr _ -> 0,1,0
+	| Der (_,b) -> if b then 1,1,1 else 1,1,0
+	| TestCond _ -> 0,1,0
 
 let topOutputs node_type = match node_type with
 	| Deconstr (_,n) -> (n-1)

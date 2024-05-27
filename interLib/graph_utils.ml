@@ -413,6 +413,11 @@ let simpleSinkNode ?(custom=default_informations) ?(used=true) kgraph text =
 let simpleFbyNode ?(custom=default_informations) kgraph =
 	simpleOpNode ~custom:custom ~ho_mar:5.0 kgraph "fby" 0.5 0.5 
 
+let simpleTextNode ?(custom=default_informations) kgraph text = 
+	simpleOpNode ~custom:custom ~ho_mar:5.0 kgraph text 0.5 0.5
+
+(* for z *)
+
 let simpleAddNode ?(custom=default_informations) kgraph = 
 	simpleOpNode ~custom:custom kgraph "+" 0.5 0.5
 
@@ -420,7 +425,7 @@ let simpleMinusNode ?(custom=default_informations) kgraph =
 	simpleOpNode ~custom:custom ~order:true kgraph "-" 0.5 0.5
 
 let simpleTimesNode ?(custom=default_informations) kgraph = 
-	simpleOpNode ~custom:custom kgraph "*" 0.6 0.5
+	simpleOpNode ~custom:custom kgraph "*" 0.5 0.6
 
 let simpleDivNode ?(custom=default_informations) kgraph = 
 	simpleOpNode ~custom:custom ~order:true kgraph "/" 0.5 0.5
@@ -572,6 +577,79 @@ let simpleDeConstrNode ?(custom=default_informations) ?(vert=false) ?(right_ofs=
 
 let simpleConstrNode ?(custom=default_informations) kgraph name num =
 	simpleDeConstrNode ~custom:custom ~vert:true ~right_ofs:12.35 kgraph name num
+
+
+let integrCont ?(custom=default_informations) () = 
+	let line = new containerRendering in
+
+	let c1 = Point.create_coord Left in
+	let c2 = Point.create_coord Bottom in
+	let c3 = Point.create_coord ~pos_val:(Rel 0.5) Left in
+	let c4 = Point.create_coord Top in
+	let c5 = Point.create_coord Right in
+
+	let p1 = Point.create_point c1 c2 in
+	let p2 = Point.create_point c3 c2 in
+	let p3 = Point.create_point c3 c4 in
+	let p4 = Point.create_point c5 c4 in
+	line#setContainer (PolyLine [p1;p2;p3;p4]);
+
+	line#addStyle (create_style (LineWidth 1.5));
+	line#addStyle (create_style ~on_sel:true (LineWidth 2.));
+	line#addStyle (create_style (Foreground (create_coloring (opLineColor custom))));
+	line#addStyle (create_style (Background (create_coloring (opLineColor custom))));
+
+	let pd = new PointPlacementData.pointPlacementData in
+	pd#setMinHeight 12.0;
+	pd#setMinWidth 25.0;
+	pd#setHorizontalAlignment CENTER;
+	pd#setVerticalAlignment CENTER;
+	let c1 = Point.create_coord ~pos_val:(Rel 0.5) Left in
+	let c2 = Point.create_coord ~pos_val:(Abs 10.0) Top in
+	let point = Point.create_point c1 c2 in
+	pd#setRefPoint point;
+	line#setPlacement (Point pd);
+	line	
+
+
+let simpleDerNode ?(custom=default_informations) kgraph init_name =
+	let node = defaultNode kgraph in
+	node#setWidth 30.0;
+	node#setHeight 30.0;
+	let cont = simpleOpContWtT ~custom:custom () in
+	cont#addContainerRendering (integrCont ~custom:custom ());
+	let t = simpleText ~s:8 ~custom:custom init_name 0.5 0.5 in
+	t#setPlacement (place ~top:15.0 ~left:5.0 ~right:5.0 ~bottom:0.0 ());	
+	cont#addContainerRendering t;
+	node#addData cont;
+	resetPortsSurrounding node;
+	node
+
+let simpleTestCondNode ?(custom=default_informations) kgraph cond =
+	let node = defaultNode kgraph in
+	
+	let c1 = Point.create_coord Left in
+	let c2 = Point.create_coord Top in
+	let c3 = Point.create_coord ~pos_val:(Abs 5.0) Left in
+	let c4 = Point.create_coord Bottom in
+	let c5 = Point.create_coord ~pos_val:(Abs 5.0) Right in
+	let c6 = Point.create_coord Right in
+
+	let p1 = Point.create_point c1 c2 in
+	let p2 = Point.create_point c3 c4 in
+	let p3 = Point.create_point c5 c4 in
+	let p4 = Point.create_point c6 c2 in
+
+	let cont = simpleOpContWtT ~custom:custom () in
+	cont#setContainer (Polygon [p1;p2;p3;p4;p1]);
+	let t = simpleText ~custom:custom cond 0.5 0.5 in
+	t#setPlacement (place ~left:5.0 ~right:5.0 ~top:0.0 ~bottom:0.0 ());
+	cont#addContainerRendering t;
+	node#addData cont;
+	resetPortsSurrounding node;
+	node
+
+(* end for z *)
 
 let layered_color red green blue layer = 
 	let layer = if layer >= 5 then 5 else layer in
@@ -1131,8 +1209,9 @@ let main _ =
 	let p3 = visibleInputPort kgraph node3 in
 	linkEdge kgraph node1 p1 node3 p3;	
 *)
-	let _ = simpleDeConstrNode kgraph "hi" 1 in
-	let _ = simpleDeConstrNode kgraph "hiohiohiohiohiohoihoihoihihoihoihoho" 1 in
+	let _ = simpleDerNode kgraph "no" in
+	let _ = simpleDerNode kgraph "qroignqerionqergq" in
+	let _ = simpleTestCondNode kgraph "?up(-y)" in
 	let oc = open_out "basic.kgx" in
 
 	let ff = Format.formatter_of_out_channel oc in

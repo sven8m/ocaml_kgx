@@ -38,12 +38,13 @@ type node_type =
 (* for z *)
 	| Add of int
 	| Mult of int
-	| Minus 
+	| Minus of int 
 	| Div 
 	| Last
 	| Deconstr of string * int (**[s,n]. [s] is the name of [s x], [n] is the number of arguments *)
 	| Constr of string * int (**[s,n]. [s] is name of [s x], [n] is the number of arguments *)
-
+	| Der of string *bool (**[s,b]. [s] is the init name, [b] if there is a reset option *)
+	| TestCond of string 
 type port_type = 
 	Input | Output | Control | Undefined | OutputTop | InputTop
 
@@ -58,10 +59,18 @@ let id_cnt = ref 0
 class iInformation = object
 	val mutable inCycle = false
 	val mutable isDead = false
+	val mutable asText = false
+	val mutable textContent = ""
+
 	method getInCycle = inCycle
 	method setInCycle b = inCycle <- b
 	method getDead = isDead
 	method setDead b= isDead <- b
+	
+	method getAsText = asText
+	method setAsText b = asText <- b
+	method getTextContent = textContent
+	method setTextContent t = textContent <- t
 end 
 
 class iEdgeLabel s = object

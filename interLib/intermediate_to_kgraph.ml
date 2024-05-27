@@ -9,21 +9,50 @@ let nodeTbl = Hashtbl.create 42
 let go_deeper layer = 
 	(!InterLib_options.do_rec_viz = (-1) || layer = 0 || (layer <= !InterLib_options.do_rec_viz))
 
+let edge_between_text edge = 
+	let source = edge#getSource in
+	let target = edge#getTarget in
+	if source#getAsText && source#getLayer < target#getLayer then
+		(*edge to inside of text -> no *) true
+	else false
+
 let passOpt el = 
 	match el with
 	| None -> assert false
 	| Some el -> el
 
+let print_edge_type edge = 
+	let text = match edge#getType with
+	| Link -> "Link"
+	| Simple -> "Simple"
+	| AutLink -> "AutLink"
+	| Aut_begin -> "Autbegin"
+	| Aut_begin_history -> "Aut_begin_history"
+	| Aut_end -> "Aut_end"
+	| Aut_end_history -> "Aut_end_history"
+	| DepAutLink -> "DepAutLink"
+	| DepLink -> "DepLink"
+	| Mult -> "Mult"
+	| Seq -> "Seq"
+	| Seq_half -> "Seq_half"
+	in
+	Format.printf "%s@." text
+
 
 (** [translate_edge kg sourceNode edge] takes an iEdge [edge] and translates it to a [KEdge], given the KGraph [kg], the source KNode [sourceNode]
 and the potential source KPort [sourcePort] *)
 let rec translate_edge ?(sourcePort) (kg : Kgraph.kgraph) sourceNode (edge : iEdge) = 
-	if go_deeper (edge#getTarget#getLayer - 1) && ((edge#getSource)#getType <> Link || !InterLib_options.do_show_all) then begin
+	Format.printf "will translate edge@.";
+	if go_deeper (edge#getTarget#getLayer - 1) && ((edge#getTarget)#getType <> Link || !InterLib_options.do_show_all) && ((edge#getSource)#getType <> Link || !InterLib_options.do_show_all) && (not (edge_between_text edge)) then begin
+		Format.printf "entering @.";
+		Format.printf "%b %b@." edge#getSource#getAsText edge#getTarget#getAsText;
+		print_edge_type edge;			
 		let targetNode = Hashtbl.find nodeTbl edge#getTarget#getId in
 		let targetPort = match edge#getTargetPort with
 		| None -> None
 		| Some p -> Some (Hashtbl.find portTbl p#getId)
 		in
+		Format.printf "found target@.";
 		let kedge = match edge#getType with
 		| Simple | Mult ->
 			let sourcePort = passOpt sourcePort in
@@ -57,7 +86,8 @@ let rec translate_edge ?(sourcePort) (kg : Kgraph.kgraph) sourceNode (edge : iEd
 				kedge#addLabel klab;
 			) edge#getLabels
 		end
-	end
+	end;
+	Format.printf "has finished edge@."
 
 (** [translate_port kg port] takes an iPort [port] and translates it to a KPort given the Kgraph [kg] *)
 and translate_port (kg : Kgraph.kgraph) (port : iPort) = 
@@ -96,99 +126,110 @@ and revInputPorts (node : iNode) =
 		port#getType = Input) node#getPorts in
 	node#setPorts (other_ports @ (List.rev input_ports))
 
+(** [getKnodeFromType kgraph node] returns the knode corresponding to the [node_type] of [node]*)
+and getKnodeFromType kg node = 
+	match node#getType with
+	| And _ ->
+		simpleAndNode ~custom:(node:>iInformation) kg
+	| Or _ -> 
+		simpleOrNode ~custom:(node:>iInformation) kg
+	| Xor _ -> 
+		simpleXorNode ~custom:(node:>iInformation) kg
+	| Nand -> 
+		simpleNandNode ~custom:(node:>iInformation) kg
+	| Mux ->
+		simpleMuxNode ~custom:(node:>iInformation) kg
+	| Reg ->
+		simpleRegNode ~custom:(node:>iInformation) kg
+	| Buffer | Not ->
+		simpleBufferNode ~custom:(node:>iInformation) kg
+	| Fby ->
+		simpleFbyNode ~custom:(node:>iInformation) kg
+	| Cond _->
+		simpleCondNode ~custom:(node:>iInformation) kg
+	| Every s ->
+		function_node ~custom:(node:>iInformation) kg s node#getLayer 	
+	| Fct s ->
+		function_node ~custom:(node:>iInformation) kg s node#getLayer
+	| Slice (i,j) ->
+		simpleSliceNode ~custom:(node:>iInformation) kg i j
+	| Select i ->
+		simpleSelectNode ~custom:(node:>iInformation) kg i
+	| Concat ->
+		simpleConcatNode ~custom:(node:>iInformation) kg
+	| Match _ ->
+		simpleMatchNode ~custom:(node:>iInformation) kg
+	| Match_node ->
+		function_node ~custom:(node:>iInformation) ~m:true kg "match" node#getLayer
+	| Match_state s ->
+		function_node ~custom:(node:>iInformation) kg s node#getLayer
+	| Reset ->
+		function_node ~custom:(node:>iInformation) ~res:true kg "reset" node#getLayer
+	| Aut ->
+		function_node ~custom:(node:>iInformation) ~aut:true kg "automaton" node#getLayer	
+	| Aut_state (s,init) ->
+		stateNode ~custom:(node:>iInformation) ~init:init kg s node#getLayer
+	| For ->
+		simpleSeqBlockNode ~custom:(node:>iInformation) kg "for"
+	| While ->
+		simpleSeqBlockNode ~custom:(node:>iInformation) kg "while"
+	| Pause init ->
+		simpleBubleNode ~init:init kg 
+	| Ram ->
+		ramNode ~custom:(node:>iInformation) kg
+	| Rom ->
+		romNode ~custom:(node:>iInformation) kg
+	| Const (s,var) ->
+		simpleConstNode ~custom:(node:>iInformation) ~const:(not var) kg s
+	| Tuple _ | UnTuple _ -> simpleTupleNode ~custom:(node:>iInformation) kg
+	| Sink (s,used) ->
+		simpleSinkNode ~custom:(node:>iInformation) ~used:used kg s
+	| Var s ->
+		simpleInputVarNode ~custom:(node:>iInformation) kg s	
+	| Sync init ->
+		simpleSyncNode ~custom:(node:>iInformation) ~init:init kg
+	| Final ->
+		terminalSyncNode kg		
+	| Link -> 
+		simpleLinkNode kg
+	(* for z *)
+	| Add _ ->
+		simpleAddNode ~custom:(node:>iInformation) kg
+	| Minus _ ->
+		simpleMinusNode ~custom:(node:>iInformation) kg
+	| Mult _ ->
+		simpleTimesNode ~custom:(node:>iInformation) kg
+	| Div ->
+		simpleDivNode ~custom:(node:>iInformation) kg
+	| Last ->
+		simpleLastNode ~custom:(node:>iInformation) kg
+	| Deconstr (name , n) ->
+		simpleDeConstrNode ~custom:(node:>iInformation) kg name n
+	| Constr (name, n) ->
+		simpleConstrNode ~custom:(node:>iInformation) kg name n
+	| Der (name,_) ->
+		simpleDerNode ~custom:(node:>iInformation) kg name
+	| TestCond t ->
+		simpleTestCondNode ~custom:(node:>iInformation) kg t
+
 (** [translate_node kg node] takes an iNode [node] and translates it into a KNode, its ports into KPorts, and recursively its children. (not the edges) *)
 and translate_node kg node =
 	if Hashtbl.mem nodeTbl node#getId then
 		Hashtbl.find nodeTbl node#getId
 	else begin
 		revInputPorts node;
-		let kn = match node#getType with
-		| And _ ->
-			simpleAndNode ~custom:(node:>iInformation) kg
-		| Or _ -> 
-			simpleOrNode ~custom:(node:>iInformation) kg
-		| Xor _ -> 
-			simpleXorNode ~custom:(node:>iInformation) kg
-		| Nand -> 
-			simpleNandNode ~custom:(node:>iInformation) kg
-		| Mux ->
-			simpleMuxNode ~custom:(node:>iInformation) kg
-		| Reg ->
-			simpleRegNode ~custom:(node:>iInformation) kg
-		| Buffer | Not ->
-			simpleBufferNode ~custom:(node:>iInformation) kg
-		| Fby ->
-			simpleFbyNode ~custom:(node:>iInformation) kg
-		| Cond _->
-			simpleCondNode ~custom:(node:>iInformation) kg
-		| Every s ->
-			function_node ~custom:(node:>iInformation) kg s node#getLayer 	
-		| Fct s ->
-			function_node ~custom:(node:>iInformation) kg s node#getLayer
-		| Slice (i,j) ->
-			simpleSliceNode ~custom:(node:>iInformation) kg i j
-		| Select i ->
-			simpleSelectNode ~custom:(node:>iInformation) kg i
-		| Concat ->
-			simpleConcatNode ~custom:(node:>iInformation) kg
-		| Match _ ->
-			simpleMatchNode ~custom:(node:>iInformation) kg
-		| Match_node ->
-			function_node ~custom:(node:>iInformation) ~m:true kg "match" node#getLayer
-		| Match_state s ->
-			function_node ~custom:(node:>iInformation) kg s node#getLayer
-		| Reset ->
-			function_node ~custom:(node:>iInformation) ~res:true kg "reset" node#getLayer
-		| Aut ->
-			function_node ~custom:(node:>iInformation) ~aut:true kg "automaton" node#getLayer	
-		| Aut_state (s,init) ->
-			stateNode ~custom:(node:>iInformation) ~init:init kg s node#getLayer
-		| For ->
-			simpleSeqBlockNode ~custom:(node:>iInformation) kg "for"
-		| While ->
-			simpleSeqBlockNode ~custom:(node:>iInformation) kg "while"
-		| Pause init ->
-			simpleBubleNode ~init:init kg 
-		| Ram ->
-			ramNode ~custom:(node:>iInformation) kg
-		| Rom ->
-			romNode ~custom:(node:>iInformation) kg
-		| Const (s,var) ->
-			simpleConstNode ~custom:(node:>iInformation) ~const:(not var) kg s
-		| Tuple _ | UnTuple _ -> simpleTupleNode ~custom:(node:>iInformation) kg
-		| Sink (s,used) ->
-			simpleSinkNode ~custom:(node:>iInformation) ~used:used kg s
-		| Var s ->
-			simpleInputVarNode ~custom:(node:>iInformation) kg s	
-		| Sync init ->
-			simpleSyncNode ~custom:(node:>iInformation) ~init:init kg
-		| Final ->
-			terminalSyncNode kg		
-		| Link -> 
-			simpleLinkNode kg
-		(* for z *)
-		| Add _ ->
-			simpleAddNode ~custom:(node:>iInformation) kg
-		| Minus ->
-			simpleMinusNode ~custom:(node:>iInformation) kg
-		| Mult _ ->
-			simpleTimesNode ~custom:(node:>iInformation) kg
-		| Div ->
-			simpleDivNode ~custom:(node:>iInformation) kg
-		| Last ->
-			simpleLastNode ~custom:(node:>iInformation) kg
-		| Deconstr (name , n) ->
-			simpleDeConstrNode ~custom:(node:>iInformation) kg name n
-		| Constr (name, n) ->
-			simpleConstrNode ~custom:(node:>iInformation) kg name n
-		in
+		let kn = getKnodeFromType kg node in
 		Hashtbl.replace nodeTbl node#getId kn;
 		List.iter (fun port ->
 			ignore (translate_port kg port)) node#getPorts;
-		if (go_deeper node#getLayer) then
+		if (go_deeper node#getLayer) && (not node#getAsText) then
 			List.iter (fun child ->
 				let kc = translate_node kg child in
-				kc#setParent kn) node#getChildren; 
+				kc#setParent kn) node#getChildren
+		else if (node#getAsText) then begin
+			let textNode = simpleTextNode ~custom:(node:>iInformation) kg node#getTextContent in
+			textNode#setParent kn;
+		end;
 		kn
 	end
 
@@ -198,7 +239,7 @@ and translate_node_edges kg (node : iNode) =
 	List.iter (fun edge -> translate_edge kg kn edge) node#getEdges;
 	List.iter (fun port ->
 		translate_port_edges kg port) node#getPorts;
-	if (go_deeper node#getLayer) then
+	if (go_deeper node#getLayer) && (not node#getAsText) then
 		List.iter (fun child ->
 			translate_node_edges kg child) node#getChildren
 
