@@ -199,6 +199,17 @@ let visibleOutputPort ?(custom=default_informations) kgraph knode =
 	port#addProperty (PersistentEntry.createPortEast ());
 	port
 
+let visibleBotPort ?(custom=default_informations) kgraph knode =
+	let port = visiblePort ~custom:custom kgraph knode in
+	port#addProperty (PersistentEntry.createPortSouth ());
+	port
+
+let invisibleBotPort ?(custom=default_informations) kgraph knode =
+	let port = invisiblePort ~custom:custom kgraph knode in
+	port#addProperty (PersistentEntry.createPortSouth ());
+	port
+
+
 let notOutputPort ?(custom=default_informations) kgraph knode = 
 	let port = new kport kgraph in
 	port#setWidth 5.0;
@@ -613,7 +624,7 @@ let integrCont ?(custom=default_informations) () =
 
 
 let simpleDerNode ?(custom=default_informations) kgraph init_name =
-	let node = defaultNode kgraph in
+	let node = defaultNode ~order:true kgraph in
 	node#setWidth 30.0;
 	node#setHeight 30.0;
 	let cont = simpleOpContWtT ~custom:custom () in
@@ -649,6 +660,15 @@ let simpleTestCondNode ?(custom=default_informations) kgraph cond =
 	resetPortsSurrounding node;
 	node
 
+let simpleInvisibleNode ?(custom=default_informations) kgraph =
+	let node = defaultNode kgraph in
+	let cont = simpleOpContWtT ~inv:true ~custom:custom () in
+	node#addData cont;
+	addPortSpace node;
+		
+	node
+
+	
 (* end for z *)
 
 let layered_color red green blue layer = 

@@ -62,8 +62,11 @@ let number_ports node_type = match node_type with
 	| Last -> 1,1,0
 	| Deconstr _ -> 1,1,0
 	| Constr _ -> 0,1,0
-	| Der (_,b) -> if b then 1,1,1 else 1,1,0
-	| TestCond _ -> 0,1,0
+	| Der (_,n) -> 1,1,n
+	| TestCond _ -> 0,0,0
+	| VertText _ -> 0,0,0
+	| Inv -> assert false
+
 
 let topOutputs node_type = match node_type with
 	| Deconstr (_,n) -> (n-1)
@@ -71,7 +74,17 @@ let topOutputs node_type = match node_type with
 
 let topInputs node_type = match node_type with
 	| Constr (_,n) -> n
+	| VertText _ -> 1
 	| _ -> 0
+
+let botInputs node_type = match node_type with
+	| _ -> 0
+
+let botOutputs node_type = match node_type with
+	| TestCond _ -> 1
+	| VertText _ -> 1
+	| _ -> 0
+
 
 (** [is_output_not nt] return true if the node type [nt] is [Nand] or [Not] *)
 let is_output_not node_type = match node_type with
@@ -159,6 +172,9 @@ let simpleOpNode node_type parent layer =
 	let node = new iNode in
 	node#setType node_type;
 	node#setLayer layer;
+	
+	node#addInputList (create_n_ports (botInputs node_type) node InputBot);
+	node#addOutputList (create_n_ports (botOutputs node_type) node OutputBot);
 	node#addOutputList (create_n_ports (topOutputs node_type) node OutputTop);
 	node#addInputList (create_n_ports (topInputs node_type) node InputTop);
 	node#addInputList (create_n_ports nb_inputs node Input);
@@ -177,12 +193,12 @@ type fctParent = Node of iNode
 input ports having names [input_names], and output ports having names [output_names]. 
 
 Option [control] if there should be a control port on the node *)
-let simpleFunctionNode ?(control=false) node_type input_names output_names parent layer = 
+let simpleFunctionNode ?(vis=true) ?(control=false) node_type input_names output_names parent layer = 
 	let node = new iNode in
 	node#setType node_type;
 	node#setLayer layer;
-	node#addInputList (create_n_ports ~vis:true (List.length input_names) node Input);
-	node#addOutputList (create_n_ports ~vis:true (List.length output_names) node Output);
+	node#addInputList (create_n_ports ~vis:vis (List.length input_names) node Input);
+	node#addOutputList (create_n_ports ~vis:vis (List.length output_names) node Output);
 	if control then node#addControlList (create_n_ports ~vis:true 1 node Control); 
 	addOuterNames node#getInputs input_names;
 	addOuterNames node#getOutputs output_names;

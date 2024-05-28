@@ -105,7 +105,10 @@ and translate_port (kg : Kgraph.kgraph) (port : iPort) =
 		| _ , OutputTop , _ -> invisibleControlPort ~custom:(port:>iInformation) kg kn
 		| _ , InputTop , _ -> invisibleControlPort ~custom:(port:>iInformation) kg kn
 		| _, Undefined,true -> visiblePort ~custom:(port:>iInformation) kg kn
-		| _, Undefined,false -> invisiblePort ~custom:(port:>iInformation) kg kn in
+		| _, Undefined,false -> invisiblePort ~custom:(port:>iInformation) kg kn 
+		| _, (InputBot | OutputBot) , true -> visibleBotPort ~custom:(port:>iInformation) kg kn
+		| _, (InputBot | OutputBot) , false -> invisibleBotPort ~custom:(port:>iInformation) kg kn
+		in
 		Hashtbl.replace portTbl port#getId kp;
 		if port#getName <> "" then begin
 			let lab = portLabel ~custom:(port:>iInformation) port#getName in
@@ -211,6 +214,10 @@ and getKnodeFromType kg node =
 		simpleDerNode ~custom:(node:>iInformation) kg name
 	| TestCond t ->
 		simpleTestCondNode ~custom:(node:>iInformation) kg t
+	| Inv ->
+		simpleInvisibleNode ~custom:(node:>iInformation) kg
+	| VertText t ->
+		simpleTextNode ~custom:(node:>iInformation) kg t
 
 (** [translate_node kg node] takes an iNode [node] and translates it into a KNode, its ports into KPorts, and recursively its children. (not the edges) *)
 and translate_node kg node =

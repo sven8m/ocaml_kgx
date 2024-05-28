@@ -32,6 +32,9 @@ let createPortEast () =
 let createPortNorth () = 
 	{key = "org.eclipse.elk.port.side" ; value = "NORTH"}
 
+let createPortSouth () = 
+	{key = "org.eclipse.elk.port.side" ; value = "SOUTH"}
+
 let constraintPortSide () = 
 	{key = "org.eclipse.elk.portConstraints" ; value="FIXED_SIDE"}
 let constraintPortOrder () = 

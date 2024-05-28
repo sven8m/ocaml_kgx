@@ -43,10 +43,14 @@ type node_type =
 	| Last
 	| Deconstr of string * int (**[s,n]. [s] is the name of [s x], [n] is the number of arguments *)
 	| Constr of string * int (**[s,n]. [s] is name of [s x], [n] is the number of arguments *)
-	| Der of string *bool (**[s,b]. [s] is the init name, [b] if there is a reset option *)
+	| Der of string *int (**[s,n]. [s] is the init name, [n] is number of resets *)
 	| TestCond of string 
+	| Inv
+	| VertText of string
+
+
 type port_type = 
-	Input | Output | Control | Undefined | OutputTop | InputTop
+	Input | Output | Control | Undefined | OutputTop | InputTop | OutputBot | InputBot
 
 type edge_type = 
 	Simple | Mult | Aut_begin | Aut_end | Aut_begin_history | Aut_end_history
