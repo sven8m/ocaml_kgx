@@ -5,7 +5,7 @@ open Intermediate_graph
 (** [create_n_ports n node ty] creates [n] ports on node [node] of type [ty]. 
 
 Option [no] indicates if it is a [no] port, [vis] if the port is visible.*)
-let rec create_n_ports ?(no=false) ?(vis=false) n node ty = 
+let rec create_n_ports ?(question=false) ?(no=false) ?(vis=false) n node ty = 
 	match n with
 	| 0 -> []
 	| n -> 
@@ -13,9 +13,10 @@ let rec create_n_ports ?(no=false) ?(vis=false) n node ty =
 		port#setType ty;
 		port#setVisible vis;
 		port#setNot no;
+		port#setQuestion question;
 		node#addPort port;
 		let outer = new iOuterPort port in
-		outer :: (create_n_ports ~no:no ~vis:vis (n-1) node ty)
+		outer :: (create_n_ports ~question:question ~no:no ~vis:vis (n-1) node ty)
 
 let rec create_n_ports_special ?(no=false) ?(vis=true) n node ty =
 	match n with
@@ -66,7 +67,13 @@ let number_ports node_type = match node_type with
 	| TestCond _ -> 0,0,0
 	| VertText _ -> 0,0,0
 	| Inv -> assert false
-
+	| Present  -> assert false
+	| Text _ -> 0,0,0 
+	| Period b -> if b then 1,1,1 else 1,1,0
+	| Emit _ -> 1,1,0
+	| Up -> 1,1,0
+	| Scond _ -> assert false
+	| BlanckFct -> assert false
 
 let topOutputs node_type = match node_type with
 	| Deconstr (_,n) -> (n-1)
@@ -89,6 +96,10 @@ let botOutputs node_type = match node_type with
 (** [is_output_not nt] return true if the node type [nt] is [Nand] or [Not] *)
 let is_output_not node_type = match node_type with
 	| Nand | Not -> true
+	| _ -> false
+
+let is_output_question node_type = match node_type with
+	| Scond _ -> true
 	| _ -> false
 
 (** [addOuterNames ol nl] iterates over [ol] and [nl], and for [outer] and [name], it adds the name [name] to the outer port [outer] *)
@@ -198,7 +209,7 @@ let simpleFunctionNode ?(vis=true) ?(control=false) node_type input_names output
 	node#setType node_type;
 	node#setLayer layer;
 	node#addInputList (create_n_ports ~vis:vis (List.length input_names) node Input);
-	node#addOutputList (create_n_ports ~vis:vis (List.length output_names) node Output);
+	node#addOutputList (create_n_ports ~question:(is_output_question node_type) ~vis:vis (List.length output_names) node Output);
 	if control then node#addControlList (create_n_ports ~vis:true 1 node Control); 
 	addOuterNames node#getInputs input_names;
 	addOuterNames node#getOutputs output_names;

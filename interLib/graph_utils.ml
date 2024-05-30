@@ -92,7 +92,7 @@ let defaultStateNode ?(layer) kgraph =
 	node
 
 
-let simpleOpContWtT ?(inv=false) ?(custom=default_informations) () =
+let simpleOpContWtT ?(spe_back=None) ?(inv=false) ?(custom=default_informations) () =
 	let cont = new containerRendering in
 	cont#setContainer Rect;
 	cont#addStyle (create_style (LineWidth 1.3));
@@ -100,7 +100,10 @@ let simpleOpContWtT ?(inv=false) ?(custom=default_informations) () =
 	cont#addStyle (create_style (Foreground (create_coloring (opLineColor custom))));
 	if inv then
 		cont#addStyle (create_style Invisibility);
-	let color = create_color 200 200 250 in
+	let color = match spe_back with
+	| None -> create_color 200 200 250 
+	| Some c -> c
+	in
 	cont#addStyle (create_style (Background (create_coloring color)));
 	cont#addStyle (create_style (Shadow (2.0,2.0)));
 	cont
@@ -221,6 +224,23 @@ let notOutputPort ?(custom=default_informations) kgraph knode =
 	cont#addStyle (create_style (LineWidth 1.3));
 	cont#addStyle (create_style (Foreground (create_coloring (opLineColor custom))));
 	cont#addStyle (create_style ~on_sel:true (LineWidth 1.5));
+	port#addData cont;
+	port
+
+let questionOutputPort ?(custom=default_informations) kgraph knode = 
+	let port = new kport kgraph in
+	port#setWidth 10.0;
+	port#setHeight 10.0;
+	port#addProperty (PersistentEntry.createPortEast ());
+	port#setNode knode;
+	let cont = new containerRendering in
+	cont#setContainer Rect;
+	cont#addStyle (create_style (LineWidth 1.0));
+	cont#addStyle (create_style (Foreground (create_coloring (opLineColor custom))));
+	cont#addStyle (create_style ~on_sel:true (LineWidth 1.5));
+	let back_color = create_color 200 200 250 in
+	cont#addStyle (create_style (Background (create_coloring back_color)));
+	cont#addContainerRendering (simpleText ~custom:custom ~s:6 "?" 0.5 0.5);
 	port#addData cont;
 	port
 
@@ -636,9 +656,8 @@ let simpleDerNode ?(custom=default_informations) kgraph init_name =
 	resetPortsSurrounding node;
 	node
 
-let simpleTestCondNode ?(custom=default_informations) kgraph cond =
-	let node = defaultNode kgraph in
-	
+let testCondCont ?(spe_back=None) ?(custom=default_informations) () = 
+
 	let c1 = Point.create_coord Left in
 	let c2 = Point.create_coord Top in
 	let c3 = Point.create_coord ~pos_val:(Abs 5.0) Left in
@@ -650,9 +669,13 @@ let simpleTestCondNode ?(custom=default_informations) kgraph cond =
 	let p2 = Point.create_point c3 c4 in
 	let p3 = Point.create_point c5 c4 in
 	let p4 = Point.create_point c6 c2 in
-
-	let cont = simpleOpContWtT ~custom:custom () in
+	let cont = simpleOpContWtT ~spe_back:spe_back ~custom:custom () in
 	cont#setContainer (Polygon [p1;p2;p3;p4;p1]);
+	cont
+
+let simpleTestCondNode ?(custom=default_informations) kgraph cond =
+	let node = defaultNode kgraph in
+	let cont = testCondCont ~custom:custom () in
 	let t = simpleText ~custom:custom cond 0.5 0.5 in
 	t#setPlacement (place ~left:5.0 ~right:5.0 ~top:0.0 ~bottom:0.0 ());
 	cont#addContainerRendering t;
@@ -668,7 +691,65 @@ let simpleInvisibleNode ?(custom=default_informations) kgraph =
 		
 	node
 
-	
+let simplePresentNode ?(custom=default_informations) kgraph = 
+	let node = defaultNode kgraph in
+	let cont = simpleOpContWtT ~custom:custom () in
+	cont#setContainer Rect;
+	let tT = functionTitle ~custom:custom "Present" in 
+	cont#addContainerRendering tT;
+	let ca = new data in
+	ca#setPlacement (place ());
+	cont#setChildArea ca;
+	node#addData cont;
+	node
+
+
+let simplePeriodNode ?(custom=default_informations) kgraph = 
+	simpleOpNode ~custom:custom ~order:true ~ho_mar:5.0 kgraph "Period" 0.5 0.5
+
+let simpleEmitNode ?(custom=default_informations) kgraph name = 
+	let node = defaultNode ~order:true kgraph in
+	let cont = simpleOpContWtT ~custom:custom () in
+	let t = simpleText ~custom:custom "emit" 0.5 0.5 in
+	t#setPlacement (place ~top:0.0 ~left:5.0 ~right:5.0 ~bottom:12.0 ());	
+	cont#addContainerRendering t;
+	let t = simpleText ~custom:custom name 0.5 0.5 in
+	t#setPlacement (place ~top:12.0 ~left:5.0 ~right:5.0 ~bottom:0.0 ());
+	cont#addContainerRendering t;
+	node#addData cont;
+	resetPortsSurrounding node;
+	node
+
+let simpleUpNode ?(custom=default_informations) kgraph = 
+	simpleOpNode ~custom:custom ~ho_mar:5.0 kgraph "Up" 0.5 0.5
+
+
+
+let simpleScondNode ?(custom=default_informations) kgraph title = 
+	let node = defaultNode kgraph in
+	let back_color = create_color 200 250 225 in
+	let cont = testCondCont ~spe_back:(Some back_color) ~custom:custom () in
+	node#addData cont;
+	resetPortsSurrounding node;
+	begin match title with
+	| None -> ()
+	| Some t -> 
+		let tT = functionTitle ~custom:custom t in cont#addContainerRendering tT;
+		let ca = new data in
+		ca#setPlacement (place ());
+		cont#setChildArea ca;
+	end;
+	node
+
+let simpleBlanckNode ?(custom=default_informations) kgraph = 
+	let node = defaultNode kgraph in
+	let cont = simpleOpContWtT ~custom:custom () in
+	node#addData cont;
+	addPortSpace node;
+	cont#addAction (Actions.create_actionCollapse ());
+	node#addProperty (PersistentEntry.nodeSize "[NODE_LABELS, PORTS, PORT_LABELS, MINIMUM_SIZE]");	
+	node
+
 (* end for z *)
 
 let layered_color red green blue layer = 

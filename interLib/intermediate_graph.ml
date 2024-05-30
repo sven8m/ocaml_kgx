@@ -47,7 +47,13 @@ type node_type =
 	| TestCond of string 
 	| Inv
 	| VertText of string
-
+	| Present 
+	| Text of string (** [s]. [s] is the content *)
+	| Period of bool (** [b]. [b] is if there is a phase *)
+	| Emit of string (** [s]. [s] is name of the signal *)
+	| Up
+	| Scond of string option (** [s]. [s] is a title *)
+	| BlanckFct
 
 type port_type = 
 	Input | Output | Control | Undefined | OutputTop | InputTop | OutputBot | InputBot
@@ -178,6 +184,7 @@ and iPort node = object
 	val mutable p_type = (Undefined : port_type)
 	val mutable visible = true
 	val mutable no = false
+	val mutable question = false
 	val mutable parent = (node : iNode)
 	val mutable ofs = 0.0
 
@@ -187,13 +194,16 @@ and iPort node = object
 	method getParent = parent
 	method isNot = no
 	method getOffset = ofs
-	
+	method isQuestion = question
+
 	method setName n = name <- n
 	method setType t = p_type <- t
 	method setVisible b = visible <- b
 	method setParent p = parent <- p
 	method setNot b = no <- b
 	method setOffset o = ofs <- o
+	method setQuestion q = question <- q
+
 end
 
 and iOuterPort p = object

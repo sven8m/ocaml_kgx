@@ -94,20 +94,24 @@ and translate_port (kg : Kgraph.kgraph) (port : iPort) =
 	if Hashtbl.mem portTbl port#getId then
 		Hashtbl.find portTbl port#getId
 	else begin
-		let kn = Hashtbl.find nodeTbl port#getParent#getId in	
-		let kp = match port#isNot, port#getType, port#isVisible with
-		| true, _ , _ -> notOutputPort ~custom:(port:>iInformation) kg kn
-		| _, Input, true -> visibleInputPort ~custom:(port:>iInformation) kg kn
-		| _, Input, false -> invisibleInputPort ~custom:(port:>iInformation) kg kn
-		| _, Output, true -> visibleOutputPort ~custom:(port:>iInformation) kg kn
-		| _, Output, false -> invisibleOutputPort ~custom:(port:>iInformation) kg kn
-		| _, Control, _ -> visibleControlPort ~custom:(port:>iInformation) ~ofs:(port#getOffset) kg kn
-		| _ , OutputTop , _ -> invisibleControlPort ~custom:(port:>iInformation) kg kn
-		| _ , InputTop , _ -> invisibleControlPort ~custom:(port:>iInformation) kg kn
-		| _, Undefined,true -> visiblePort ~custom:(port:>iInformation) kg kn
-		| _, Undefined,false -> invisiblePort ~custom:(port:>iInformation) kg kn 
-		| _, (InputBot | OutputBot) , true -> visibleBotPort ~custom:(port:>iInformation) kg kn
-		| _, (InputBot | OutputBot) , false -> invisibleBotPort ~custom:(port:>iInformation) kg kn
+		let kn = Hashtbl.find nodeTbl port#getParent#getId in
+		let kp = if port#isNot then
+			notOutputPort ~custom:(port:>iInformation) kg kn
+		else if port#isQuestion then
+			questionOutputPort ~custom:(port:>iInformation) kg kn
+		else 
+		match port#getType, port#isVisible with
+		| Input, true -> visibleInputPort ~custom:(port:>iInformation) kg kn
+		| Input, false -> invisibleInputPort ~custom:(port:>iInformation) kg kn
+		| Output, true -> visibleOutputPort ~custom:(port:>iInformation) kg kn
+		| Output, false -> invisibleOutputPort ~custom:(port:>iInformation) kg kn
+		| Control, _ -> visibleControlPort ~custom:(port:>iInformation) ~ofs:(port#getOffset) kg kn
+		| OutputTop , _ -> invisibleControlPort ~custom:(port:>iInformation) kg kn
+		| InputTop , _ -> invisibleControlPort ~custom:(port:>iInformation) kg kn
+		| Undefined,true -> visiblePort ~custom:(port:>iInformation) kg kn
+		| Undefined,false -> invisiblePort ~custom:(port:>iInformation) kg kn 
+		| (InputBot | OutputBot) , true -> visibleBotPort ~custom:(port:>iInformation) kg kn
+		| (InputBot | OutputBot) , false -> invisibleBotPort ~custom:(port:>iInformation) kg kn
 		in
 		Hashtbl.replace portTbl port#getId kp;
 		if port#getName <> "" then begin
@@ -218,6 +222,20 @@ and getKnodeFromType kg node =
 		simpleInvisibleNode ~custom:(node:>iInformation) kg
 	| VertText t ->
 		simpleTextNode ~custom:(node:>iInformation) kg t
+	| Present ->
+		simplePresentNode ~custom:(node:>iInformation) kg
+	| Text s ->
+		simpleTextNode ~custom:(node:>iInformation) kg s
+	| Period _ ->
+		simplePeriodNode ~custom:(node:>iInformation) kg
+	| Emit s ->
+		simpleEmitNode ~custom:(node:>iInformation) kg s
+	| Up ->
+		simpleUpNode ~custom:(node:>iInformation) kg
+	| Scond t_opt ->
+		simpleScondNode ~custom:(node:>iInformation) kg t_opt
+	| BlanckFct ->
+		simpleBlanckNode ~custom:(node:>iInformation) kg
 
 (** [translate_node kg node] takes an iNode [node] and translates it into a KNode, its ports into KPorts, and recursively its children. (not the edges) *)
 and translate_node kg node =
