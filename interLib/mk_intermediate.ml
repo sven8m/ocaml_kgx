@@ -64,7 +64,6 @@ let number_ports node_type = match node_type with
 	| Deconstr _ -> 1,1,0
 	| Constr _ -> 0,1,0
 	| Der (_,n) -> 1,1,n
-	| TestCond _ -> 0,0,0
 	| VertText _ -> 0,0,0
 	| Inv -> assert false
 	| Present  -> assert false
@@ -88,10 +87,8 @@ let botInputs node_type = match node_type with
 	| _ -> 0
 
 let botOutputs node_type = match node_type with
-	| TestCond _ -> 1
 	| VertText _ -> 1
 	| _ -> 0
-
 
 (** [is_output_not nt] return true if the node type [nt] is [Nand] or [Not] *)
 let is_output_not node_type = match node_type with
@@ -137,6 +134,32 @@ let addNames node node_type =
 	| Ram -> 
 		addOuterNames node#getInputs ["read_addr";"write?";"write_addr";"write_data"]
 	| _ -> ()
+
+let needOffsets node node_type = 
+	match node_type with
+	| Match l ->
+		addOffsets node#getControl [-.3.0 -. 3.0 *. (float_of_int (List.length l))]
+	| Mux -> 
+		addOffsets node#getControl [-3.5]
+	| Cond n ->
+		let offsets = List.init n (fun i ->
+			let i = i + 1 in
+			let delta = if i >= 10 then
+				8.0 -. 0.013 *. (float_of_int n)
+			else 8.0 -. 0.045 *. (float_of_int n)
+			in
+			let ofs = if i >= 10 then (-5.0) -. 0.013 *. (float_of_int n) else 4.0 in
+			(-.ofs -. delta *. (float_of_int (i - 1)))
+		) in
+		addOffsets node#getControl offsets
+	| Scond _ ->
+		let offsets = List.init (List.length node#getInputs) (fun i ->
+			-.3.0) in
+		addOffsets node#getInputs offsets;
+		addOffsets node#getOutputs [-.5.0]
+	| _ -> ()
+
+
 
 (** [createLinkEdge sourcePort targetNode targetPort] creates an edge of some link type, going from sourcePort to endpoint (targetNode , targetPort) 
 
@@ -192,13 +215,15 @@ let simpleOpNode node_type parent layer =
 	node#addOutputList (create_n_ports ~no:(is_output_not node_type) nb_outputs node Output);
 	node#addControlList (create_n_ports ~vis:true nb_control node Control);
 	addNames node node_type;
+	needOffsets node node_type;
 	linkCreation node;
 	
 	parent#addChild node;
 	node
 
-type fctParent = Node of iNode
-| Graph of iGraph
+type fctParent = 
+	| Node of iNode
+	| Graph of iGraph
 
 (** [simpleFunctionNode node_type input_names output_names parent layer] creates an iNode for a [node_type] function, with 
 input ports having names [input_names], and output ports having names [output_names]. 
@@ -213,6 +238,7 @@ let simpleFunctionNode ?(vis=true) ?(control=false) node_type input_names output
 	if control then node#addControlList (create_n_ports ~vis:true 1 node Control); 
 	addOuterNames node#getInputs input_names;
 	addOuterNames node#getOutputs output_names;
+	needOffsets node node_type;
 	begin match parent with
 	| Node p -> p#addChild node;
 	| Graph g -> g#addNode node;

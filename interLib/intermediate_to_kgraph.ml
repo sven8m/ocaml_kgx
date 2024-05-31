@@ -35,6 +35,7 @@ let print_edge_type edge =
 	| Mult -> "Mult"
 	| Seq -> "Seq"
 	| Seq_half -> "Seq_half"
+	| Big -> "Big"
 	in
 	Format.printf "%s@." text
 
@@ -42,22 +43,29 @@ let print_edge_type edge =
 (** [translate_edge kg sourceNode edge] takes an iEdge [edge] and translates it to a [KEdge], given the KGraph [kg], the source KNode [sourceNode]
 and the potential source KPort [sourcePort] *)
 let rec translate_edge ?(sourcePort) (kg : Kgraph.kgraph) sourceNode (edge : iEdge) = 
-	Format.printf "will translate edge@.";
-	if go_deeper (edge#getTarget#getLayer - 1) && ((edge#getTarget)#getType <> Link || !InterLib_options.do_show_all) && ((edge#getSource)#getType <> Link || !InterLib_options.do_show_all) && (not (edge_between_text edge)) then begin
-		Format.printf "entering @.";
+(*	Format.printf "will translate edge@.";
+*)	if go_deeper (edge#getTarget#getLayer - 1) && ((edge#getTarget)#getType <> Link || !InterLib_options.do_show_all) && ((edge#getSource)#getType <> Link || !InterLib_options.do_show_all) && (not (edge_between_text edge)) then begin
+		(*Format.printf "entering @.";
 		Format.printf "%b %b@." edge#getSource#getAsText edge#getTarget#getAsText;
-		print_edge_type edge;			
+		print_edge_type edge;			*)
 		let targetNode = Hashtbl.find nodeTbl edge#getTarget#getId in
 		let targetPort = match edge#getTargetPort with
 		| None -> None
 		| Some p -> Some (Hashtbl.find portTbl p#getId)
 		in
-		Format.printf "found target@.";
+		(*Format.printf "found target@."; *)
 		let kedge = match edge#getType with
-		| Simple | Mult ->
+		| Simple | Mult | Big ->
 			let sourcePort = passOpt sourcePort in
 			let targetPort = passOpt targetPort in
-			let kedge = new_edge ~custom:(edge:>iInformation) ~mult:(edge#getType=Mult) kg sourceNode sourcePort targetNode targetPort in
+			let translateThickness e_t = 
+				match e_t with
+				| Simple -> Gu_Simple
+				| Mult -> Gu_Mult
+				| Big -> Gu_Big
+				| _ -> assert false
+			in
+			let kedge = new_edge ~custom:(edge:>iInformation) ~thick:(translateThickness edge#getType) kg sourceNode sourcePort targetNode targetPort in
 			Some kedge
 		| Aut_begin | Aut_end | Aut_begin_history | Aut_end_history ->
 			Some (automaton_edge ~custom:(edge:>iInformation) kg edge#getType sourceNode targetNode)
@@ -86,9 +94,9 @@ let rec translate_edge ?(sourcePort) (kg : Kgraph.kgraph) sourceNode (edge : iEd
 				kedge#addLabel klab;
 			) edge#getLabels
 		end
-	end;
-	Format.printf "has finished edge@."
-
+	end
+	(*Format.printf "has finished edge@."
+*)
 (** [translate_port kg port] takes an iPort [port] and translates it to a KPort given the Kgraph [kg] *)
 and translate_port (kg : Kgraph.kgraph) (port : iPort) = 
 	if Hashtbl.mem portTbl port#getId then
@@ -96,22 +104,22 @@ and translate_port (kg : Kgraph.kgraph) (port : iPort) =
 	else begin
 		let kn = Hashtbl.find nodeTbl port#getParent#getId in
 		let kp = if port#isNot then
-			notOutputPort ~custom:(port:>iInformation) kg kn
+			notOutputPort ~custom:(port:>iInformation) ~ofs:(port#getOffset) kg kn
 		else if port#isQuestion then
-			questionOutputPort ~custom:(port:>iInformation) kg kn
+			questionOutputPort ~custom:(port:>iInformation) ~ofs:(port#getOffset) kg kn
 		else 
 		match port#getType, port#isVisible with
-		| Input, true -> visibleInputPort ~custom:(port:>iInformation) kg kn
-		| Input, false -> invisibleInputPort ~custom:(port:>iInformation) kg kn
-		| Output, true -> visibleOutputPort ~custom:(port:>iInformation) kg kn
-		| Output, false -> invisibleOutputPort ~custom:(port:>iInformation) kg kn
+		| Input, true -> visibleInputPort ~custom:(port:>iInformation) ~ofs:(port#getOffset) kg kn
+		| Input, false -> invisibleInputPort ~custom:(port:>iInformation) ~ofs:(port#getOffset) kg kn
+		| Output, true -> visibleOutputPort ~custom:(port:>iInformation) ~ofs:(port#getOffset) kg kn
+		| Output, false -> invisibleOutputPort ~custom:(port:>iInformation) ~ofs:(port#getOffset) kg kn
 		| Control, _ -> visibleControlPort ~custom:(port:>iInformation) ~ofs:(port#getOffset) kg kn
-		| OutputTop , _ -> invisibleControlPort ~custom:(port:>iInformation) kg kn
-		| InputTop , _ -> invisibleControlPort ~custom:(port:>iInformation) kg kn
-		| Undefined,true -> visiblePort ~custom:(port:>iInformation) kg kn
-		| Undefined,false -> invisiblePort ~custom:(port:>iInformation) kg kn 
-		| (InputBot | OutputBot) , true -> visibleBotPort ~custom:(port:>iInformation) kg kn
-		| (InputBot | OutputBot) , false -> invisibleBotPort ~custom:(port:>iInformation) kg kn
+		| OutputTop , _ -> invisibleControlPort ~custom:(port:>iInformation) ~ofs:(port#getOffset) kg kn
+		| InputTop , _ -> invisibleControlPort ~custom:(port:>iInformation) ~ofs:(port#getOffset) kg kn
+		| Undefined,true -> visiblePort ~custom:(port:>iInformation) ~ofs:(port#getOffset) kg kn
+		| Undefined,false -> invisiblePort ~custom:(port:>iInformation) ~ofs:(port#getOffset) kg kn 
+		| (InputBot | OutputBot) , true -> visibleBotPort ~custom:(port:>iInformation) ~ofs:(port#getOffset) kg kn
+		| (InputBot | OutputBot) , false -> invisibleBotPort ~custom:(port:>iInformation) ~ofs:(port#getOffset) kg kn
 		in
 		Hashtbl.replace portTbl port#getId kp;
 		if port#getName <> "" then begin
@@ -216,8 +224,6 @@ and getKnodeFromType kg node =
 		simpleConstrNode ~custom:(node:>iInformation) kg name n
 	| Der (name,_) ->
 		simpleDerNode ~custom:(node:>iInformation) kg name
-	| TestCond t ->
-		simpleTestCondNode ~custom:(node:>iInformation) kg t
 	| Inv ->
 		simpleInvisibleNode ~custom:(node:>iInformation) kg
 	| VertText t ->

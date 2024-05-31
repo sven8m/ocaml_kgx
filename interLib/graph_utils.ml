@@ -12,6 +12,28 @@ open Kedge
 open Intermediate_graph
 let default_informations = new iInformation
 
+let layered_color red green blue layer = 
+	let layer = if layer >= 5 then 5 else layer in
+	create_color (max 0 (red - 10 * layer)) (max 0 (green - 10 * layer)) (max 0 (blue - 10 * layer))
+
+let aut_color _ = 
+	layered_color 240 240 255 0
+
+let fct_color layer = 
+	layered_color 224 224 242 layer
+
+let match_color layer = 
+	layered_color 200 200 242 layer
+
+let reset_color layer = 
+	layered_color 190 200 250 layer
+
+let operation_color () = 
+	layered_color 200 200 250 0
+
+let cond_color () = 
+	create_color 200 250 225 
+
 let place ?(top=15.0) ?(left=10.0) ?(right=10.0) ?(bottom=10.0) () =
 	let p = new AreaPlacementData.areaPlacementData in
 	let c1 = create_coord ~pos_val:(Abs left) Left in
@@ -101,7 +123,7 @@ let simpleOpContWtT ?(spe_back=None) ?(inv=false) ?(custom=default_informations)
 	if inv then
 		cont#addStyle (create_style Invisibility);
 	let color = match spe_back with
-	| None -> create_color 200 200 250 
+	| None -> operation_color () 
 	| Some c -> c
 	in
 	cont#addStyle (create_style (Background (create_coloring color)));
@@ -144,7 +166,13 @@ let simpleText ?(custom=default_informations) ?(s=11) ?(ho_mar=0.0) ?(ver_mar) t
 	c#setPlacement (centerPlacement ~ho_mar:(Some ho_mar) ~ver_mar:ver_mar relX relY);
 	c
 
-let invisiblePort ?(custom=default_informations) kgraph knode = 
+let addPortOffset kport ofs = 
+	match ofs with
+	| None -> ()
+	| Some ofs ->
+		kport#addProperty (PersistentEntry.borderOffset ofs)
+
+let invisiblePort ?(custom=default_informations) ?(ofs=None) kgraph knode = 
 	let port = new kport kgraph in
 	port#setNode knode;
 	port#setHeight (0.1);
@@ -154,10 +182,14 @@ let invisiblePort ?(custom=default_informations) kgraph knode =
 	cont#addStyle (create_style (Background (create_coloring color)));
 	cont#addStyle (create_style (Foreground (create_coloring color)));
 	port#addData cont;
-	port#addProperty (PersistentEntry.borderOffset (-0.1));
+	begin match ofs with
+	| None ->
+		addPortOffset port (Some (-0.1));
+	| Some _ -> addPortOffset port ofs
+	end;
 	port
 
-let visiblePort ?(custom=default_informations) kgraph knode = 
+let visiblePort ?(custom=default_informations) ?(ofs=None) kgraph knode = 
 	let port = new kport kgraph in
 	port#setNode knode;
 	port#setHeight 5.0;
@@ -167,58 +199,59 @@ let visiblePort ?(custom=default_informations) kgraph knode =
 	cont#addStyle (create_style (Background (create_coloring color)));
 	cont#addStyle (create_style (Foreground (create_coloring color)));
 	port#addData cont;
+	addPortOffset port ofs;
 	port
 
-let invisibleOutputPort ?(custom=default_informations) kgraph knode = 
-	let port = invisiblePort ~custom:custom kgraph knode in
+let invisibleOutputPort ?(custom=default_informations) ?(ofs=None) kgraph knode = 
+	let port = invisiblePort ~custom:custom ~ofs:ofs kgraph knode in
 	port#addProperty (PersistentEntry.createPortEast ());
 	port
 
-let invisibleInputPort ?(custom=default_informations) kgraph knode =
-	let port = invisiblePort ~custom:custom kgraph knode in
+let invisibleInputPort ?(custom=default_informations) ?(ofs=None) kgraph knode =
+	let port = invisiblePort ~custom:custom ~ofs:ofs kgraph knode in
 	port#addProperty (PersistentEntry.createPortWest ());
 	port
 
-let invisibleControlPort ?(custom=default_informations) kgraph knode = 
-	let port = invisiblePort ~custom:custom kgraph knode in
+let invisibleControlPort ?(custom=default_informations) ?(ofs=None) kgraph knode = 
+	let port = invisiblePort ~custom:custom ~ofs:ofs kgraph knode in
 	port#addProperty (PersistentEntry.createPortNorth ());
 	(*port#addProperty (PersistentEntry.allowSwitch ()); *)
 	port
 
-let visibleControlPort ?(custom=default_informations) ?(ofs=0.0) kgraph knode = 
-	let port = visiblePort ~custom:custom kgraph knode in
-	port#addProperty (PersistentEntry.borderOffset ofs);
+let visibleControlPort ?(custom=default_informations) ?(ofs=None) kgraph knode = 
+	let port = visiblePort ~custom:custom ~ofs:ofs kgraph knode in	
 	port#addProperty (PersistentEntry.createPortNorth ());
 	(*port#addProperty (PersistentEntry.allowSwitch ()); *)
 	port	
 
-let visibleInputPort ?(custom=default_informations) kgraph knode = 
-	let port = visiblePort ~custom:custom kgraph knode in
+let visibleInputPort ?(custom=default_informations) ?(ofs=None) kgraph knode = 
+	let port = visiblePort ~custom:custom ~ofs:ofs kgraph knode in
 	port#addProperty (PersistentEntry.createPortWest ());
 	port
 
-let visibleOutputPort ?(custom=default_informations) kgraph knode = 
-	let port = visiblePort ~custom:custom kgraph knode in
+let visibleOutputPort ?(custom=default_informations) ?(ofs=None) kgraph knode = 
+	let port = visiblePort ~custom:custom ~ofs:ofs kgraph knode in
 	port#addProperty (PersistentEntry.createPortEast ());
 	port
 
-let visibleBotPort ?(custom=default_informations) kgraph knode =
+let visibleBotPort ?(custom=default_informations) ?(ofs=None) kgraph knode =
 	let port = visiblePort ~custom:custom kgraph knode in
 	port#addProperty (PersistentEntry.createPortSouth ());
 	port
 
-let invisibleBotPort ?(custom=default_informations) kgraph knode =
-	let port = invisiblePort ~custom:custom kgraph knode in
+let invisibleBotPort ?(custom=default_informations) ?(ofs=None) kgraph knode =
+	let port = invisiblePort ~custom:custom kgraph ~ofs:ofs knode in
 	port#addProperty (PersistentEntry.createPortSouth ());
 	port
 
 
-let notOutputPort ?(custom=default_informations) kgraph knode = 
+let notOutputPort ?(custom=default_informations) ?(ofs=None) kgraph knode = 
 	let port = new kport kgraph in
 	port#setWidth 5.0;
 	port#setHeight 5.0;
 	port#addProperty (PersistentEntry.createPortEast ());
 	port#setNode knode;
+	addPortOffset port ofs;
 	let cont = new containerRendering in
 	cont#setContainer Ellipse;
 	cont#addStyle (create_style (LineWidth 1.3));
@@ -227,12 +260,13 @@ let notOutputPort ?(custom=default_informations) kgraph knode =
 	port#addData cont;
 	port
 
-let questionOutputPort ?(custom=default_informations) kgraph knode = 
+let questionOutputPort ?(custom=default_informations) ?(ofs=None) kgraph knode = 
 	let port = new kport kgraph in
 	port#setWidth 10.0;
 	port#setHeight 10.0;
 	port#addProperty (PersistentEntry.createPortEast ());
 	port#setNode knode;
+	addPortOffset port ofs;
 	let cont = new containerRendering in
 	cont#setContainer Rect;
 	cont#addStyle (create_style (LineWidth 1.0));
@@ -656,7 +690,7 @@ let simpleDerNode ?(custom=default_informations) kgraph init_name =
 	resetPortsSurrounding node;
 	node
 
-let testCondCont ?(spe_back=None) ?(custom=default_informations) () = 
+let testCondCont ?(custom=default_informations) () = 
 
 	let c1 = Point.create_coord Left in
 	let c2 = Point.create_coord Top in
@@ -669,19 +703,26 @@ let testCondCont ?(spe_back=None) ?(custom=default_informations) () =
 	let p2 = Point.create_point c3 c4 in
 	let p3 = Point.create_point c5 c4 in
 	let p4 = Point.create_point c6 c2 in
-	let cont = simpleOpContWtT ~spe_back:spe_back ~custom:custom () in
+	let cont = simpleOpContWtT ~spe_back:(Some (cond_color ())) ~custom:custom () in
 	cont#setContainer (Polygon [p1;p2;p3;p4;p1]);
 	cont
 
-let simpleTestCondNode ?(custom=default_informations) kgraph cond =
+let simpleScondNode ?(custom=default_informations) kgraph title = 
 	let node = defaultNode kgraph in
 	let cont = testCondCont ~custom:custom () in
-	let t = simpleText ~custom:custom cond 0.5 0.5 in
-	t#setPlacement (place ~left:5.0 ~right:5.0 ~top:0.0 ~bottom:0.0 ());
-	cont#addContainerRendering t;
+	cont#addAction (Actions.create_actionCollapse ());
 	node#addData cont;
 	resetPortsSurrounding node;
+	begin match title with
+	| None -> ()
+	| Some t -> 
+		let tT = functionTitle ~custom:custom t in cont#addContainerRendering tT;
+		let ca = new data in
+		ca#setPlacement (place ());
+		cont#setChildArea ca;
+	end;
 	node
+
 
 let simpleInvisibleNode ?(custom=default_informations) kgraph =
 	let node = defaultNode kgraph in
@@ -693,7 +734,7 @@ let simpleInvisibleNode ?(custom=default_informations) kgraph =
 
 let simplePresentNode ?(custom=default_informations) kgraph = 
 	let node = defaultNode kgraph in
-	let cont = simpleOpContWtT ~custom:custom () in
+	let cont = simpleOpContWtT ~spe_back:(Some (fct_color custom#getLayer)) ~custom:custom () in
 	cont#setContainer Rect;
 	let tT = functionTitle ~custom:custom "Present" in 
 	cont#addContainerRendering tT;
@@ -723,27 +764,9 @@ let simpleEmitNode ?(custom=default_informations) kgraph name =
 let simpleUpNode ?(custom=default_informations) kgraph = 
 	simpleOpNode ~custom:custom ~ho_mar:5.0 kgraph "Up" 0.5 0.5
 
-
-
-let simpleScondNode ?(custom=default_informations) kgraph title = 
-	let node = defaultNode kgraph in
-	let back_color = create_color 200 250 225 in
-	let cont = testCondCont ~spe_back:(Some back_color) ~custom:custom () in
-	node#addData cont;
-	resetPortsSurrounding node;
-	begin match title with
-	| None -> ()
-	| Some t -> 
-		let tT = functionTitle ~custom:custom t in cont#addContainerRendering tT;
-		let ca = new data in
-		ca#setPlacement (place ());
-		cont#setChildArea ca;
-	end;
-	node
-
 let simpleBlanckNode ?(custom=default_informations) kgraph = 
 	let node = defaultNode kgraph in
-	let cont = simpleOpContWtT ~custom:custom () in
+	let cont = simpleOpContWtT ~spe_back:(Some (fct_color custom#getLayer)) ~custom:custom () in
 	node#addData cont;
 	addPortSpace node;
 	cont#addAction (Actions.create_actionCollapse ());
@@ -751,22 +774,6 @@ let simpleBlanckNode ?(custom=default_informations) kgraph =
 	node
 
 (* end for z *)
-
-let layered_color red green blue layer = 
-	let layer = if layer >= 5 then 5 else layer in
-	create_color (max 0 (red - 10 * layer)) (max 0 (green - 10 * layer)) (max 0 (blue - 10 * layer))
-
-let aut_color _ = 
-	layered_color 240 240 255 0
-
-let fct_color layer = 
-	layered_color 224 224 242 layer
-
-let match_color layer = 
-	layered_color 200 200 242 layer
-
-let reset_color layer = 
-	layered_color 190 200 250 layer
 
 let function_node ?(custom=default_informations) ?(res=false) ?(aut=false) ?(m=false) kgraph name layer = 
 	let main_node= defaultNode kgraph in
@@ -948,7 +955,19 @@ let romNode ?(custom=default_informations) kgraph =
 	node#setWidth 30.0;
 	node
 
-let junction ?(custom=default_informations) mult =
+
+type thickness_type = 
+	| Gu_Simple
+	| Gu_Mult
+	| Gu_Big
+
+let junctionThickness tt = 
+	match tt with
+	| Gu_Simple -> 4.0
+	| Gu_Mult -> 5.0
+	| Gu_Big -> 7.0
+
+let junction ?(custom=default_informations) thick =
 	let cont = new containerRendering in
 	cont#setContainer Ellipse;
 	let color = opLineColor custom in
@@ -957,7 +976,7 @@ let junction ?(custom=default_informations) mult =
 	let pd = new PointPlacementData.pointPlacementData in
 	pd#setVerticalAlignment CENTER;
 	pd#setHorizontalAlignment CENTER;
-	let size = if mult then 5.0 else 4.0 in
+	let size = junctionThickness thick in
 	pd#setMinWidth size;
 	pd#setMinHeight size;
 	cont#setPlacement (Point pd);
@@ -1209,7 +1228,19 @@ let automaton_edge ?(custom=default_informations) kgraph e_type source target =
 	edge#addData cont;
 	edge
 
-let new_edge ?(custom=default_informations) ?(mult=false) kgraph sourceNode sourcePort targetNode targetPort = 
+let lineThickness tt = 
+	match tt with
+	| Gu_Simple -> 1.0
+	| Gu_Mult -> 1.7
+	| Gu_Big -> 2.5
+
+let lineSelThickness tt = 
+	match tt with
+	| Gu_Simple -> 1.5
+	| Gu_Mult -> 2.5
+	| Gu_Big -> 4.0
+
+let new_edge ?(custom=default_informations) ?(thick=Gu_Simple) kgraph sourceNode sourcePort targetNode targetPort = 
 	let edge = new kedge kgraph in
 	edge#setSource sourceNode;
 	edge#setSourcePort sourcePort;
@@ -1218,12 +1249,12 @@ let new_edge ?(custom=default_informations) ?(mult=false) kgraph sourceNode sour
 	let cont = new containerRendering in
 	cont#setContainer (PolyLine []);
 	
-	cont#addStyle (create_style (LineWidth (if mult then 1.7 else 1.0)));
-	cont#addStyle (create_style ~on_sel:true (LineWidth (if mult then 2.5 else 1.5 )));
+	cont#addStyle (create_style (LineWidth (lineThickness thick)));
+	cont#addStyle (create_style ~on_sel:true (LineWidth (lineThickness thick)));
 	let color = create_color 100 100 255 in
 	cont#addStyle (create_style (Foreground (create_coloring (opLineColor custom))));
 	cont#addStyle (create_style ~on_sel:true (Foreground (create_coloring color)));
-	cont#addJunction (junction ~custom:custom mult);
+	cont#addJunction (junction ~custom:custom thick);
 	edge#addData cont;
 	edge
 
@@ -1312,7 +1343,6 @@ let main _ =
 *)
 	let _ = simpleDerNode kgraph "no" in
 	let _ = simpleDerNode kgraph "qroignqerionqergq" in
-	let _ = simpleTestCondNode kgraph "?up(-y)" in
 	let oc = open_out "basic.kgx" in
 
 	let ff = Format.formatter_of_out_channel oc in

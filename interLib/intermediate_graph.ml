@@ -44,7 +44,6 @@ type node_type =
 	| Deconstr of string * int (**[s,n]. [s] is the name of [s x], [n] is the number of arguments *)
 	| Constr of string * int (**[s,n]. [s] is name of [s x], [n] is the number of arguments *)
 	| Der of string *int (**[s,n]. [s] is the init name, [n] is number of resets *)
-	| TestCond of string 
 	| Inv
 	| VertText of string
 	| Present 
@@ -59,7 +58,7 @@ type port_type =
 	Input | Output | Control | Undefined | OutputTop | InputTop | OutputBot | InputBot
 
 type edge_type = 
-	Simple | Mult | Aut_begin | Aut_end | Aut_begin_history | Aut_end_history
+	Simple | Mult | Big | Aut_begin | Aut_end | Aut_begin_history | Aut_end_history
 	| Seq | Seq_half | DepLink | DepAutLink | Link | AutLink
 
 type label_placement = Tail | Center | Head | Undef
@@ -71,16 +70,19 @@ class iInformation = object
 	val mutable isDead = false
 	val mutable asText = false
 	val mutable textContent = ""
+	val mutable layer = 0
 
 	method getInCycle = inCycle
 	method setInCycle b = inCycle <- b
 	method getDead = isDead
 	method setDead b= isDead <- b
-	
+	method getLayer = layer
+
 	method getAsText = asText
 	method setAsText b = asText <- b
 	method getTextContent = textContent
 	method setTextContent t = textContent <- t
+	method setLayer l = layer <- l
 end 
 
 class iEdgeLabel s = object
@@ -129,6 +131,9 @@ and iEndPoint n p = object
 		let l = labels in
 		labels <- [];
 		l
+	
+	method delSelf = 
+		node#delPort port
 end
 
 and iEdgeContainer = object
@@ -145,7 +150,7 @@ and iEdgeContainer = object
 	method setEdges el = edges <- List.rev el
 end
 
-and iNode = object
+and iNode = object(self)
 	inherit iEdgeContainer
 
 	val mutable n_type = Buffer
@@ -154,7 +159,6 @@ and iNode = object
 	val mutable outputs = ([] : iOuterPort list)
 	val mutable control = ([] : iOuterPort list)
 	val mutable ports = ([] : iPort list)
-	val mutable layer = 0
 
 	method getType = n_type
 	method getChildren = List.rev children
@@ -162,7 +166,6 @@ and iNode = object
 	method getOutputs = List.rev outputs
 	method getControl = List.rev control
 	method getPorts = List.rev ports
-	method getLayer = layer
 	
 	method setType t = n_type <- t
 	method addChild c = children <- c :: children
@@ -174,7 +177,14 @@ and iNode = object
 	method addControlList l = control <- (List.rev l) @ control
 	method addPort p = ports <- p :: ports
 	method setPorts pl = ports <- List.rev pl
-	method setLayer l = layer <- l
+
+	method delPort p_del =
+		ports <- List.filter (fun p -> p#getId <> p_del#getId) ports;
+		inputs <- List.filter (fun outer -> outer#getPort#getId <> p_del#getId) inputs;
+		outputs <- List.filter (fun outer -> outer#getPort#getId <> p_del#getId) outputs;
+		control <- List.filter (fun outer -> outer#getPort#getId <> p_del#getId) control
+	method delOuterPort (outer : iOuterPort) = 
+		self#delPort outer#getPort
 end
 
 and iPort node = object
@@ -186,7 +196,7 @@ and iPort node = object
 	val mutable no = false
 	val mutable question = false
 	val mutable parent = (node : iNode)
-	val mutable ofs = 0.0
+	val mutable ofs = (None : float option)
 
 	method getName = name
 	method getType = p_type
@@ -201,7 +211,7 @@ and iPort node = object
 	method setVisible b = visible <- b
 	method setParent p = parent <- p
 	method setNot b = no <- b
-	method setOffset o = ofs <- o
+	method setOffset o = ofs <- Some o
 	method setQuestion q = question <- q
 
 end
@@ -222,6 +232,7 @@ and iOuterPort p = object
 	
 	method setPort p = port <- p
 	method addInnerPort p = inner_ports <- p :: inner_ports
+
 end
 
 and iEdge = object
