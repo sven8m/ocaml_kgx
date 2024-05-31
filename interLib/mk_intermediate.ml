@@ -73,6 +73,8 @@ let number_ports node_type = match node_type with
 	| Up -> 1,1,0
 	| Scond _ -> assert false
 	| BlanckFct -> assert false
+	| Mg -> 1,1,1
+	| Next _ -> 1,1,0
 
 let topOutputs node_type = match node_type with
 	| Deconstr (_,n) -> (n-1)
@@ -229,10 +231,11 @@ type fctParent =
 input ports having names [input_names], and output ports having names [output_names]. 
 
 Option [control] if there should be a control port on the node *)
-let simpleFunctionNode ?(vis=true) ?(control=false) node_type input_names output_names parent layer = 
+let simpleFunctionNode ?(order=false) ?(vis=true) ?(control=false) node_type input_names output_names parent layer = 
 	let node = new iNode in
 	node#setType node_type;
 	node#setLayer layer;
+	node#setForceOrder order;
 	node#addInputList (create_n_ports ~vis:vis (List.length input_names) node Input);
 	node#addOutputList (create_n_ports ~question:(is_output_question node_type) ~vis:vis (List.length output_names) node Output);
 	if control then node#addControlList (create_n_ports ~vis:true 1 node Control); 

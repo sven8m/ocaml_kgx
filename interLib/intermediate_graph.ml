@@ -53,6 +53,8 @@ type node_type =
 	| Up
 	| Scond of string option (** [s]. [s] is a title *)
 	| BlanckFct
+	| Mg
+	| Next of string
 
 type port_type = 
 	Input | Output | Control | Undefined | OutputTop | InputTop | OutputBot | InputBot
@@ -159,6 +161,7 @@ and iNode = object(self)
 	val mutable outputs = ([] : iOuterPort list)
 	val mutable control = ([] : iOuterPort list)
 	val mutable ports = ([] : iPort list)
+	val mutable forceOrder = false
 
 	method getType = n_type
 	method getChildren = List.rev children
@@ -166,7 +169,8 @@ and iNode = object(self)
 	method getOutputs = List.rev outputs
 	method getControl = List.rev control
 	method getPorts = List.rev ports
-	
+	method isForcedOrder = forceOrder
+
 	method setType t = n_type <- t
 	method addChild c = children <- c :: children
 	method addInput i = inputs <- i :: inputs
@@ -177,6 +181,7 @@ and iNode = object(self)
 	method addControlList l = control <- (List.rev l) @ control
 	method addPort p = ports <- p :: ports
 	method setPorts pl = ports <- List.rev pl
+	method setForceOrder b = forceOrder <- b
 
 	method delPort p_del =
 		ports <- List.filter (fun p -> p#getId <> p_del#getId) ports;

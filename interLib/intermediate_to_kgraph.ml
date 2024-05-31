@@ -163,9 +163,9 @@ and getKnodeFromType kg node =
 	| Cond _->
 		simpleCondNode ~custom:(node:>iInformation) kg
 	| Every s ->
-		function_node ~custom:(node:>iInformation) kg s node#getLayer 	
+		function_node ~order:(node#isForcedOrder) ~custom:(node:>iInformation) kg s node#getLayer 	
 	| Fct s ->
-		function_node ~custom:(node:>iInformation) kg s node#getLayer
+		function_node ~order:(node#isForcedOrder) ~custom:(node:>iInformation) kg s node#getLayer
 	| Slice (i,j) ->
 		simpleSliceNode ~custom:(node:>iInformation) kg i j
 	| Select i ->
@@ -242,6 +242,10 @@ and getKnodeFromType kg node =
 		simpleScondNode ~custom:(node:>iInformation) kg t_opt
 	| BlanckFct ->
 		simpleBlanckNode ~custom:(node:>iInformation) kg
+	| Mg -> 
+		simpleMinusGreaterNode ~custom:(node:>iInformation) kg
+	| Next s ->
+		simpleNextNode ~custom:(node:>iInformation) kg s
 
 (** [translate_node kg node] takes an iNode [node] and translates it into a KNode, its ports into KPorts, and recursively its children. (not the edges) *)
 and translate_node kg node =

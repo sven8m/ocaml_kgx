@@ -742,6 +742,7 @@ let simplePresentNode ?(custom=default_informations) kgraph =
 	ca#setPlacement (place ());
 	cont#setChildArea ca;
 	node#addData cont;
+	node#addProperty (PersistentEntry.portLabelPlacement "[INSIDE, NEXT_TO_PORT_IF_POSSIBLE]");
 	node
 
 
@@ -773,10 +774,28 @@ let simpleBlanckNode ?(custom=default_informations) kgraph =
 	node#addProperty (PersistentEntry.nodeSize "[NODE_LABELS, PORTS, PORT_LABELS, MINIMUM_SIZE]");	
 	node
 
+let simpleMinusGreaterNode ?(custom=default_informations) kgraph = 
+	simpleOpNode ~custom:custom ~ho_mar:5.0 kgraph "-&gt;" 0.5 0.5
+
+
+let simpleNextNode ?(custom=default_informations) kgraph name = 
+	let node = defaultNode ~order:true kgraph in
+	let cont = simpleOpContWtT ~custom:custom () in
+	let t = simpleText ~custom:custom "next" 0.5 0.5 in
+	t#setPlacement (place ~top:0.0 ~left:5.0 ~right:5.0 ~bottom:12.0 ());	
+	cont#addContainerRendering t;
+	let t = simpleText ~custom:custom name 0.5 0.5 in
+	t#setPlacement (place ~top:12.0 ~left:5.0 ~right:5.0 ~bottom:0.0 ());
+	cont#addContainerRendering t;
+	node#addData cont;
+	resetPortsSurrounding node;
+	node
+
+
 (* end for z *)
 
-let function_node ?(custom=default_informations) ?(res=false) ?(aut=false) ?(m=false) kgraph name layer = 
-	let main_node= defaultNode kgraph in
+let function_node ?(order=false) ?(custom=default_informations) ?(res=false) ?(aut=false) ?(m=false) kgraph name layer = 
+	let main_node= defaultNode ~order:order kgraph in
 	if aut then begin
 		main_node#addProperty (PersistentEntry.create_property "org.eclipse.elk.edgeRouting" "SPLINES"); 
 		(*main_node#addProperty (PersistentEntry.create_property "org.eclipse.elk.hierarchyHandling" "INCLUDE_CHILDREN");
@@ -1250,7 +1269,7 @@ let new_edge ?(custom=default_informations) ?(thick=Gu_Simple) kgraph sourceNode
 	cont#setContainer (PolyLine []);
 	
 	cont#addStyle (create_style (LineWidth (lineThickness thick)));
-	cont#addStyle (create_style ~on_sel:true (LineWidth (lineThickness thick)));
+	cont#addStyle (create_style ~on_sel:true (LineWidth (lineSelThickness thick)));
 	let color = create_color 100 100 255 in
 	cont#addStyle (create_style (Foreground (create_coloring (opLineColor custom))));
 	cont#addStyle (create_style ~on_sel:true (Foreground (create_coloring color)));
