@@ -18,17 +18,33 @@ let rec create_n_ports ?(question=false) ?(no=false) ?(vis=false) n node ty =
 		let outer = new iOuterPort port in
 		outer :: (create_n_ports ~question:question ~no:no ~vis:vis (n-1) node ty)
 
-let rec create_n_ports_special ?(no=false) ?(vis=true) n node ty =
-	match n with
-	| 0 -> []
-	| n -> 
+
+type portRequest = {
+	name : string;
+	typ : port_type}
+
+let mk_portRequest ?(typ=Undefined) name = 
+	{name = name; typ = typ}
+
+let portRequestsToTy pl = List.map (fun el -> el.typ) pl
+
+let portRequestsToName pl = List.map (fun el -> el.name) pl
+
+let rec create_n_ports_special ?(question=false) ?(no=false) ?(vis=true) node ty_def tyRequests =
+	match tyRequests with
+	| [] -> []
+	| tyR :: q -> 
 		let port = new iPort node in
-		port#setType (ty (n-1));
+		begin match tyR with
+		| Undefined -> port#setType ty_def
+		| _ -> port#setType tyR
+		end;
 		port#setVisible vis;
 		port#setNot no;
+		port#setQuestion question;
 		node#addPort port;
 		let outer = new iOuterPort port in
-		outer :: (create_n_ports_special ~no:no ~vis:vis (n-1) node ty)
+		outer :: (create_n_ports_special ~question:question ~no:no ~vis:vis node ty_def q)
 
 (** [outerToEndPoint outer] takes an iOuterPort and creates a corresponding iEndPoint *)
 let outerToEndPoint o = 
@@ -223,6 +239,7 @@ let simpleOpNode node_type parent layer =
 	parent#addChild node;
 	node
 
+
 type fctParent = 
 	| Node of iNode
 	| Graph of iGraph
@@ -231,16 +248,17 @@ type fctParent =
 input ports having names [input_names], and output ports having names [output_names]. 
 
 Option [control] if there should be a control port on the node *)
-let simpleFunctionNode ?(order=false) ?(vis=true) ?(control=false) node_type input_names output_names parent layer = 
+
+let simpleFunctionNode ?(outBot=false) ?(outTop=false) ?(order=false) ?(vis=true) ?(control=false) node_type input_names output_names parent layer = 
 	let node = new iNode in
 	node#setType node_type;
 	node#setLayer layer;
-	node#setForceOrder order;
-	node#addInputList (create_n_ports ~vis:vis (List.length input_names) node Input);
-	node#addOutputList (create_n_ports ~question:(is_output_question node_type) ~vis:vis (List.length output_names) node Output);
+	node#setForceOrder order;	
+	node#addInputList (create_n_ports_special ~vis:vis node Input (portRequestsToTy input_names));
+	node#addOutputList (create_n_ports_special ~question:(is_output_question node_type) ~vis:vis node Output (portRequestsToTy output_names));
 	if control then node#addControlList (create_n_ports ~vis:true 1 node Control); 
-	addOuterNames node#getInputs input_names;
-	addOuterNames node#getOutputs output_names;
+	addOuterNames node#getInputs (portRequestsToName input_names);
+	addOuterNames node#getOutputs (portRequestsToName output_names);
 	needOffsets node node_type;
 	begin match parent with
 	| Node p -> p#addChild node;

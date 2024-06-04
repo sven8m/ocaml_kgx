@@ -51,7 +51,7 @@ type node_type =
 	| Period of bool (** [b]. [b] is if there is a phase *)
 	| Emit of string (** [s]. [s] is name of the signal *)
 	| Up
-	| Scond of string option (** [s]. [s] is a title *)
+	| Scond of string option (** [s,b]. [s] is a title. [b] is if output should be vertical *)
 	| BlanckFct
 	| Mg
 	| Next of string

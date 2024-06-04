@@ -238,7 +238,7 @@ and getKnodeFromType kg node =
 		simpleEmitNode ~custom:(node:>iInformation) kg s
 	| Up ->
 		simpleUpNode ~custom:(node:>iInformation) kg
-	| Scond t_opt ->
+	| Scond (t_opt) ->
 		simpleScondNode ~custom:(node:>iInformation) kg t_opt
 	| BlanckFct ->
 		simpleBlanckNode ~custom:(node:>iInformation) kg

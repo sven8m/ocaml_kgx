@@ -742,6 +742,9 @@ let simplePresentNode ?(custom=default_informations) kgraph =
 	ca#setPlacement (place ());
 	cont#setChildArea ca;
 	node#addData cont;
+	cont#addAction (Actions.create_actionCollapse ());	
+	addPortSpace node;
+	node#addProperty (PersistentEntry.nodeSize "[NODE_LABELS, PORTS, PORT_LABELS, MINIMUM_SIZE]");	
 	node#addProperty (PersistentEntry.portLabelPlacement "[INSIDE, NEXT_TO_PORT_IF_POSSIBLE]");
 	node
 
