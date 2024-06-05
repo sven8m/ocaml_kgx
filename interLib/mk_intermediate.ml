@@ -289,15 +289,20 @@ let new_edge edge_type (source : iEndPoint) target =
 	(target#getPort)#addBackEdge edge
 
 (** [automaton_edge_type reset beginning] gives the type of the automaton edge depending on the reset or beginning *)
-let automaton_edge_type reset beginning = 
-	match reset , beginning with
-	| true , true -> Aut_begin
-	| true, false -> Aut_end
-	| false , true -> Aut_begin_history
-	| false, false -> Aut_end_history
+let automaton_edge_type half first reset beginning = 
+	match half, first, reset , beginning with
+	| true, true, _ , true -> Aut_first_half_begin
+	| true, true, _ , _ -> Aut_first_half
+	| true,false,true,true -> Aut_second_half_begin
+	| true,false,true,false -> Aut_second_half_end
+	| true,false,false,_ -> Aut_second_half_history
+	| _,_,true , true -> Aut_begin
+	| _,_,true, false -> Aut_end
+	| _,_,false , true -> Aut_begin_history
+	| _,_,false, false -> Aut_end_history
 
-let automaton_edge source target lab reset beginning = 
-	let edge_type = automaton_edge_type reset beginning in
+let automaton_edge ?(half=false) ?(first=false) source target lab reset beginning = 
+	let edge_type = automaton_edge_type half first reset beginning in
 	let edge = new iEdge in
 	edge#setType edge_type;
 	edge#setTarget target;

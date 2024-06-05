@@ -1245,6 +1245,18 @@ let automaton_edge ?(custom=default_informations) kgraph e_type source target =
 	| Aut_end_history ->
 		cont#addContainerRendering (history_dot ());
 		cont#addContainerRendering (arrow_decorator ~custom:custom ~h:true false);
+	| Aut_first_half ->
+		()
+	| Aut_first_half_begin ->
+		cont#addContainerRendering (red_dot true);
+	| Aut_second_half_begin ->
+		cont#addContainerRendering (arrow_decorator ~custom:custom true);
+	| Aut_second_half_end ->
+		cont#addContainerRendering (red_dot false);
+		cont#addContainerRendering (arrow_decorator ~custom:custom false);
+	| Aut_second_half_history ->
+		cont#addContainerRendering (history_dot ());
+		cont#addContainerRendering (arrow_decorator ~custom:custom ~h:true false);
 	| _ -> assert false
 	end;
 	edge#addData cont;

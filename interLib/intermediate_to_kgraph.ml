@@ -36,6 +36,11 @@ let print_edge_type edge =
 	| Seq -> "Seq"
 	| Seq_half -> "Seq_half"
 	| Big -> "Big"
+	| Aut_first_half -> "Aut_first_half"
+	| Aut_first_half_begin -> "Aut_first_half_begin"
+	| Aut_second_half_begin -> "Aut_second_half_begin"
+	| Aut_second_half_end -> "Aut_second_half_end"
+	| Aut_second_half_history -> "Aut_second_half_history"
 	in
 	Format.printf "%s@." text
 
@@ -67,7 +72,7 @@ let rec translate_edge ?(sourcePort) (kg : Kgraph.kgraph) sourceNode (edge : iEd
 			in
 			let kedge = new_edge ~custom:(edge:>iInformation) ~thick:(translateThickness edge#getType) kg sourceNode sourcePort targetNode targetPort in
 			Some kedge
-		| Aut_begin | Aut_end | Aut_begin_history | Aut_end_history ->
+		| Aut_begin | Aut_end | Aut_begin_history | Aut_end_history | Aut_first_half | Aut_first_half_begin | Aut_second_half_begin | Aut_second_half_end | Aut_second_half_history ->
 			Some (automaton_edge ~custom:(edge:>iInformation) kg edge#getType sourceNode targetNode)
 		| Seq | Seq_half ->
 			Some (seq_edge ~half:(edge#getType=Seq_half) ~sourcePort:sourcePort ~targetPort:targetPort kg sourceNode targetNode)

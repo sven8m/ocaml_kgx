@@ -60,7 +60,8 @@ type port_type =
 	Input | Output | Control | Undefined | OutputTop | InputTop | OutputBot | InputBot
 
 type edge_type = 
-	Simple | Mult | Big | Aut_begin | Aut_end | Aut_begin_history | Aut_end_history
+	Simple | Mult | Big | Aut_begin | Aut_end | Aut_begin_history | Aut_end_history 
+	| Aut_first_half | Aut_first_half_begin | Aut_second_half_begin | Aut_second_half_history | Aut_second_half_end
 	| Seq | Seq_half | DepLink | DepAutLink | Link | AutLink
 
 type label_placement = Tail | Center | Head | Undef
