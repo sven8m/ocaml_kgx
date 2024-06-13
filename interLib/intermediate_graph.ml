@@ -52,9 +52,10 @@ type node_type =
 	| Emit of string (** [s]. [s] is name of the signal *)
 	| Up
 	| Scond of string option (** [s,b]. [s] is a title. [b] is if output should be vertical *)
-	| BlanckFct
+	| BlanckFct of bool (** [b]. [b] true if there is a port side constraint *)
 	| Mg
 	| Next of string
+	| ResetDer
 
 type port_type = 
 	Input | Output | Control | Undefined | OutputTop | InputTop | OutputBot | InputBot

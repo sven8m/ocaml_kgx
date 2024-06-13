@@ -88,9 +88,10 @@ let number_ports node_type = match node_type with
 	| Emit _ -> 1,1,0
 	| Up -> 1,1,0
 	| Scond _ -> assert false
-	| BlanckFct -> assert false
+	| BlanckFct _ -> assert false
 	| Mg -> 1,1,1
 	| Next _ -> 1,1,0
+	| ResetDer -> assert false
 
 let topOutputs node_type = match node_type with
 	| Deconstr (_,n) -> (n-1)

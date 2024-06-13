@@ -84,7 +84,7 @@ let opLineColor custom =
 		create_color 100 100 100
 	else create_color 0 0 0
 
-let defaultNode ?(layer) ?(order=false) kgraph = 
+let defaultNode ?(layer) ?(order=false) ?(side=true) kgraph = 
 	let node = new knode kgraph in
 	node#setWidth 20.0;
 	node#setHeight 20.0;	
@@ -98,7 +98,7 @@ let defaultNode ?(layer) ?(order=false) kgraph =
 	end;
 	if order then
 		node#addProperty (PersistentEntry.constraintPortOrder ())
-	else
+	else if side then
 		node#addProperty (PersistentEntry.constraintPortSide ());
 	node
 
@@ -496,7 +496,7 @@ let simpleDivNode ?(custom=default_informations) kgraph =
 	simpleOpNode ~custom:custom ~order:true kgraph "/" 0.5 0.5
 
 let simpleLastNode ?(custom=default_informations) kgraph = 
-	simpleOpNode ~custom:custom kgraph "last" 0.5 0.5
+	simpleOpNode ~custom:custom kgraph ~ho_mar:(5.0) "last" 0.5 0.5
 
 
 let constrBox ?(custom=default_informations) ?(vert=false) cont n =
@@ -748,6 +748,22 @@ let simplePresentNode ?(custom=default_informations) kgraph =
 	node#addProperty (PersistentEntry.portLabelPlacement "[INSIDE, NEXT_TO_PORT_IF_POSSIBLE]");
 	node
 
+let simpleResetDerNode ?(custom=default_informations) kgraph = 
+	let node = defaultNode kgraph in
+	let cont = simpleOpContWtT ~spe_back:(Some (fct_color custom#getLayer)) ~custom:custom () in
+	cont#setContainer Rect;
+	let tT = functionTitle ~custom:custom "Reset" in 
+	cont#addContainerRendering tT;
+	let ca = new data in
+	ca#setPlacement (place ());
+	cont#setChildArea ca;
+	node#addData cont;
+	cont#addAction (Actions.create_actionCollapse ());	
+	addPortSpace node;
+	node#addProperty (PersistentEntry.nodeSize "[NODE_LABELS, PORTS, PORT_LABELS, MINIMUM_SIZE]");	
+	node#addProperty (PersistentEntry.portLabelPlacement "[INSIDE, NEXT_TO_PORT_IF_POSSIBLE]");
+	node
+
 
 let simplePeriodNode ?(custom=default_informations) kgraph = 
 	simpleOpNode ~custom:custom ~order:true ~ho_mar:5.0 kgraph "Period" 0.5 0.5
@@ -768,8 +784,8 @@ let simpleEmitNode ?(custom=default_informations) kgraph name =
 let simpleUpNode ?(custom=default_informations) kgraph = 
 	simpleOpNode ~custom:custom ~ho_mar:5.0 kgraph "Up" 0.5 0.5
 
-let simpleBlanckNode ?(custom=default_informations) kgraph = 
-	let node = defaultNode kgraph in
+let simpleBlanckNode ?(custom=default_informations) kgraph side = 
+	let node = defaultNode ~side:side kgraph in
 	let cont = simpleOpContWtT ~spe_back:(Some (fct_color custom#getLayer)) ~custom:custom () in
 	node#addData cont;
 	addPortSpace node;

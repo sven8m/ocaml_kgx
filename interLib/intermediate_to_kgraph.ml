@@ -245,12 +245,14 @@ and getKnodeFromType kg node =
 		simpleUpNode ~custom:(node:>iInformation) kg
 	| Scond (t_opt) ->
 		simpleScondNode ~custom:(node:>iInformation) kg t_opt
-	| BlanckFct ->
-		simpleBlanckNode ~custom:(node:>iInformation) kg
+	| BlanckFct b ->
+		simpleBlanckNode ~custom:(node:>iInformation) kg b
 	| Mg -> 
 		simpleMinusGreaterNode ~custom:(node:>iInformation) kg
 	| Next s ->
 		simpleNextNode ~custom:(node:>iInformation) kg s
+	| ResetDer ->
+		simpleResetDerNode ~custom:(node:>iInformation) kg
 
 (** [translate_node kg node] takes an iNode [node] and translates it into a KNode, its ports into KPorts, and recursively its children. (not the edges) *)
 and translate_node kg node =
