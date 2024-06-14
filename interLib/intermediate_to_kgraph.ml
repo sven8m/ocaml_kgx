@@ -108,7 +108,10 @@ and translate_port (kg : Kgraph.kgraph) (port : iPort) =
 		Hashtbl.find portTbl port#getId
 	else begin
 		let kn = Hashtbl.find nodeTbl port#getParent#getId in
-		let kp = if port#isNot then
+		let kp =
+		if port#isBuble then
+			bublePort ~custom:(port:>iInformation) ~ofs:(port#getOffset) kg kn
+		else if port#isNot then
 			notOutputPort ~custom:(port:>iInformation) ~ofs:(port#getOffset) kg kn
 		else if port#isQuestion then
 			questionOutputPort ~custom:(port:>iInformation) ~ofs:(port#getOffset) kg kn
@@ -253,6 +256,10 @@ and getKnodeFromType kg node =
 		simpleNextNode ~custom:(node:>iInformation) kg s
 	| ResetDer ->
 		simpleResetDerNode ~custom:(node:>iInformation) kg
+	| RecordPat ->
+		simpleRecordPatNode ~custom:(node:>iInformation) kg
+	| InnerRecord s ->
+		simpleInnerRecordNode ~custom:(node:>iInformation) kg s
 
 (** [translate_node kg node] takes an iNode [node] and translates it into a KNode, its ports into KPorts, and recursively its children. (not the edges) *)
 and translate_node kg node =

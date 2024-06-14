@@ -56,6 +56,8 @@ type node_type =
 	| Mg
 	| Next of string
 	| ResetDer
+	| RecordPat
+	| InnerRecord of string 
 
 type port_type = 
 	Input | Output | Control | Undefined | OutputTop | InputTop | OutputBot | InputBot
@@ -204,6 +206,7 @@ and iPort node = object
 	val mutable question = false
 	val mutable parent = (node : iNode)
 	val mutable ofs = (None : float option)
+	val mutable buble = false
 
 	method getName = name
 	method getType = p_type
@@ -212,6 +215,7 @@ and iPort node = object
 	method isNot = no
 	method getOffset = ofs
 	method isQuestion = question
+	method isBuble = buble
 
 	method setName n = name <- n
 	method setType t = p_type <- t
@@ -220,7 +224,7 @@ and iPort node = object
 	method setNot b = no <- b
 	method setOffset o = ofs <- Some o
 	method setQuestion q = question <- q
-
+	method setBuble b = buble <- b
 end
 
 and iOuterPort p = object

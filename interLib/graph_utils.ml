@@ -716,7 +716,7 @@ let simpleScondNode ?(custom=default_informations) kgraph title =
 	begin match title with
 	| None -> ()
 	| Some t -> 
-		let tT = functionTitle ~custom:custom t in cont#addContainerRendering tT;
+		let tT = functionTitle ~ho_mar:5.0 ~custom:custom t in cont#addContainerRendering tT;
 		let ca = new data in
 		ca#setPlacement (place ());
 		cont#setChildArea ca;
@@ -809,6 +809,52 @@ let simpleNextNode ?(custom=default_informations) kgraph name =
 	node#addData cont;
 	resetPortsSurrounding node;
 	node
+
+
+let simpleInnerRecordNode ?(custom=default_informations) kgraph name = 
+	let node = defaultNode kgraph in
+	let cont = new containerRendering in
+	cont#setContainer Rect;
+	cont#addStyle (create_style (LineWidth 0.0));
+	cont#addContainerRendering (simpleText ~custom:custom name 0.5 0.5);
+	node#addData cont;
+	resetPortsSurrounding node;
+	node
+
+
+let simpleRecordPatNode ?(custom=default_informations) kgraph = 
+	let node = defaultNode ~order:true kgraph in	
+	let cont = simpleOpContWtT ~custom:custom () in
+	node#addProperty (PersistentEntry.create_property "org.eclipse.elk.direction" "UP");
+	node#addData cont;
+	node
+
+type direction = North | South | East | West
+
+let bublePort ?(custom=default_informations) ?(ofs=None) ?(dir=North) kgraph knode = 
+	let port = new kport kgraph in
+	port#setWidth 5.0;
+	port#setHeight 5.0;
+	begin match dir with
+	| North -> 
+		port#addProperty (PersistentEntry.createPortNorth ());
+	| South -> 
+		port#addProperty (PersistentEntry.createPortSouth ());
+	| East ->
+		port#addProperty (PersistentEntry.createPortEast ());
+	| West ->
+		port#addProperty (PersistentEntry.createPortWest ());
+	end;
+	port#setNode knode;
+	addPortOffset port ofs;
+	let cont = new containerRendering in
+	cont#setContainer Ellipse;
+	cont#addStyle (create_style (LineWidth 1.3));
+	cont#addStyle (create_style (Foreground (create_coloring (opLineColor custom))));
+	cont#addStyle (create_style (Background (create_coloring (opLineColor custom))));
+	cont#addStyle (create_style ~on_sel:true (LineWidth 1.5));
+	port#addData cont;
+	port
 
 
 (* end for z *)
