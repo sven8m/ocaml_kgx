@@ -822,7 +822,7 @@ let simpleInnerRecordNode ?(custom=default_informations) kgraph name =
 	node
 
 
-let simpleRecordPatNode ?(custom=default_informations) kgraph = 
+let simpleRecordNode ?(custom=default_informations) kgraph = 
 	let node = defaultNode ~order:true kgraph in	
 	let cont = simpleOpContWtT ~custom:custom () in
 	node#addProperty (PersistentEntry.create_property "org.eclipse.elk.direction" "UP");
@@ -856,7 +856,7 @@ let bublePort ?(custom=default_informations) ?(ofs=None) ?(dir=North) kgraph kno
 	port#addData cont;
 	port
 
-
+	
 (* end for z *)
 
 let function_node ?(order=false) ?(custom=default_informations) ?(res=false) ?(aut=false) ?(m=false) kgraph name layer = 

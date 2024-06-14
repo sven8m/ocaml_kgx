@@ -47,7 +47,7 @@ type node_type =
 	| Inv
 	| VertText of string
 	| Present 
-	| Text of string (** [s]. [s] is the content *)
+	| Text of string*int (** [s,n]. [s] is the content, [n] the number of inputs *)
 	| Period of bool (** [b]. [b] is if there is a phase *)
 	| Emit of string (** [s]. [s] is name of the signal *)
 	| Up
@@ -57,7 +57,9 @@ type node_type =
 	| Next of string
 	| ResetDer
 	| RecordPat
-	| InnerRecord of string 
+	| InnerRecordPat of string 
+	| Record
+	| InnerRecord of string
 
 type port_type = 
 	Input | Output | Control | Undefined | OutputTop | InputTop | OutputBot | InputBot

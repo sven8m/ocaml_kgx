@@ -84,7 +84,7 @@ let number_ports node_type = match node_type with
 	| VertText _ -> 0,0,0
 	| Inv -> assert false
 	| Present  -> assert false
-	| Text _ -> 0,0,0 
+	| Text (_,n) -> n,1,0 
 	| Period b -> if b then 1,1,1 else 1,1,0
 	| Emit _ -> 1,1,0
 	| Up -> 1,1,0
@@ -94,6 +94,7 @@ let number_ports node_type = match node_type with
 	| Next _ -> 1,1,0
 	| ResetDer -> assert false
 	| RecordPat | InnerRecord _ -> assert false
+	| Record | InnerRecordPat _ -> assert false
 
 let topOutputs node_type = match node_type with
 	| Deconstr (_,n) -> (n-1)
@@ -315,19 +316,26 @@ let simpleOpNode node_type parent layer =
 	parent#addChild node;
 	node
 
-let simpleRecordPatNode name_list parent layer = 
+let simpleRecordNode record_type inner_type name_list parent layer = 
 	let node = new iNode in
-	node#setType RecordPat;
+	node#setType record_type;
 	node#setLayer layer;
-	node#addOutputList (create_n_ports ~vis:false (List.length name_list) node OutputTop);
-	node#addInputList (create_n_ports 1 node Input);
-	
+	if record_type = RecordPat then node#addOutputList (create_n_ports ~vis:false (List.length name_list) node OutputTop)
+	else node#addInputList (create_n_ports ~vis:false (List.length name_list) node InputTop);
+	if record_type = RecordPat then node#addInputList (create_n_ports 1 node Input)
+	else node#addOutputList (create_n_ports 1 node Output);
+
 	parent#addChild node;
 	List.iter2 (fun name outer ->
 		let inner_node = new iNode in
-		inner_node#setType (InnerRecord name);
+		inner_node#setType (inner_type name);
 		inner_node#setLayer layer;
-		inner_node#addOutputList (create_n_ports ~bub:true 1 inner_node OutputTop);
+		let outType = match record_type with
+		| RecordPat -> OutputTop
+		| Record -> Output
+		| _ -> assert false
+		in
+		inner_node#addOutputList (create_n_ports ~bub:true 1 inner_node outType);
 		node#addChild inner_node;
 		let source = outerToEndPoint (List.hd inner_node#getOutputs) in
 		let target = outerToEndPoint outer in
