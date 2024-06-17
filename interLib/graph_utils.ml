@@ -729,7 +729,7 @@ let simpleInvisibleNode ?(custom=default_informations) kgraph =
 	let cont = simpleOpContWtT ~inv:true ~custom:custom () in
 	node#addData cont;
 	addPortSpace node;
-		
+	
 	node
 
 let simplePresentNode ?(custom=default_informations) kgraph = 
@@ -856,7 +856,42 @@ let bublePort ?(custom=default_informations) ?(ofs=None) ?(dir=North) kgraph kno
 	port#addData cont;
 	port
 
-	
+
+
+let simpleInitNode ?(custom=default_informations) kgraph name = 
+	let node = defaultNode ~order:true kgraph in
+	let cont = simpleOpContWtT ~custom:custom () in
+	if name <> "" then begin
+		let t = simpleText ~custom:custom "init" 0.5 0.5 in
+		t#setPlacement (place ~top:0.0 ~left:5.0 ~right:5.0 ~bottom:12.0 ());	
+		cont#addContainerRendering t;
+		let t = simpleText ~custom:custom name 0.5 0.5 in
+		t#setPlacement (place ~top:12.0 ~left:5.0 ~right:5.0 ~bottom:0.0 ());
+		cont#addContainerRendering t;
+	end else begin
+		let t = simpleText ~custom "init" 0.5 0.5 in
+		t#setPlacement (place ~top:0.0 ~left:5.0 ~right:5.0 ~bottom:0.0 ());
+		cont#addContainerRendering t;
+	end;
+	node#addData cont;
+	resetPortsSurrounding node;
+	node
+
+
+let simpleDiscNode ?(custom=default_informations) kgraph = 
+	simpleOpNode ~custom:custom ~ho_mar:5.0 kgraph "disc" 0.5 0.5
+
+
+let simpleTestNode ?(custom=default_informations) kgraph = 
+	simpleOpNode ~custom:custom ~ho_mar:5.0 kgraph "?" 0.5 0.5
+
+let simpleInvStateNode kgraph = 
+	let node = new knode kgraph in
+	let cont = new containerRendering in
+	cont#addStyle (create_style (Invisibility));
+	node#addData cont;
+	node
+
 (* end for z *)
 
 let function_node ?(order=false) ?(custom=default_informations) ?(res=false) ?(aut=false) ?(m=false) kgraph name layer = 
@@ -1281,10 +1316,18 @@ let seq_edge ?(half=false) ?(sourcePort=None) ?(targetPort=None) kgraph source t
 	edge#addData cont;
 	edge
 
-let automaton_edge ?(custom=default_informations) kgraph e_type source target = 
+let automaton_edge ?(custom=default_informations) ?(sourcePort=None) ?(targetPort=None) kgraph e_type source target = 
 	let edge = new kedge kgraph in
 	edge#setSource source;
 	edge#setTarget target;
+	begin match sourcePort with
+	| Some p -> edge#setSourcePort p
+	| _ -> ()
+	end;
+	begin match targetPort with
+	| Some p -> edge#setTargetPort p
+	| _ -> ()
+	end;
 	
 	let cont = new containerRendering in
 	cont#setContainer Spline;
@@ -1319,6 +1362,8 @@ let automaton_edge ?(custom=default_informations) kgraph e_type source target =
 	| Aut_second_half_history ->
 		cont#addContainerRendering (history_dot ());
 		cont#addContainerRendering (arrow_decorator ~custom:custom ~h:true false);
+	| Aut_port -> 
+		cont#addContainerRendering (arrow_decorator ~custom:custom true);
 	| _ -> assert false
 	end;
 	edge#addData cont;

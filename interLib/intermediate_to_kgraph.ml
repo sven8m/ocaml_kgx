@@ -41,6 +41,7 @@ let print_edge_type edge =
 	| Aut_second_half_begin -> "Aut_second_half_begin"
 	| Aut_second_half_end -> "Aut_second_half_end"
 	| Aut_second_half_history -> "Aut_second_half_history"
+	| Aut_port -> "Aut_port"
 	in
 	Format.printf "%s@." text
 
@@ -74,6 +75,8 @@ let rec translate_edge ?(sourcePort) (kg : Kgraph.kgraph) sourceNode (edge : iEd
 			Some kedge
 		| Aut_begin | Aut_end | Aut_begin_history | Aut_end_history | Aut_first_half | Aut_first_half_begin | Aut_second_half_begin | Aut_second_half_end | Aut_second_half_history ->
 			Some (automaton_edge ~custom:(edge:>iInformation) kg edge#getType sourceNode targetNode)
+		| Aut_port ->
+			Some (automaton_edge ~custom:(edge:>iInformation) ~sourcePort:(sourcePort) ~targetPort:(targetPort) kg edge#getType sourceNode targetNode)
 		| Seq | Seq_half ->
 			Some (seq_edge ~half:(edge#getType=Seq_half) ~sourcePort:sourcePort ~targetPort:targetPort kg sourceNode targetNode)
 		| DepLink -> 
@@ -265,6 +268,14 @@ and getKnodeFromType kg node =
 		simpleRecordNode ~custom:(node:>iInformation) kg
 	| InnerRecord s | InnerRecordPat s ->
 		simpleInnerRecordNode ~custom:(node:>iInformation) kg s
+	| Init s ->
+		simpleInitNode ~custom:(node:>iInformation) kg s
+	| Disc ->
+		simpleDiscNode ~custom:(node:>iInformation) kg
+	| Test ->
+		simpleTestNode ~custom:(node:>iInformation) kg
+	| InvState ->
+		simpleInvStateNode kg
 
 (** [translate_node kg node] takes an iNode [node] and translates it into a KNode, its ports into KPorts, and recursively its children. (not the edges) *)
 and translate_node kg node =

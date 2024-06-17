@@ -95,6 +95,10 @@ let number_ports node_type = match node_type with
 	| ResetDer -> assert false
 	| RecordPat | InnerRecord _ -> assert false
 	| Record | InnerRecordPat _ -> assert false
+	| Init s -> (if s <> "" then 1 else 0),1,0
+	| Disc -> 1,1,0
+	| Test -> 1,1,0
+	| InvState -> 0,0,0
 
 let topOutputs node_type = match node_type with
 	| Deconstr (_,n) -> (n-1)
@@ -224,13 +228,18 @@ let linkCreation node =
 
 
 (** [new_edge edge_type source target] creates an iEdge of type [type_edge] from the endpoint [source] to the endpoint [target] *)
-let new_edge edge_type (source : iEndPoint) target = 
+let new_edge ?(lab=None) edge_type (source : iEndPoint) target = 
 	let edge = new iEdge in
 	edge#setType edge_type;
 	edge#setTarget target#getNode;
 	edge#setTargetPort target#getPort;
 	edge#setSource source#getNode;
 	edge#setSourcePort source#getPort;
+	begin match lab with
+	| None -> 
+		()
+	| Some lab -> edge#addLabel lab;
+	end;
 	List.iter (fun lab ->
 		lab#setPosition Tail;
 		edge#addLabel lab
