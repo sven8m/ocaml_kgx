@@ -99,6 +99,8 @@ let number_ports node_type = match node_type with
 	| Disc -> 1,1,0
 	| Test -> 1,1,0
 	| InvState -> 0,0,0
+	| App n -> n,1,1
+	| PartApp _ -> 1,1,0
 
 let topOutputs node_type = match node_type with
 	| Deconstr (_,n) -> (n-1)
@@ -107,6 +109,7 @@ let topOutputs node_type = match node_type with
 let topInputs node_type = match node_type with
 	| Constr (_,n) -> n
 	| VertText _ -> 1
+	| PartApp (_,_,n) -> n
 	| _ -> 0
 
 let botInputs node_type = match node_type with
@@ -349,7 +352,7 @@ let simpleRecordNode record_type inner_type name_list parent layer =
 		let source = outerToEndPoint (List.hd inner_node#getOutputs) in
 		let target = outerToEndPoint outer in
 		new_edge Simple source target; 
-	) name_list (node#getOutputs);
+	) name_list (if record_type = RecordPat then (node#getOutputs) else node#getInputs);
 	node
 
 type fctParent = 

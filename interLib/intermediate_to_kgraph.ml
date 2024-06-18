@@ -276,6 +276,10 @@ and getKnodeFromType kg node =
 		simpleTestNode ~custom:(node:>iInformation) kg
 	| InvState ->
 		simpleInvStateNode kg
+	| App _ -> 
+		simpleAppNode ~custom:(node:>iInformation) kg
+	| PartApp (s,n1,n2) ->	
+		partialAppNode ~custom:(node:>iInformation) kg s n1 n2
 
 (** [translate_node kg node] takes an iNode [node] and translates it into a KNode, its ports into KPorts, and recursively its children. (not the edges) *)
 and translate_node kg node =

@@ -499,9 +499,8 @@ let simpleLastNode ?(custom=default_informations) kgraph =
 	simpleOpNode ~custom:custom kgraph ~ho_mar:(5.0) "last" 0.5 0.5
 
 
-let constrBox ?(custom=default_informations) ?(vert=false) cont n =
+let constrBox ?(custom=default_informations) ?(no_line=false) cont rightDelta high =
 
-	let rightDelta = 1.0 +. n *. 3.0 in
 	let dim = 5.0 in
 	let circle = new containerRendering in
 	circle#setContainer Ellipse;
@@ -542,7 +541,6 @@ let constrBox ?(custom=default_informations) ?(vert=false) cont n =
 	quad#setPlacement (Point pd);
 	cont#addContainerRendering quad;
 	
-	let high = n <> 0.0 || vert in
 	let line = new containerRendering in
 	line#addStyle (create_style (LineWidth 1.0));
 	line#addStyle (create_style ~on_sel:true (LineWidth 1.7));
@@ -562,30 +560,30 @@ let constrBox ?(custom=default_informations) ?(vert=false) cont n =
 		let p2 = Point.create_point c2 c3 in
 		line#setContainer (PolyLine [p1;p2]);
 	end;
-
-	let pd = new PointPlacementData.pointPlacementData in
-	if high then begin 
-		pd#setMinHeight (dim*.2.);
-		pd#setMinWidth 1.0;
-		pd#setHorizontalAlignment LEFT;
-		pd#setVerticalAlignment CENTER;	
-	end else begin
-		pd#setMinHeight 1.0;
-		pd#setMinWidth (dim*.2.1);
-		pd#setVerticalAlignment TOP;
-		pd#setHorizontalAlignment CENTER;
-	end;
-	let c1 = if high then 
-		Point.create_coord ~pos_val:(Abs (dim *. (rightDelta +. 1.5))) Right 
-		else Point.create_coord ~pos_val:(Abs (dim *. 1.05)) Right in
-	let c2 = if high then
-		Point.create_coord ~pos_val:(Rel 0.25) Top 
-		else Point.create_coord ~pos_val:(Rel 0.5) Top in
-	let point = Point.create_point c1 c2 in
-	pd#setRefPoint point;
-	line#setPlacement (Point pd);
-	cont#addContainerRendering line
-
+	if not no_line then begin
+		let pd = new PointPlacementData.pointPlacementData in
+		if high then begin 
+			pd#setMinHeight (dim*.2.);
+			pd#setMinWidth 1.0;
+			pd#setHorizontalAlignment LEFT;
+			pd#setVerticalAlignment CENTER;	
+		end else begin
+			pd#setMinHeight 1.0;
+			pd#setMinWidth (dim*.2.1);
+			pd#setVerticalAlignment TOP;
+			pd#setHorizontalAlignment CENTER;
+		end;
+		let c1 = if high then 
+			Point.create_coord ~pos_val:(Abs (dim *. (rightDelta +. 1.5))) Right 
+			else Point.create_coord ~pos_val:(Abs (dim *. 1.05)) Right in
+		let c2 = if high then
+			Point.create_coord ~pos_val:(Rel 0.25) Top 
+			else Point.create_coord ~pos_val:(Rel 0.5) Top in
+		let point = Point.create_point c1 c2 in
+		pd#setRefPoint point;
+		line#setPlacement (Point pd);
+		cont#addContainerRendering line
+	end
 (*
 let constrPort ?(custom=default_informations) kgraph knode n = 
 	let port = new kport kgraph in
@@ -622,7 +620,7 @@ let simpleDeConstrNode ?(custom=default_informations) ?(vert=false) ?(right_ofs=
 	let rec addBox n = match n with
 		| -1 -> ()
 		| _ -> 
-			constrBox ~custom:custom ~vert:vert cont (float_of_int n);
+			constrBox ~custom:custom cont (1.0 +. 3.0 *. (float_of_int n)) (vert || n <> 0);
 			addBox (n - 1)
 	in
 	addBox (num - 1);
@@ -890,6 +888,63 @@ let simpleInvStateNode kgraph =
 	let cont = new containerRendering in
 	cont#addStyle (create_style (Invisibility));
 	node#addData cont;
+	node
+
+let simpleAppNode ?(custom=default_informations) kgraph = 
+	simpleOpNode ~custom:custom ~ho_mar:5.0 kgraph "App" 0.5 0.5
+
+let arrowBox ?(custom=default_informations) ?(dim=5.0) cont rightDelta = 
+	let t = simpleText ~custom:custom ~s:8 "-" 0.5 0.5 in
+	let pd = new PointPlacementData.pointPlacementData in
+	pd#setMinHeight dim;
+	pd#setMinWidth (0.5 *. dim);
+	pd#setHorizontalAlignment CENTER;
+	pd#setVerticalAlignment CENTER;
+	let c1 = Point.create_coord ~pos_val:(Abs (dim *. (rightDelta +. 0.5))) Right in
+	let c2 = Point.create_coord ~pos_val:(Rel 0.5) Top in
+	let point = Point.create_point c1 c2 in
+	pd#setRefPoint point;
+	t#setPlacement (Point pd);
+	cont#addContainerRendering t;
+	
+	let t = simpleText ~custom:custom ~s:8 "&gt;" 0.5 0.5 in
+	let pd = new PointPlacementData.pointPlacementData in
+	pd#setMinHeight dim;
+	pd#setMinWidth (1. *. dim);
+	pd#setHorizontalAlignment CENTER;
+	pd#setVerticalAlignment CENTER;
+	let c1 = Point.create_coord ~pos_val:(Abs (dim *. (rightDelta))) Right in
+	let c2 = Point.create_coord ~pos_val:(Rel 0.52) Top in
+	let point = Point.create_point c1 c2 in
+	pd#setRefPoint point;
+	t#setPlacement (Point pd);
+	cont#addContainerRendering t
+
+
+let partialAppNode ?(custom=default_informations) kgraph name num num_taken = 
+	let node = defaultNode ~order:true kgraph in
+	let cont = simpleOpContWtT ~custom:custom () in
+	let rec addBox n = match n with
+	| -1 -> ()
+	| _ -> 
+		constrBox ~custom:custom ~no_line:(n < num - num_taken) cont (2.5 +. 4.5 *. (float_of_int n)) true;
+		arrowBox ~custom:custom cont (1.5 +. 4.5 *. (float_of_int n));
+		addBox (n-1)
+	in
+	addBox (num - 1);
+	
+	let num = (float_of_int num) in
+	let t = simpleText ~s:8 ~custom:custom name 0.5 0.5 in
+	t#setPlacement (place ~top:0.0 ~left:5.0 ~right:((3. +. 4. *. num) *. 5.0) ~bottom:0.0 ());
+	cont#addContainerRendering t;
+	node#addData cont;
+	
+	let right_ofs = 19.85 +. 22.5 *. (num -. (float_of_int num_taken)) in
+
+	node#addProperty (PersistentEntry.create_property "org.eclipse.elk.spacing.individual"
+	("org.eclipse.elk.spacing.portPort:22.5;,;org.eclipse.elk.spacing.portsSurrounding:[top=0.0,left=0.0,bottom=0.0,right="^(string_of_float right_ofs)^"]"));
+	node#addProperty (PersistentEntry.create_property "org.eclipse.elk.portAlignment.north" "END");
+
 	node
 
 (* end for z *)

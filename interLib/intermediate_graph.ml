@@ -64,6 +64,8 @@ type node_type =
 	| Disc
 	| Test
 	| InvState
+	| App of int
+	| PartApp of string * int * int (**[s,n1,n2] [s] is the name [n1] the number of arguments [n2] the number of given arguments *)
 
 type port_type = 
 	Input | Output | Control | Undefined | OutputTop | InputTop | OutputBot | InputBot
