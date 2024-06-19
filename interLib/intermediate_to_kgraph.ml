@@ -142,6 +142,7 @@ and translate_port (kg : Kgraph.kgraph) (port : iPort) =
 			let lab = portLabel ~custom:(port:>iInformation) port#getName in
 			kp#addLabel lab;
 		end;
+		kp#addProperty (PersistentEntry.create_property "org.eclipse.elk.port.index" (string_of_int port#getIndex));
 		kp
 	end
 
@@ -156,6 +157,10 @@ and revInputPorts (node : iNode) =
 	let input_ports , other_ports = List.partition (fun port ->
 		port#getType = Input) node#getPorts in
 	node#setPorts (other_ports @ (List.rev input_ports))
+
+and indexPorts (node : iNode) = 
+	List.iteri (fun id port ->
+		port#setIndex id) node#getPorts
 
 (** [getKnodeFromType kgraph node] returns the knode corresponding to the [node_type] of [node]*)
 and getKnodeFromType kg node = 
@@ -280,6 +285,8 @@ and getKnodeFromType kg node =
 		simpleAppNode ~custom:(node:>iInformation) kg
 	| PartApp (s,n1,n2) ->	
 		partialAppNode ~custom:(node:>iInformation) kg s n1 n2
+	| Mod ->
+		simpleTextNode ~custom:(node:>iInformation) kg "mod"
 
 (** [translate_node kg node] takes an iNode [node] and translates it into a KNode, its ports into KPorts, and recursively its children. (not the edges) *)
 and translate_node kg node =
@@ -287,6 +294,7 @@ and translate_node kg node =
 		Hashtbl.find nodeTbl node#getId
 	else begin
 		revInputPorts node;
+		indexPorts node;
 		let kn = getKnodeFromType kg node in
 		Hashtbl.replace nodeTbl node#getId kn;
 		List.iter (fun port ->

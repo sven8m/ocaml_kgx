@@ -66,6 +66,7 @@ type node_type =
 	| InvState
 	| App of int
 	| PartApp of string * int * int (**[s,n1,n2] [s] is the name [n1] the number of arguments [n2] the number of given arguments *)
+	| Mod 
 
 type port_type = 
 	Input | Output | Control | Undefined | OutputTop | InputTop | OutputBot | InputBot
@@ -215,6 +216,7 @@ and iPort node = object
 	val mutable parent = (node : iNode)
 	val mutable ofs = (None : float option)
 	val mutable buble = false
+	val mutable index = 0
 
 	method getName = name
 	method getType = p_type
@@ -224,6 +226,7 @@ and iPort node = object
 	method getOffset = ofs
 	method isQuestion = question
 	method isBuble = buble
+	method getIndex = index
 
 	method setName n = name <- n
 	method setType t = p_type <- t
@@ -233,6 +236,7 @@ and iPort node = object
 	method setOffset o = ofs <- Some o
 	method setQuestion q = question <- q
 	method setBuble b = buble <- b
+	method setIndex i = index <- i
 end
 
 and iOuterPort p = object

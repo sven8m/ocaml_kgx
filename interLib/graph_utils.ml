@@ -723,7 +723,8 @@ let simpleScondNode ?(custom=default_informations) kgraph title =
 
 
 let simpleInvisibleNode ?(custom=default_informations) kgraph =
-	let node = defaultNode kgraph in
+	let node = defaultNode ~order:true kgraph in
+	
 	let cont = simpleOpContWtT ~inv:true ~custom:custom () in
 	node#addData cont;
 	addPortSpace node;
