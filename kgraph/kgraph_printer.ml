@@ -9,10 +9,16 @@ open Kgraph
 open Kedge
 open PersistentEntry
 
+let print_klabel ff klabel = 
+	Format.fprintf ff "@,@[<v 4><labels%a text=\"%s\">" Object_pos.print_obj_pos (klabel :> Object_pos.obj_pos) klabel#getText;
+	List.iter (print_property ff) klabel#getProperties;
+ 	List.iter (print_data_node ff) klabel#getData;
+	Format.fprintf ff "@,</labels>"
+	
 let print_port ff port = 
 	Format.fprintf ff "@,@[<v 4><ports%a>" Object_pos.print_obj_pos (port :> Object_pos.obj_pos) ;
 	List.iter (print_property ff) port#getProperties;
-	List.iter (print_label ff) port#getLabels;
+	List.iter (print_klabel ff) port#getLabels;
 	List.iter (print_data_node ff) port#getData;
 	Format.fprintf ff "@]@,</ports>"
 
@@ -40,7 +46,7 @@ let print_targetPort ff kedge =
 let print_kedge ff kedge =	
 	Format.fprintf ff "@,@[<v 4><outgoingEdges target=\"%s\"%a%a>" (kedge#getTargetOpt ())#getPath print_sourcePort kedge print_targetPort kedge;
 	List.iter (print_property ff) kedge#getProperties;
-	List.iter (print_label ff) kedge#getLabels;
+	List.iter (print_klabel ff) kedge#getLabels;
 	List.iter (print_data_node ff) kedge#getData;
 	Format.fprintf ff "@]@,</outgoingEdges>"
 
@@ -66,7 +72,7 @@ let rec print_knode ff (knode :knode) =
 	in
 	Format.fprintf ff "@,@[<v 4><children%a%s>" Object_pos.print_obj_pos (knode :> Object_pos.obj_pos) incoming;	
 	List.iter (print_property ff) knode#getProperties;
-	List.iter (print_label ff) knode#getLabels;
+	List.iter (print_klabel ff) knode#getLabels;
 	(*printing data*)
 	List.iter (print_data_node ff) (knode#getData);
 	(*printing children *)

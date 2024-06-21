@@ -4,7 +4,8 @@ open Intermediate_graph
 
 (** [create_n_ports n node ty] creates [n] ports on node [node] of type [ty]. 
 
-Option [no] indicates if it is a [no] port, [vis] if the port is visible.*)
+Option [no] indicates if it is a [no] port, [vis] if the port is visible, [bub] if the port is a buble,
+[question] if the port is a question mark. By default all options are [false]. *)
 let rec create_n_ports ?(question=false) ?(no=false) ?(vis=false) ?(bub=false) n node ty = 
 	match n with
 	| 0 -> []
@@ -19,34 +20,6 @@ let rec create_n_ports ?(question=false) ?(no=false) ?(vis=false) ?(bub=false) n
 		let outer = new iOuterPort port in
 		outer :: (create_n_ports ~question:question ~no:no ~vis:vis ~bub:bub (n-1) node ty)
 
-(*
-type portRequest = {
-	name : string;
-	typ : port_type}
-
-let mk_portRequest ?(typ=Undefined) name = 
-	{name = name; typ = typ}
-
-let portRequestsToTy pl = List.map (fun el -> el.typ) pl
-
-let portRequestsToName pl = List.map (fun el -> el.name) pl
-
-let rec create_n_ports_special ?(question=false) ?(no=false) ?(vis=true) node ty_def tyRequests =
-	match tyRequests with
-	| [] -> []
-	| tyR :: q -> 
-		let port = new iPort node in
-		begin match tyR with
-		| Undefined -> port#setType ty_def
-		| _ -> port#setType tyR
-		end;
-		port#setVisible vis;
-		port#setNot no;
-		port#setQuestion question;
-		node#addPort port;
-		let outer = new iOuterPort port in
-		outer :: (create_n_ports_special ~question:question ~no:no ~vis:vis node ty_def q)
-*)
 (** [outerToEndPoint outer] takes an iOuterPort and creates a corresponding iEndPoint *)
 let outerToEndPoint o = 
 	let endPoint = new iEndPoint (o#getNode) (o#getPort) in
@@ -103,19 +76,26 @@ let number_ports node_type = match node_type with
 	| PartApp _ -> 1,1,0
 	| Mod -> 1,1,1
 
+(** [topOutputs node_type] takes a node_type and returns the number of outputs to place on the north side *)
 let topOutputs node_type = match node_type with
 	| Deconstr (_,n) -> (n-1)
 	| _ -> 0
 
+
+(** [topInputs node_type] takes a node_type and returns the number of inputs to place on the north side *)
 let topInputs node_type = match node_type with
 	| Constr (_,n) -> n
 	| VertText _ -> 1
 	| PartApp (_,_,n) -> n
 	| _ -> 0
 
+
+(** [botInputs node_type] takes a node_type and returns the number of inputs to place on the south side *)
 let botInputs node_type = match node_type with
 	| _ -> 0
 
+
+(** [botOutputs node_type] takes a node_type and returns the number of outputs to place on the south side *)
 let botOutputs node_type = match node_type with
 	| VertText _ -> 1
 	| _ -> 0
@@ -125,6 +105,7 @@ let is_output_not node_type = match node_type with
 	| Nand | Not -> true
 	| _ -> false
 
+(** [is_output_question nt] return true if the node type [nt] is [Scond] *)
 let is_output_question node_type = match node_type with
 	| Scond _ -> true
 	| _ -> false
@@ -150,8 +131,8 @@ let addNames node node_type =
 		let conds = List.init n (fun i -> string_of_int (i+1)) in 
 		let inputs = List.init (n+1) (fun i -> if i <> n then string_of_int (i+1) else "else") in
 		addOuterNames node#getControl conds;
-		addOuterNames node#getInputs inputs;
-		let offsets = List.init n (fun i ->
+		addOuterNames node#getInputs inputs
+		(*let offsets = List.init n (fun i ->
 			let i = i + 1 in
 			let delta = if i >= 10 then
 				8.0 -. 0.013 *. (float_of_int n)
@@ -160,11 +141,12 @@ let addNames node node_type =
 			let ofs = if i >= 10 then (-5.0) -. 0.013 *. (float_of_int n) else 4.0 in
 			(-.ofs -. delta *. (float_of_int (i - 1)))
 		) in
-		addOffsets node#getControl offsets
+		addOffsets node#getControl offsets*)
 	| Ram -> 
 		addOuterNames node#getInputs ["read_addr";"write?";"write_addr";"write_data"]
 	| _ -> ()
 
+(** [needOffsets node node_type] adds offset to some ports of the [node] depending on the [node_type] *)
 let needOffsets node node_type = 
 	match node_type with
 	| Match l ->
@@ -231,7 +213,9 @@ let linkCreation node =
 	) node#getControl
 
 
-(** [new_edge edge_type source target] creates an iEdge of type [type_edge] from the endpoint [source] to the endpoint [target] *)
+(** [new_edge edge_type source target] creates an iEdge of type [type_edge] from the endpoint [source] to the endpoint [target] 
+
+Option [lab] allows to add a label to the created edge, default [None]. *)
 let new_edge ?(lab=None) edge_type (source : iEndPoint) target = 
 	let edge = new iEdge in
 	edge#setType edge_type;
@@ -254,7 +238,7 @@ let new_edge ?(lab=None) edge_type (source : iEndPoint) target =
 	(source#getPort)#addEdge edge;
 	(target#getPort)#addBackEdge edge
 
-(** [automaton_edge_type reset beginning] gives the type of the automaton edge depending on the reset or beginning *)
+(** [automaton_edge_type half first reset beginning] gives the type of the automaton edge depending on the reset, beginning, half and first.*)
 let automaton_edge_type half first reset beginning = 
 	match half, first, reset , beginning with
 	| true, true, _ , true -> Aut_first_half_begin
@@ -267,7 +251,11 @@ let automaton_edge_type half first reset beginning =
 	| _,_,false , true -> Aut_begin_history
 	| _,_,false, false -> Aut_end_history
 
-let automaton_edge ?(half=false) ?(first=false) source target lab reset beginning = 
+(** [automaton_edge source target lab r b] creates an automaton edge between the [source] node and [target] node, with label [lab].
+[r] and [b] are used to determine which type of automaton edge it is, as the options [half] and [first] are used for.
+
+Option [inline] to set the label to inlined or not. *)
+let automaton_edge ?(inline=false) ?(half=false) ?(first=false) source target lab reset beginning = 
 	let edge_type = automaton_edge_type half first reset beginning in
 	let edge = new iEdge in
 	edge#setType edge_type;
@@ -275,6 +263,7 @@ let automaton_edge ?(half=false) ?(first=false) source target lab reset beginnin
 	edge#setSource source;
 	let label = new iEdgeLabel lab in
 	label#setPosition Center;
+	label#setInlined inline;
 	edge#addLabel label;
 	source#addEdge edge;
 	target#addBackEdge edge
@@ -307,8 +296,13 @@ let edgeLabel ?(pos=Undef) ?(forced=Undef) name =
 	lab
 
 
+(** [simpleOpNode node_type parent layer] creates an iNode corresponding to the [node_type], 
+with number of ports, names and innerLinks depending on the [node_type], and parent [parent]. 
+The [layer] is used for coloring.
 
-(** [simpleOpNode node_type parent layer] creates an iNode corresponding to the [node_type], with number of ports, names and innerLinks depending on the [node_type], and parent [parent]. The [layer] is used for coloring.*)
+Order of the ports for inputs and outputs :  
+	South; North; Default (West for inputs, East for outputs)
+*)
 let simpleOpNode node_type parent layer =
 	let nb_inputs,nb_outputs, nb_control = number_ports node_type in
 	let node = new iNode in
@@ -329,6 +323,8 @@ let simpleOpNode node_type parent layer =
 	parent#addChild node;
 	node
 
+(** [simpleRecordNode r_type i_type name_list parent layer] creates an iNode of the type [r_type] similarly to [simpleOpNode],
+but there are nodes inside the operation node to create, so it is separated *)
 let simpleRecordNode record_type inner_type name_list parent layer = 
 	let node = new iNode in
 	node#setType record_type;
@@ -361,11 +357,17 @@ type fctParent =
 	| Graph of iGraph
 
 (** [simpleFunctionNode node_type input_names output_names parent layer] creates an iNode for a [node_type] function, with 
-input ports having names [input_names], and output ports having names [output_names]. 
+input ports having names [input_names], and output ports having names [output_names], and parent [parent]. 
 
-Option [control] if there should be a control port on the node *)
+Option [control] if there should be a control port on the node 
 
-let simpleFunctionNode ?(outBot=false) ?(outTop=false) ?(order=false) ?(vis=true) ?(control=false) ?(addI=None) ?(addO=None) node_type input_names output_names parent layer = 
+Option [order] if the node has fixed port order.
+
+Option [vis] if the ports are visible (default [true]).
+
+Option [addI] and [addO] if an additional port has to be added for the inputs and outputs, then the type is given.
+*)
+let simpleFunctionNode (*?(outBot=false) ?(outTop=false)*) ?(order=false) ?(vis=true) ?(control=false) ?(addI=None) ?(addO=None) node_type input_names output_names parent layer = 
 	let node = new iNode in
 	node#setType node_type;
 	node#setLayer layer;

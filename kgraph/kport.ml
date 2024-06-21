@@ -2,7 +2,7 @@ open ObjectSig
 open Kelement
 
 class kport graph : kportSig = object (self)
-	inherit kelement graph
+	inherit klabeledelement graph
 	inherit Object_pos.obj_pos
 	val mutable node = (None : knodeSig option)
 

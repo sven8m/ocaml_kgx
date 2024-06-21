@@ -45,6 +45,13 @@ let print_edge_type edge =
 	in
 	Format.printf "%s@." text
 
+(** [translate_edge_label kg lab] takes an iEdgeLabel [lab] and translates it into the corresponding Klabel *)
+
+let translate_edge_label ?(custom=default_informations) kg lab = 
+	if lab#getInlined then
+		inlinedLabel ~custom:custom kg lab#getName
+	else
+		labelOfEdgeLabel ~custom:custom kg lab#getName lab#getPosition
 
 (** [translate_edge kg sourceNode edge] takes an iEdge [edge] and translates it to a [KEdge], given the KGraph [kg], the source KNode [sourceNode]
 and the potential source KPort [sourcePort] *)
@@ -98,7 +105,7 @@ let rec translate_edge ?(sourcePort) (kg : Kgraph.kgraph) sourceNode (edge : iEd
 		| None -> ()
 		| Some kedge ->
 			List.iter (fun label ->
-				let klab = labelOfEdgeLabel ~custom:(edge:>iInformation) label#getName label#getPosition in
+				let klab = translate_edge_label ~custom:(edge:>iInformation) kg label in
 				kedge#addLabel klab;
 			) edge#getLabels
 		end
@@ -139,7 +146,7 @@ and translate_port (kg : Kgraph.kgraph) (port : iPort) =
 		in
 		Hashtbl.replace portTbl port#getId kp;
 		if port#getName <> "" then begin
-			let lab = portLabel ~custom:(port:>iInformation) port#getName in
+			let lab = portLabel ~custom:(port:>iInformation) kg port#getName in
 			kp#addLabel lab;
 		end;
 		kp#addProperty (PersistentEntry.create_property "org.eclipse.elk.port.index" (string_of_int port#getIndex));

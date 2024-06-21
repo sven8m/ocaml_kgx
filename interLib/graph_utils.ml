@@ -1327,10 +1327,13 @@ let green_triangle st =
 	cont#setPlacement (Decorator place);
 	cont
 
-let labelOfEdgeLabel ?(custom=default_informations) name pos = 
-	let label = new label in
+let labelOfEdgeLabel ?(custom=default_informations) kgraph name pos = 
+	let label = new Klabel.klabel kgraph in
 	label#setText name;
-	label#addStyle (create_style (Foreground (create_coloring (opLineColor custom))));
+	let cont = new containerRendering in
+	cont#setContainer (Text name); 
+	cont#addStyle (create_style (Foreground (create_coloring (opLineColor custom))));
+	label#addData cont;
 	begin match pos with
 	| Intermediate_graph.Tail ->
 		label#addProperty (PersistentEntry.edgeLabelPlacement "TAIL");
@@ -1343,10 +1346,25 @@ let labelOfEdgeLabel ?(custom=default_informations) name pos =
 	end;
 	label
 
-let portLabel ?(custom=default_informations) name = 
-	let label = new label in
+let inlinedLabel ?(custom=default_informations) kgraph name =
+	let label = new Klabel.klabel kgraph in
 	label#setText name;
-	label#addStyle (create_style (Foreground (create_coloring (opLineColor custom))));
+	let cont = new containerRendering in
+	let color = create_color 240 240 240 in
+	cont#setContainer (RoundRect (8.0,8.0));
+	cont#addStyle (create_style (Background (create_coloring color)));
+	cont#addContainerRendering (simpleText ~ho_mar:5.0 name 0.5 0.5);
+	label#addData cont;
+	label#addProperty (PersistentEntry.create_property "org.eclipse.elk.edgeLabels.inline" "true");
+	label
+
+let portLabel ?(custom=default_informations) kgraph name = 
+	let label = new Klabel.klabel kgraph in
+	label#setText name;
+	let cont = new containerRendering in
+	cont#setContainer (Text name);
+	cont#addStyle (create_style (Foreground (create_coloring (opLineColor custom))));
+	label#addData cont;
 	label
 
 let seq_edge ?(half=false) ?(sourcePort=None) ?(targetPort=None) kgraph source target = 

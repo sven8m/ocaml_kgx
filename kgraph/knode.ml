@@ -1,7 +1,7 @@
 open ObjectSig
 
 class knode graph : knodeSig = object (self) 
-	inherit Kelement.kelement graph
+	inherit Kelement.klabeledelement graph
 	inherit Object_pos.obj_pos
 	val mutable parent = None
 	val mutable children = []

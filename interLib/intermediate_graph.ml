@@ -104,9 +104,11 @@ class iEdgeLabel s = object
 	val mutable name = (s : string)
 	val mutable position = Undef
 	val mutable forced_position = Undef
-	
+	val mutable inlined = false
+
 	method setName s = name <- s
 	method getName = name
+	method getInlined = inlined
 
 	method getPosition = 
 		match forced_position with
@@ -115,6 +117,7 @@ class iEdgeLabel s = object
 	
 	method setPosition p = position <- p
 	method setForcedPosition p = forced_position <- p
+	method setInlined i = inlined <- i
 end
 
 class iElement = object

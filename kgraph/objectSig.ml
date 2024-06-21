@@ -1,25 +1,41 @@
 open RenderingSig
+
+
 class type kelementSig = object
 	inherit PersistentEntry.propertyHolderSig
 	val id : int
 	val kgraph_id : int
 	val mutable kgraph : kgraphSig
-	val mutable labels : Label.label list
 	val mutable data : containerRenderingSig list	
 	method getId : int
 
 	method getGraphId : int
 	method getGraph : kgraphSig
 
-	method getLabels : Label.label list
-	method addLabel : Label.label -> unit
 
 	method getData : containerRenderingSig list
 	method addData : containerRenderingSig -> unit
 end
 
-and knodeSig = object 
+and klabelSig = object
 	inherit kelementSig
+	inherit Object_pos.obj_pos
+	val mutable text : string
+
+	method getText : string
+	method setText : string -> unit
+end
+
+and klabeledelementSig = object
+	inherit kelementSig
+	val mutable labels : klabelSig list
+	
+	method getLabels : klabelSig list
+	method addLabel : klabelSig -> unit
+end
+
+and knodeSig = object 
+	inherit klabeledelementSig
 	inherit Object_pos.obj_pos
 	val mutable parent : knodeSig option
 	val mutable children : knodeSig list
@@ -53,7 +69,7 @@ and knodeSig = object
 end
 
 and kedgeSig = object 
-	inherit kelementSig
+	inherit klabeledelementSig
 	val mutable source : knodeSig option
 	val mutable target : knodeSig option
 	val mutable sourcePort : kportSig option
@@ -75,7 +91,7 @@ and kedgeSig = object
 end
 
 and kportSig = object
-	inherit kelementSig
+	inherit klabeledelementSig
 	inherit Object_pos.obj_pos
 	val mutable node : knodeSig option
 

@@ -2,7 +2,7 @@ open Kelement
 open ObjectSig
 
 class kedge graph : kedgeSig = object (self) 
-	inherit kelement graph
+	inherit klabeledelement graph
 	val mutable source = (None : knodeSig option)
 	val mutable target = (None : knodeSig option)
 	val mutable sourcePort = (None : kportSig option)
