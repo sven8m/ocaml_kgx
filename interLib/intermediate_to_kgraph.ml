@@ -211,7 +211,7 @@ and getKnodeFromType kg node =
 	| Aut ->
 		function_node ~custom:(node:>iInformation) ~aut:true kg "automaton" node#getLayer	
 	| Aut_state (s,init) ->
-		stateNode ~custom:(node:>iInformation) ~init:init kg s node#getLayer
+		stateNode ~custom:(node:>iInformation) ~first:init ~init:init kg s node#getLayer
 	| For ->
 		simpleSeqBlockNode ~custom:(node:>iInformation) kg "for"
 	| While ->
@@ -327,7 +327,6 @@ and translate_node_edges kg (node : iNode) =
 		List.iter (fun child ->
 			translate_node_edges kg child) node#getChildren
 
-
 let compare_edges edge1 edge2 = 
 	if edge1#getInCycle = edge2#getInCycle then begin
 		match edge1#getDead , edge2#getDead with
@@ -351,6 +350,7 @@ let rec sort_edges_node node =
 	List.iter (fun port ->
 		sort_edges (port:>iEdgeContainer)) node#getPorts;
 	List.iter sort_edges_node node#getChildren
+
 (** [translate_graph ig] translates the iGraph [ig] into the corresponding Kgraph *)
 let translate_graph (ig : iGraph) = 
 	let kg = init_kgraph () in

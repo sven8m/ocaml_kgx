@@ -175,8 +175,8 @@ let addPortOffset kport ofs =
 let invisiblePort ?(custom=default_informations) ?(ofs=None) kgraph knode = 
 	let port = new kport kgraph in
 	port#setNode knode;
-	port#setHeight (0.1);
-	port#setWidth (0.1);
+	port#setHeight (0.01);
+	port#setWidth (0.01);
 	let cont = new containerRendering in
 	let color = opLineColor custom in
 	cont#addStyle (create_style (Background (create_coloring color)));
@@ -887,7 +887,10 @@ let simpleTestNode ?(custom=default_informations) kgraph =
 let simpleInvStateNode kgraph = 
 	let node = new knode kgraph in
 	let cont = new containerRendering in
+	node#setWidth 1.0;
+	node#setHeight 1.0;
 	cont#addStyle (create_style (Invisibility));
+	node#addProperty (PersistentEntry.layerConstraint "FIRST_SEPARATE");
 	node#addData cont;
 	node
 
@@ -936,7 +939,7 @@ let partialAppNode ?(custom=default_informations) kgraph name num num_taken =
 	
 	let num = (float_of_int num) in
 	let t = simpleText ~s:8 ~custom:custom name 0.5 0.5 in
-	t#setPlacement (place ~top:0.0 ~left:5.0 ~right:((3. +. 4. *. num) *. 5.0) ~bottom:0.0 ());
+	t#setPlacement (place ~top:0.0 ~left:5.0 ~right:((2. +. 4.5 *. num) *. 5.0) ~bottom:0.0 ());
 	cont#addContainerRendering t;
 	node#addData cont;
 	
@@ -992,8 +995,8 @@ let function_node ?(order=false) ?(custom=default_informations) ?(res=false) ?(a
 let state_color layer =
 	layered_color 242 224 224 layer
 
-let stateNode ?(custom=default_informations) ?(init=false) kgraph name layer = 
-	let node = defaultStateNode ~layer:(if init then "FIRST" else "NONE") kgraph in
+let stateNode ?(custom=default_informations) ?(first=false) ?(init=false) kgraph name layer = 
+	let node = defaultStateNode ~layer:(if first then "FIRST" else "NONE") kgraph in
 	node#addProperty (PersistentEntry.activatePartition ());
 	let cont = new containerRendering in
 	let ca = new data in
@@ -1352,6 +1355,7 @@ let inlinedLabel ?(custom=default_informations) kgraph name =
 	let cont = new containerRendering in
 	let color = create_color 240 240 240 in
 	cont#setContainer (RoundRect (8.0,8.0));
+	cont#addStyle (create_style (LineStyle DASH));
 	cont#addStyle (create_style (Background (create_coloring color)));
 	cont#addContainerRendering (simpleText ~ho_mar:5.0 name 0.5 0.5);
 	label#addData cont;

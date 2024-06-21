@@ -13,7 +13,7 @@ let print_klabel ff klabel =
 	Format.fprintf ff "@,@[<v 4><labels%a text=\"%s\">" Object_pos.print_obj_pos (klabel :> Object_pos.obj_pos) klabel#getText;
 	List.iter (print_property ff) klabel#getProperties;
  	List.iter (print_data_node ff) klabel#getData;
-	Format.fprintf ff "@,</labels>"
+	Format.fprintf ff "@]@,</labels>"
 	
 let print_port ff port = 
 	Format.fprintf ff "@,@[<v 4><ports%a>" Object_pos.print_obj_pos (port :> Object_pos.obj_pos) ;
