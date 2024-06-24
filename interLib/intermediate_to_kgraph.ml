@@ -42,6 +42,7 @@ let print_edge_type edge =
 	| Aut_second_half_end -> "Aut_second_half_end"
 	| Aut_second_half_history -> "Aut_second_half_history"
 	| Aut_port -> "Aut_port"
+	| Dash -> "Dash"
 	in
 	Format.printf "%s@." text
 
@@ -68,7 +69,7 @@ let rec translate_edge ?(sourcePort) (kg : Kgraph.kgraph) sourceNode (edge : iEd
 		in
 		(*Format.printf "found target@."; *)
 		let kedge = match edge#getType with
-		| Simple | Mult | Big ->
+		| Dash | Simple | Mult | Big ->
 			let sourcePort = passOpt sourcePort in
 			let targetPort = passOpt targetPort in
 			let translateThickness e_t = 
@@ -76,9 +77,10 @@ let rec translate_edge ?(sourcePort) (kg : Kgraph.kgraph) sourceNode (edge : iEd
 				| Simple -> Gu_Simple
 				| Mult -> Gu_Mult
 				| Big -> Gu_Big
+				| Dash -> Gu_Simple
 				| _ -> assert false
 			in
-			let kedge = new_edge ~custom:(edge:>iInformation) ~thick:(translateThickness edge#getType) kg sourceNode sourcePort targetNode targetPort in
+			let kedge = new_edge ~custom:(edge:>iInformation) ~dash:(edge#getType = Dash) ~thick:(translateThickness edge#getType) kg sourceNode sourcePort targetNode targetPort in
 			Some kedge
 		| Aut_begin | Aut_end | Aut_begin_history | Aut_end_history | Aut_first_half | Aut_first_half_begin | Aut_second_half_begin | Aut_second_half_end | Aut_second_half_history ->
 			Some (automaton_edge ~custom:(edge:>iInformation) kg edge#getType sourceNode targetNode)
@@ -295,7 +297,7 @@ and getKnodeFromType kg node =
 	| Mod ->
 		simpleTextNode ~custom:(node:>iInformation) kg "mod"
 	| Forall ->
-		function_node ~custom:(node:>iInformation) kg "forall" node#getLayer	
+		function_node ~always_expand:true ~custom:(node:>iInformation) kg "forall" node#getLayer	
 
 (** [translate_node kg node] takes an iNode [node] and translates it into a KNode, its ports into KPorts, and recursively its children. (not the edges) *)
 and translate_node kg node =

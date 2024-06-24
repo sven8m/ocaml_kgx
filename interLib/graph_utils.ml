@@ -783,8 +783,8 @@ let simpleEmitNode ?(custom=default_informations) kgraph name =
 let simpleUpNode ?(custom=default_informations) kgraph = 
 	simpleOpNode ~custom:custom ~ho_mar:5.0 kgraph "Up" 0.5 0.5
 
-let simpleBlanckNode ?(custom=default_informations) kgraph side = 
-	let node = defaultNode ~side:side kgraph in
+let simpleBlanckNode ?(custom=default_informations) kgraph order = 
+	let node = defaultNode ~order:order kgraph in
 	let cont = simpleOpContWtT ~spe_back:(Some (fct_color custom#getLayer)) ~custom:custom () in
 	node#addData cont;
 	addPortSpace node;
@@ -953,7 +953,7 @@ let partialAppNode ?(custom=default_informations) kgraph name num num_taken =
 
 (* end for z *)
 
-let function_node ?(order=false) ?(custom=default_informations) ?(res=false) ?(aut=false) ?(m=false) kgraph name layer = 
+let function_node ?(always_expand=false) ?(order=false) ?(custom=default_informations) ?(res=false) ?(aut=false) ?(m=false) kgraph name layer = 
 	let main_node= defaultNode ~order:order kgraph in
 	if aut then begin
 		main_node#addProperty (PersistentEntry.create_property "org.eclipse.elk.edgeRouting" "SPLINES"); 
@@ -986,7 +986,7 @@ let function_node ?(order=false) ?(custom=default_informations) ?(res=false) ?(a
 	cont#addStyle (create_style (Shadow (4.0 , 4.0)));
 	main_node#addData cont;
 	
-	main_node#addProperty (PersistentEntry.expand (string_of_bool (!InterLib_options.do_show_all || (layer=0))));
+	main_node#addProperty (PersistentEntry.expand (string_of_bool (!InterLib_options.do_show_all || (layer=0)|| always_expand)));
 	main_node#addProperty (PersistentEntry.nodeSize "[NODE_LABELS, PORTS, PORT_LABELS, MINIMUM_SIZE]");
 	main_node#addProperty (PersistentEntry.activatePartition ());
 	if layer > 0 then main_node#addProperty (PersistentEntry.portLabelPlacement "[INSIDE, NEXT_TO_PORT_IF_POSSIBLE]");
@@ -1459,7 +1459,7 @@ let lineSelThickness tt =
 	| Gu_Mult -> 2.5
 	| Gu_Big -> 4.0
 
-let new_edge ?(custom=default_informations) ?(thick=Gu_Simple) kgraph sourceNode sourcePort targetNode targetPort = 
+let new_edge ?(custom=default_informations) ?(dash=false) ?(thick=Gu_Simple) kgraph sourceNode sourcePort targetNode targetPort = 
 	let edge = new kedge kgraph in
 	edge#setSource sourceNode;
 	edge#setSourcePort sourcePort;
@@ -1470,6 +1470,7 @@ let new_edge ?(custom=default_informations) ?(thick=Gu_Simple) kgraph sourceNode
 	
 	cont#addStyle (create_style (LineWidth (lineThickness thick)));
 	cont#addStyle (create_style ~on_sel:true (LineWidth (lineSelThickness thick)));
+	if dash then cont#addStyle (create_style (LineStyle DASH));
 	let color = create_color 100 100 255 in
 	cont#addStyle (create_style (Foreground (create_coloring (opLineColor custom))));
 	cont#addStyle (create_style ~on_sel:true (Foreground (create_coloring color)));
