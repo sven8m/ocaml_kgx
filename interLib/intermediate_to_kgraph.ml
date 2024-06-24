@@ -294,6 +294,8 @@ and getKnodeFromType kg node =
 		partialAppNode ~custom:(node:>iInformation) kg s n1 n2
 	| Mod ->
 		simpleTextNode ~custom:(node:>iInformation) kg "mod"
+	| Forall ->
+		function_node ~custom:(node:>iInformation) kg "forall" node#getLayer	
 
 (** [translate_node kg node] takes an iNode [node] and translates it into a KNode, its ports into KPorts, and recursively its children. (not the edges) *)
 and translate_node kg node =

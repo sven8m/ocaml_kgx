@@ -75,6 +75,7 @@ let number_ports node_type = match node_type with
 	| App n -> n,1,1
 	| PartApp _ -> 1,1,0
 	| Mod -> 1,1,1
+	| Forall -> assert false
 
 (** [topOutputs node_type] takes a node_type and returns the number of outputs to place on the north side *)
 let topOutputs node_type = match node_type with
@@ -356,6 +357,14 @@ type fctParent =
 	| Node of iNode
 	| Graph of iGraph
 
+
+type additionalPort = {
+	typ : port_type;
+	name : string;
+}
+
+let mk_addPort ?(name="") typ = 
+	{typ = typ; name = name}
 (** [simpleFunctionNode node_type input_names output_names parent layer] creates an iNode for a [node_type] function, with 
 input ports having names [input_names], and output ports having names [output_names], and parent [parent]. 
 
@@ -367,23 +376,40 @@ Option [vis] if the ports are visible (default [true]).
 
 Option [addI] and [addO] if an additional port has to be added for the inputs and outputs, then the type is given.
 *)
-let simpleFunctionNode (*?(outBot=false) ?(outTop=false)*) ?(order=false) ?(vis=true) ?(control=false) ?(addI=None) ?(addO=None) node_type input_names output_names parent layer = 
+let simpleFunctionNode (*?(outBot=false) ?(outTop=false)*) ?(order=false) ?(vis=true) ?(control=false) ?(addI=[]) ?(addO=[]) node_type input_names output_names parent layer = 
 	let node = new iNode in
 	node#setType node_type;
 	node#setLayer layer;
 	node#setForceOrder order;
-	let true_input_names = match addI with
+
+	let rec addPortsInputs addList = 
+		match addList with
+		| [] -> []
+		| x :: q -> node#addInputList (create_n_ports ~vis:vis 1 node x.typ); x.name :: (addPortsInputs q)
+	in
+	let true_input_names = (addPortsInputs addI) @ input_names in	
+(*
+	match addI with
 	| None -> input_names
 	| Some pt -> 
 		node#addInputList (create_n_ports ~vis:vis 1 node pt);
 		"" :: input_names
+	in*)
+
+	let rec addPortsOutputs addList = 
+		match addList with
+		| [] -> []
+		| x :: q -> node#addOutputList (create_n_ports ~vis:vis ~question:(is_output_question node_type) 1 node x.typ); x.name :: (addPortsOutputs q)
 	in
-	let true_output_names = match addO with
+
+	let true_output_names = 
+		(addPortsOutputs addO) @ output_names in
+	(*match addO with
 	| None -> output_names
 	| Some pt ->
 		node#addOutputList (create_n_ports ~vis:vis ~question:(is_output_question node_type) 1 node pt);
 		"" :: output_names
-	in
+	in*)
 	node#addInputList (create_n_ports ~vis:vis (List.length input_names) node Input);
 	node#addOutputList (create_n_ports ~question:(is_output_question node_type) ~vis:vis (List.length output_names) node Output);
 	if control then node#addControlList (create_n_ports ~vis:true 1 node Control); 
