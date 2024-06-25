@@ -109,7 +109,8 @@ let rec translate_edge ?(sourcePort) (kg : Kgraph.kgraph) sourceNode (edge : iEd
 			List.iter (fun label ->
 				let klab = translate_edge_label ~custom:(edge:>iInformation) kg label in
 				kedge#addLabel klab;
-			) edge#getLabels
+			) edge#getLabels;
+			addDirectionPriority kedge edge#getDirectionPrio;
 		end
 	end
 	(*Format.printf "has finished edge@."
@@ -121,7 +122,9 @@ and translate_port (kg : Kgraph.kgraph) (port : iPort) =
 	else begin
 		let kn = Hashtbl.find nodeTbl port#getParent#getId in
 		let kp =
-		if port#isBuble then
+			createPort ~custom:(port:>iInformation) ~ofs:(port#getOffset) ~look:(port#getType).look ~side:(port#getType).side kg kn
+		in
+		(*if port#isBuble then
 			match port#getType with
 			| OutputTop ->
 				bublePort ~custom:(port:>iInformation) ~ofs:(port#getOffset) kg kn
@@ -145,7 +148,7 @@ and translate_port (kg : Kgraph.kgraph) (port : iPort) =
 		| Undefined,false -> invisiblePort ~custom:(port:>iInformation) ~ofs:(port#getOffset) kg kn 
 		| (InputBot | OutputBot) , true -> visibleBotPort ~custom:(port:>iInformation) ~ofs:(port#getOffset) kg kn
 		| (InputBot | OutputBot) , false -> invisibleBotPort ~custom:(port:>iInformation) ~ofs:(port#getOffset) kg kn
-		in
+		in*)
 		Hashtbl.replace portTbl port#getId kp;
 		if port#getName <> "" then begin
 			let lab = portLabel ~custom:(port:>iInformation) kg port#getName in
@@ -164,7 +167,7 @@ and translate_port_edges kg port =
 (** [revInputports node] reverse the order for the ports of type [Input] *)
 and revInputPorts (node : iNode) = 	
 	let input_ports , other_ports = List.partition (fun port ->
-		port#getType = Input) node#getPorts in
+		port#getType.side = Input || port#getType.side = West) node#getPorts in
 	node#setPorts (other_ports @ (List.rev input_ports))
 
 and indexPorts (node : iNode) = 
@@ -307,6 +310,8 @@ and translate_node kg node =
 		revInputPorts node;
 		indexPorts node;
 		let kn = getKnodeFromType kg node in
+		if node#isForcedEnoughSize then
+			addEnoughSize kn;
 		Hashtbl.replace nodeTbl node#getId kn;
 		List.iter (fun port ->
 			ignore (translate_port kg port)) node#getPorts;

@@ -172,6 +172,39 @@ let addPortOffset kport ofs =
 	| Some ofs ->
 		kport#addProperty (PersistentEntry.borderOffset ofs)
 
+
+let defaultPortNode ?(ofs=None) ?(height=5.0) ?(width=5.0) kgraph knode = 
+	let port = new kport kgraph in
+	port#setNode knode;
+	port#setHeight height;
+	port#setWidth width;
+	addPortOffset port ofs;
+	port
+
+let defaultPortContainer ?(custom=default_informations) () = 
+	let cont = new containerRendering in
+	let color = opLineColor custom in
+	cont#addStyle (create_style (Background (create_coloring color)));
+	cont#addStyle (create_style (Foreground (create_coloring color)));
+	cont
+
+let invisiblePort ?(custom=default_informations) ?(ofs=None) kgraph knode =
+	let port = defaultPortNode ~ofs:ofs ~height:0.01 ~width:0.01 kgraph knode in
+	let cont = defaultPortContainer ~custom:custom () in
+	port#addData cont;
+	begin match ofs with
+	| None -> addPortOffset port (Some (-0.01));
+	| Some _ -> ()
+	end;
+	port
+
+let visiblePort ?(custom=default_informations) ?(ofs=None) kgraph knode = 
+	let port = defaultPortNode ~ofs:ofs ~height:5.0 ~width:5.0 kgraph knode in
+	let cont = defaultPortContainer ~custom:custom () in
+	port#addData cont;
+	port
+
+(*
 let invisiblePort ?(custom=default_informations) ?(ofs=None) kgraph knode = 
 	let port = new kport kgraph in
 	port#setNode knode;
@@ -201,7 +234,7 @@ let visiblePort ?(custom=default_informations) ?(ofs=None) kgraph knode =
 	port#addData cont;
 	addPortOffset port ofs;
 	port
-
+*)
 let invisibleOutputPort ?(custom=default_informations) ?(ofs=None) kgraph knode = 
 	let port = invisiblePort ~custom:custom ~ofs:ofs kgraph knode in
 	port#addProperty (PersistentEntry.createPortEast ());
@@ -244,7 +277,7 @@ let invisibleBotPort ?(custom=default_informations) ?(ofs=None) kgraph knode =
 	port#addProperty (PersistentEntry.createPortSouth ());
 	port
 
-
+(*
 let notOutputPort ?(custom=default_informations) ?(ofs=None) kgraph knode = 
 	let port = new kport kgraph in
 	port#setWidth 5.0;
@@ -277,6 +310,81 @@ let questionOutputPort ?(custom=default_informations) ?(ofs=None) kgraph knode =
 	cont#addContainerRendering (simpleText ~custom:custom ~s:6 "?" 0.5 0.5);
 	port#addData cont;
 	port
+*)
+
+let notPortContainer ?(custom=default_informations) () = 
+	let cont = new containerRendering in
+	cont#setContainer Ellipse;
+	cont#addStyle (create_style (LineWidth 1.3));
+	cont#addStyle (create_style (Foreground (create_coloring (opLineColor custom))));
+	cont#addStyle (create_style ~on_sel:true (LineWidth 1.5));
+	cont
+
+let notPort ?(custom=default_informations) ?(ofs=None) kgraph knode = 
+	let port = defaultPortNode ~ofs:ofs ~height:5.0 ~width:5.0 kgraph knode in
+	let cont = notPortContainer ~custom:custom () in
+	port#addData cont;
+	port
+
+let questionPortContainer ?(custom=default_informations) () = 
+	let cont = new containerRendering in
+	cont#setContainer Rect;
+	cont#addStyle (create_style (LineWidth 1.0));
+	cont#addStyle (create_style (Foreground (create_coloring (opLineColor custom))));
+	cont#addStyle (create_style ~on_sel:true (LineWidth 1.5));
+	let back_color = create_color 200 200 250 in
+	cont#addStyle (create_style (Background (create_coloring back_color)));
+	cont#addContainerRendering (simpleText ~custom:custom ~s:6 "?" 0.5 0.5);
+	cont
+
+let questionPort ?(custom=default_informations) ?(ofs=None) kgraph knode = 
+	let port = defaultPortNode ~ofs:ofs ~height:10.0 ~width:10.0 kgraph knode in
+	let cont = questionPortContainer ~custom:custom () in
+	port#addData cont;
+	port
+
+(*
+type portLook = Invisible | Visible | Not | Question  
+type portSide = East | West | North | South | Undefined
+*)
+
+let bublePortContainer ?(custom=default_informations) () = 
+	let cont = new containerRendering in
+	cont#setContainer Ellipse;
+	cont#addStyle (create_style (LineWidth 1.3));
+	cont#addStyle (create_style (Foreground (create_coloring (opLineColor custom))));
+	cont#addStyle (create_style (Background (create_coloring (opLineColor custom))));
+	cont#addStyle (create_style ~on_sel:true (LineWidth 1.5));
+	cont
+
+let bublePort ?(custom=default_informations) ?(ofs=None) kgraph knode = 
+	let port = defaultPortNode ~ofs:ofs ~height:5.0 ~width:5.0 kgraph knode in
+	let cont = bublePortContainer ~custom:custom () in
+	port#addData cont;
+	port
+
+
+
+let createPort ?(custom=default_informations) ?(ofs=None) ?(look=Invisible) ?(side=Undefined) kgraph knode = 
+	let port = match look with
+	| Invisible -> invisiblePort ~custom:custom kgraph ~ofs:ofs knode 
+	| Visible -> visiblePort ~custom:custom kgraph ~ofs:ofs knode
+	| Not -> notPort ~custom:custom ~ofs:ofs kgraph knode 
+	| Question -> questionPort ~custom:custom ~ofs:ofs kgraph knode
+	| Buble -> bublePort ~custom:custom ~ofs:ofs kgraph knode
+	in
+	begin match side with
+	| East | Output ->
+		port#addProperty (PersistentEntry.createPortEast ())
+	| West | Input-> 	port#addProperty (PersistentEntry.createPortWest ())
+	| North | Control ->	port#addProperty (PersistentEntry.createPortNorth ())
+	| South ->	port#addProperty (PersistentEntry.createPortSouth ())	
+	| Undefined -> ()
+	end;
+	port
+	
+
+
 
 let resetPortsSurrounding node = 
 	node#addProperty (PersistentEntry.create_property "org.eclipse.elk.spacing.individual" "org.eclipse.elk.spacing.portsSurrounding:[top=0.0,left=0.0,bottom=0.0,right=0.0]")
@@ -642,7 +750,7 @@ let simpleConstrNode ?(custom=default_informations) kgraph name num =
 	simpleDeConstrNode ~custom:custom ~vert:true ~right_ofs:12.35 kgraph name num
 
 
-let integrCont ?(custom=default_informations) () = 
+let integrCont ?(custom=default_informations) alone = 
 	let line = new containerRendering in
 
 	let c1 = Point.create_coord Left in
@@ -668,7 +776,8 @@ let integrCont ?(custom=default_informations) () =
 	pd#setHorizontalAlignment CENTER;
 	pd#setVerticalAlignment CENTER;
 	let c1 = Point.create_coord ~pos_val:(Rel 0.5) Left in
-	let c2 = Point.create_coord ~pos_val:(Abs 10.0) Top in
+	let c2 = if alone then Point.create_coord ~pos_val:(Rel 0.5) Top 
+		else Point.create_coord ~pos_val:(Abs 10.0) Top in
 	let point = Point.create_point c1 c2 in
 	pd#setRefPoint point;
 	line#setPlacement (Point pd);
@@ -680,7 +789,7 @@ let simpleDerNode ?(custom=default_informations) kgraph init_name =
 	node#setWidth 30.0;
 	node#setHeight 30.0;
 	let cont = simpleOpContWtT ~custom:custom () in
-	cont#addContainerRendering (integrCont ~custom:custom ());
+	cont#addContainerRendering (integrCont ~custom:custom (init_name = ""));
 	let t = simpleText ~s:8 ~custom:custom init_name 0.5 0.5 in
 	t#setPlacement (place ~top:15.0 ~left:5.0 ~right:5.0 ~bottom:0.0 ());	
 	cont#addContainerRendering t;
@@ -783,8 +892,10 @@ let simpleEmitNode ?(custom=default_informations) kgraph name =
 let simpleUpNode ?(custom=default_informations) kgraph = 
 	simpleOpNode ~custom:custom ~ho_mar:5.0 kgraph "Up" 0.5 0.5
 
-let simpleBlanckNode ?(custom=default_informations) kgraph order = 
-	let node = defaultNode ~order:order kgraph in
+let simpleBlanckNode ?(custom=default_informations) kgraph portPos =
+	let order = portPos = ORDER in
+	let side = portPos <> NONE in
+	let node = defaultNode ~side:side ~order:order kgraph in
 	let cont = simpleOpContWtT ~spe_back:(Some (fct_color custom#getLayer)) ~custom:custom () in
 	node#addData cont;
 	addPortSpace node;
@@ -828,6 +939,7 @@ let simpleRecordNode ?(custom=default_informations) kgraph =
 	node#addData cont;
 	node
 
+(*
 type direction = North | South | East | West
 
 let bublePort ?(custom=default_informations) ?(ofs=None) ?(dir=North) kgraph knode = 
@@ -854,7 +966,7 @@ let bublePort ?(custom=default_informations) ?(ofs=None) ?(dir=North) kgraph kno
 	cont#addStyle (create_style ~on_sel:true (LineWidth 1.5));
 	port#addData cont;
 	port
-
+*)
 
 
 let simpleInitNode ?(custom=default_informations) kgraph name = 
@@ -950,6 +1062,10 @@ let partialAppNode ?(custom=default_informations) kgraph name num num_taken =
 	node#addProperty (PersistentEntry.create_property "org.eclipse.elk.portAlignment.north" "END");
 
 	node
+
+
+let addEnoughSize node = 
+	node#addProperty (PersistentEntry.nodeSize "[NODE_LABELS, PORTS, PORT_LABELS, MINIMUM_SIZE]")
 
 (* end for z *)
 
@@ -1477,6 +1593,9 @@ let new_edge ?(custom=default_informations) ?(dash=false) ?(thick=Gu_Simple) kgr
 	cont#addJunction (junction ~custom:custom thick);
 	edge#addData cont;
 	edge
+
+let addDirectionPriority kedge prio = 
+	if prio <> 0 then kedge#addProperty (PersistentEntry.create_property "org.eclipse.elk.layered.priority.direction" (string_of_int prio))
 
 let linkEdge ?(custom=default_informations) kgraph sourceNode sourcePort targetNode targetPort =
 	let edge = new kedge kgraph in

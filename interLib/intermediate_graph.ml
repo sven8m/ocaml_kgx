@@ -1,5 +1,11 @@
 (** Defines the types for the intermediate graph. *)
 
+
+type blanckFctOpt = 
+	| NONE
+	| SIDE
+	| ORDER
+
 type node_type =
 	| And of int (**[n] is number of inputs *)
 	| Or of int (**[n] is number of inputs *)
@@ -52,7 +58,7 @@ type node_type =
 	| Emit of string (** [s]. [s] is name of the signal *)
 	| Up
 	| Scond of string option (** [s,b]. [s] is a title. [b] is if output should be vertical *)
-	| BlanckFct of bool (** [b]. [b] true if there is a port side constraint *)
+	| BlanckFct of blanckFctOpt (** [b]. [b] true if there is a port side constraint *)
 	| Mg
 	| Next of string
 	| ResetDer
@@ -69,8 +75,15 @@ type node_type =
 	| Mod 
 	| Forall
 
+(*
 type port_type = 
 	Input | Output | Control | Undefined | OutputTop | InputTop | OutputBot | InputBot
+*)
+
+type portLook = Invisible | Visible | Not | Question | Buble
+type portSide = East | West | North | South | Undefined | Input | Output | Control
+
+type port_type = {look : portLook ; side : portSide}
 
 type edge_type = 
 	Simple | Mult | Big | Aut_port | Aut_begin | Aut_end | Aut_begin_history | Aut_end_history 
@@ -78,6 +91,8 @@ type edge_type =
 	| Seq | Seq_half | DepLink | DepAutLink | Link | AutLink | Dash
 
 type label_placement = Tail | Center | Head | Undef
+
+let default_port_type = {look = Invisible; side = Undefined}
 
 let id_cnt = ref 0
 
@@ -179,6 +194,7 @@ and iNode = object(self)
 	val mutable control = ([] : iOuterPort list)
 	val mutable ports = ([] : iPort list)
 	val mutable forceOrder = false
+	val mutable enough = false
 
 	method getType = n_type
 	method getChildren = List.rev children
@@ -187,6 +203,7 @@ and iNode = object(self)
 	method getControl = List.rev control
 	method getPorts = List.rev ports
 	method isForcedOrder = forceOrder
+	method isForcedEnoughSize = enough
 
 	method setType t = n_type <- t
 	method addChild c = children <- c :: children
@@ -199,6 +216,7 @@ and iNode = object(self)
 	method addPort p = ports <- p :: ports
 	method setPorts pl = ports <- List.rev pl
 	method setForceOrder b = forceOrder <- b
+	method setEnoughSize b = enough <- b
 
 	method delPort p_del =
 		ports <- List.filter (fun p -> p#getId <> p_del#getId) ports;
@@ -213,7 +231,7 @@ and iPort node = object
 	inherit iEdgeContainer
 
 	val mutable name = ""
-	val mutable p_type = (Undefined : port_type)
+	val mutable p_type = (default_port_type : port_type)
 	val mutable visible = true
 	val mutable no = false
 	val mutable question = false
@@ -270,6 +288,7 @@ and iEdge = object
 	val mutable targetPort = (None : iPort option)
 	val mutable source = (None : iNode option)
 	val mutable sourcePort = (None : iPort option)
+	val mutable direction = 0
 
 	method getLabels = labels
 	method getType = e_type
@@ -281,6 +300,7 @@ and iEdge = object
 	| None -> assert false
 	| Some t -> t
 	method getSourcePort = sourcePort
+	method getDirectionPrio = direction
 
 	method addLabel l = labels <- l :: labels
 	method resetLabel = labels <- []
@@ -289,6 +309,7 @@ and iEdge = object
 	method setTargetPort p = targetPort <- Some p
 	method setSource s = source <- Some s
 	method setSourcePort p = sourcePort <- Some p
+	method setDirectionPrio p = direction <- p
 end
 
 and iGraph = object

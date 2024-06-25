@@ -6,19 +6,19 @@ open Intermediate_graph
 
 Option [no] indicates if it is a [no] port, [vis] if the port is visible, [bub] if the port is a buble,
 [question] if the port is a question mark. By default all options are [false]. *)
-let rec create_n_ports ?(question=false) ?(no=false) ?(vis=false) ?(bub=false) n node ty = 
+let rec create_n_ports (*?(question=false) ?(no=false) ?(vis=false) ?(bub=false)*) n node ty = 
 	match n with
 	| 0 -> []
 	| n -> 
 		let port = new iPort node in
 		port#setType ty;
-		port#setVisible vis;
+		(*port#setVisible vis;
 		port#setNot no;
 		port#setQuestion question;
-		port#setBuble bub;
+		port#setBuble bub;*)
 		node#addPort port;
 		let outer = new iOuterPort port in
-		outer :: (create_n_ports ~question:question ~no:no ~vis:vis ~bub:bub (n-1) node ty)
+		outer :: (create_n_ports (*~question:question ~no:no ~vis:vis ~bub:bub*) (n-1) node ty)
 
 (** [outerToEndPoint outer] takes an iOuterPort and creates a corresponding iEndPoint *)
 let outerToEndPoint o = 
@@ -217,13 +217,14 @@ let linkCreation node =
 (** [new_edge edge_type source target] creates an iEdge of type [type_edge] from the endpoint [source] to the endpoint [target] 
 
 Option [lab] allows to add a label to the created edge, default [None]. *)
-let new_edge ?(lab=None) edge_type (source : iEndPoint) target = 
+let new_edge ?(lab=None) ?(prio=0) edge_type (source : iEndPoint) target = 
 	let edge = new iEdge in
 	edge#setType edge_type;
 	edge#setTarget target#getNode;
 	edge#setTargetPort target#getPort;
 	edge#setSource source#getNode;
 	edge#setSourcePort source#getPort;
+	edge#setDirectionPrio prio;
 	begin match lab with
 	| None -> 
 		()
@@ -297,6 +298,8 @@ let edgeLabel ?(pos=Undef) ?(forced=Undef) name =
 	lab
 
 
+let mk_portType ?(look=Invisible) ?(side=Undefined) () = {look = look ; side = side}
+
 (** [simpleOpNode node_type parent layer] creates an iNode corresponding to the [node_type], 
 with number of ports, names and innerLinks depending on the [node_type], and parent [parent]. 
 The [layer] is used for coloring.
@@ -310,13 +313,14 @@ let simpleOpNode node_type parent layer =
 	node#setType node_type;
 	node#setLayer layer;
 	
-	node#addInputList (create_n_ports (botInputs node_type) node InputBot);
-	node#addOutputList (create_n_ports (botOutputs node_type) node OutputBot);
-	node#addOutputList (create_n_ports (topOutputs node_type) node OutputTop);
-	node#addInputList (create_n_ports (topInputs node_type) node InputTop);
-	node#addInputList (create_n_ports nb_inputs node Input);
-	node#addOutputList (create_n_ports ~no:(is_output_not node_type) nb_outputs node Output);
-	node#addControlList (create_n_ports ~vis:true nb_control node Control);
+	node#addInputList (create_n_ports (botInputs node_type) node {look = Invisible; side = South});
+	node#addOutputList (create_n_ports (botOutputs node_type) node {look = Invisible; side = South});
+	node#addOutputList (create_n_ports (topOutputs node_type) node {look = Invisible; side = North});
+	node#addInputList (create_n_ports (topInputs node_type) node {look = Invisible; side = North});
+	node#addInputList (create_n_ports nb_inputs node {look = Invisible; side = Input});
+	let outputLook = if (is_output_not node_type) then Not else Invisible in
+	node#addOutputList (create_n_ports nb_outputs node {look = outputLook; side=Output});
+	node#addControlList (create_n_ports nb_control node {look = Visible; side=Control});
 	addNames node node_type;
 	needOffsets node node_type;
 	linkCreation node;
@@ -330,22 +334,23 @@ let simpleRecordNode record_type inner_type name_list parent layer =
 	let node = new iNode in
 	node#setType record_type;
 	node#setLayer layer;
-	if record_type = RecordPat then node#addOutputList (create_n_ports ~vis:false (List.length name_list) node OutputTop)
-	else node#addInputList (create_n_ports ~vis:false (List.length name_list) node InputTop);
-	if record_type = RecordPat then node#addInputList (create_n_ports 1 node Input)
-	else node#addOutputList (create_n_ports 1 node Output);
+	if record_type = RecordPat then node#addOutputList (create_n_ports (List.length name_list) node {look=Invisible;side=North})
+	else node#addInputList (create_n_ports (List.length name_list) node {look=Invisible;side=North});
+	if record_type = RecordPat then node#addInputList (create_n_ports 1 node {look=Invisible;side=West})
+	else node#addOutputList (create_n_ports 1 node {look=Invisible;side=East});
 
 	parent#addChild node;
 	List.iter2 (fun name outer ->
 		let inner_node = new iNode in
 		inner_node#setType (inner_type name);
 		inner_node#setLayer layer;
-		let outType = match record_type with
-		| RecordPat -> OutputTop
-		| Record -> Output
+		let outSide = match record_type with
+		| RecordPat -> North
+		| Record -> East
 		| _ -> assert false
 		in
-		inner_node#addOutputList (create_n_ports ~bub:true 1 inner_node outType);
+		let portType = {look=Buble;side=outSide} in
+		inner_node#addOutputList (create_n_ports 1 inner_node portType);
 		node#addChild inner_node;
 		let source = outerToEndPoint (List.hd inner_node#getOutputs) in
 		let target = outerToEndPoint outer in
@@ -359,12 +364,12 @@ type fctParent =
 
 
 type additionalPort = {
-	typ : port_type;
+	side : portSide;
 	name : string;
 }
 
-let mk_addPort ?(name="") typ = 
-	{typ = typ; name = name}
+let mk_addPort ?(name="") side = 
+	{side=side; name = name}
 (** [simpleFunctionNode node_type input_names output_names parent layer] creates an iNode for a [node_type] function, with 
 input ports having names [input_names], and output ports having names [output_names], and parent [parent]. 
 
@@ -382,10 +387,11 @@ let simpleFunctionNode (*?(outBot=false) ?(outTop=false)*) ?(order=false) ?(vis=
 	node#setLayer layer;
 	node#setForceOrder order;
 
-	let rec addPortsInputs addList = 
+	let rec addPortsInputs addList =
+		let look = if vis then Visible else Invisible in
 		match addList with
 		| [] -> []
-		| x :: q -> node#addInputList (create_n_ports ~vis:vis 1 node x.typ); x.name :: (addPortsInputs q)
+		| x :: q -> node#addInputList (create_n_ports 1 node {look=look;side=x.side}); x.name :: (addPortsInputs q)
 	in
 	let true_input_names = (addPortsInputs addI) @ input_names in	
 (*
@@ -396,10 +402,11 @@ let simpleFunctionNode (*?(outBot=false) ?(outTop=false)*) ?(order=false) ?(vis=
 		"" :: input_names
 	in*)
 
-	let rec addPortsOutputs addList = 
+	let rec addPortsOutputs addList =
+		let look = if (is_output_question node_type) then Question else if vis then Visible else Invisible in
 		match addList with
 		| [] -> []
-		| x :: q -> node#addOutputList (create_n_ports ~vis:vis ~question:(is_output_question node_type) 1 node x.typ); x.name :: (addPortsOutputs q)
+		| x :: q -> node#addOutputList (create_n_ports 1 node {look=look;side=x.side}); x.name :: (addPortsOutputs q)
 	in
 
 	let true_output_names = 
@@ -410,9 +417,11 @@ let simpleFunctionNode (*?(outBot=false) ?(outTop=false)*) ?(order=false) ?(vis=
 		node#addOutputList (create_n_ports ~vis:vis ~question:(is_output_question node_type) 1 node pt);
 		"" :: output_names
 	in*)
-	node#addInputList (create_n_ports ~vis:vis (List.length input_names) node Input);
-	node#addOutputList (create_n_ports ~question:(is_output_question node_type) ~vis:vis (List.length output_names) node Output);
-	if control then node#addControlList (create_n_ports ~vis:true 1 node Control); 
+	let portsLook = if vis then Visible else Invisible in
+	node#addInputList (create_n_ports (List.length input_names) node {look=portsLook;side=Input});
+	let portsLook = if is_output_question node_type then Question else portsLook in
+	node#addOutputList (create_n_ports (List.length output_names) node {look=portsLook;side=Output});
+	if control then node#addControlList (create_n_ports 1 node {look=Visible;side=North}); 
 	addOuterNames node#getInputs true_input_names;
 	addOuterNames node#getOutputs true_output_names;
 	needOffsets node node_type;
@@ -424,5 +433,5 @@ let simpleFunctionNode (*?(outBot=false) ?(outTop=false)*) ?(order=false) ?(vis=
 
 (** [addReset node] adds a port of type control to the [node] *)
 let addReset node = 
-	node#addControlList (create_n_ports ~vis:true 1 node Control)
+	node#addControlList (create_n_ports 1 node {look=Visible;side=Control})
 
