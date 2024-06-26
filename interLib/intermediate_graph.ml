@@ -80,7 +80,7 @@ type port_type =
 	Input | Output | Control | Undefined | OutputTop | InputTop | OutputBot | InputBot
 *)
 
-type portLook = Invisible | Visible | Not | Question | Buble
+type portLook = Invisible | Visible | Not | Question | Buble | HalfCircle
 type portSide = East | West | North | South | Undefined | Input | Output | Control
 
 type port_type = {look : portLook ; side : portSide}
@@ -195,6 +195,7 @@ and iNode = object(self)
 	val mutable ports = ([] : iPort list)
 	val mutable forceOrder = false
 	val mutable enough = false
+	val mutable insideSelf = false
 
 	method getType = n_type
 	method getChildren = List.rev children
@@ -204,6 +205,7 @@ and iNode = object(self)
 	method getPorts = List.rev ports
 	method isForcedOrder = forceOrder
 	method isForcedEnoughSize = enough
+	method getInsideSelf = insideSelf
 
 	method setType t = n_type <- t
 	method addChild c = children <- c :: children
@@ -217,6 +219,7 @@ and iNode = object(self)
 	method setPorts pl = ports <- List.rev pl
 	method setForceOrder b = forceOrder <- b
 	method setEnoughSize b = enough <- b
+	method setInsideSelf b = insideSelf <- b
 
 	method delPort p_del =
 		ports <- List.filter (fun p -> p#getId <> p_del#getId) ports;
@@ -289,6 +292,7 @@ and iEdge = object
 	val mutable source = (None : iNode option)
 	val mutable sourcePort = (None : iPort option)
 	val mutable direction = 0
+	val mutable insideSelf = false
 
 	method getLabels = labels
 	method getType = e_type
@@ -301,6 +305,7 @@ and iEdge = object
 	| Some t -> t
 	method getSourcePort = sourcePort
 	method getDirectionPrio = direction
+	method getInsideSelf = insideSelf
 
 	method addLabel l = labels <- l :: labels
 	method resetLabel = labels <- []
@@ -310,6 +315,7 @@ and iEdge = object
 	method setSource s = source <- Some s
 	method setSourcePort p = sourcePort <- Some p
 	method setDirectionPrio p = direction <- p
+	method setInsideSelf b = insideSelf <- b
 end
 
 and iGraph = object

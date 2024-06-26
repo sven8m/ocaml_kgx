@@ -364,6 +364,22 @@ let bublePort ?(custom=default_informations) ?(ofs=None) kgraph knode =
 	port
 
 
+let halfCirclePortContainer ?(custom=default_informations) () = 
+	let cont = new containerRendering in
+	cont#setContainer (Arc (0.0 , 180.0));
+	cont#addStyle (create_style (Foreground (create_coloring (opLineColor custom))));
+	cont#addStyle (create_style (Background (create_coloring (opLineColor custom))));	
+	cont
+
+let halfCirclePort ?(custom=default_informations) ?(ofs=None) kgraph knode =
+	let ofs = match ofs with
+	| None -> Some (-.2.5)
+	| Some f -> Some (f -. 2.5)
+	in
+	let port = defaultPortNode ~ofs:ofs ~height:5.0 ~width:5.0 kgraph knode in
+	let cont = halfCirclePortContainer ~custom:custom () in
+	port#addData cont;
+	port
 
 let createPort ?(custom=default_informations) ?(ofs=None) ?(look=Invisible) ?(side=Undefined) kgraph knode = 
 	let port = match look with
@@ -372,6 +388,7 @@ let createPort ?(custom=default_informations) ?(ofs=None) ?(look=Invisible) ?(si
 	| Not -> notPort ~custom:custom ~ofs:ofs kgraph knode 
 	| Question -> questionPort ~custom:custom ~ofs:ofs kgraph knode
 	| Buble -> bublePort ~custom:custom ~ofs:ofs kgraph knode
+	| HalfCircle -> halfCirclePort ~custom:custom ~ofs:ofs kgraph knode
 	in
 	begin match side with
 	| East | Output ->
@@ -1079,7 +1096,7 @@ let function_node ?(always_expand=false) ?(order=false) ?(custom=default_informa
 *)	end;	
 	let cont = new containerRendering in
 	let ca = new data in
-	ca#setPlacement (place ());
+	ca#setPlacement (place ()); 
 	cont#setChildArea ca;
 	cont#addAction (Actions.create_actionCollapse ());
 	let background = 
@@ -1596,6 +1613,12 @@ let new_edge ?(custom=default_informations) ?(dash=false) ?(thick=Gu_Simple) kgr
 
 let addDirectionPriority kedge prio = 
 	if prio <> 0 then kedge#addProperty (PersistentEntry.create_property "org.eclipse.elk.layered.priority.direction" (string_of_int prio))
+
+let addInsideSelfEdge kedge value = 
+	if value then kedge#addProperty (PersistentEntry.create_property "org.eclipse.elk.insideSelfLoops.yo" "true")
+
+let addInsideSelfNode knode value = 
+	if value then knode#addProperty (PersistentEntry.create_property "org.eclipse.elk.insideSelfLoops.activate" "true")
 
 let linkEdge ?(custom=default_informations) kgraph sourceNode sourcePort targetNode targetPort =
 	let edge = new kedge kgraph in

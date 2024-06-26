@@ -111,6 +111,7 @@ let rec translate_edge ?(sourcePort) (kg : Kgraph.kgraph) sourceNode (edge : iEd
 				kedge#addLabel klab;
 			) edge#getLabels;
 			addDirectionPriority kedge edge#getDirectionPrio;
+			addInsideSelfEdge kedge edge#getInsideSelf;
 		end
 	end
 	(*Format.printf "has finished edge@."
@@ -312,6 +313,7 @@ and translate_node kg node =
 		let kn = getKnodeFromType kg node in
 		if node#isForcedEnoughSize then
 			addEnoughSize kn;
+		addInsideSelfNode kn node#getInsideSelf; 
 		Hashtbl.replace nodeTbl node#getId kn;
 		List.iter (fun port ->
 			ignore (translate_port kg port)) node#getPorts;
