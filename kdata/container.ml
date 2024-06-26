@@ -11,6 +11,7 @@ type container =
 	| Polygon of Point.point list
 	| Default
 	| RoundPolyline of float * Point.point list
+	| Arc of float * float (* start angle ; arc angle *)
 (* creation *)
 
 (* functions *)
@@ -28,6 +29,7 @@ let container_to_string c =
 	| Polygon _ -> "KPolygon"
 	| Default -> "KRectangle"
 	| RoundPolyline _ -> "KRoundedBendsPolyline"
+	| Arc _ -> "KArc"
 
 let print_container_infos ff c = 
 	match c with
@@ -40,6 +42,7 @@ let print_container_infos ff c =
 	| Default -> ()
 	| Polygon _ -> ()
 	| RoundPolyline (x,_) -> Format.fprintf ff " bendRadius=\"%f\"" x
+	| Arc (x1,x2) -> Format.fprintf ff " startAngle=\"%f\" arcAngle=\"%f\"" x1 x2
 
 let print_container_content ff c = 
 	match c with
