@@ -373,10 +373,10 @@ let halfCirclePortContainer ?(custom=default_informations) () =
 
 let halfCirclePort ?(custom=default_informations) ?(ofs=None) kgraph knode =
 	let ofs = match ofs with
-	| None -> Some (-.2.5)
-	| Some f -> Some (f -. 2.5)
+	| None -> Some (-.3.75)
+	| Some f -> Some (f -. 3.75)
 	in
-	let port = defaultPortNode ~ofs:ofs ~height:5.0 ~width:5.0 kgraph knode in
+	let port = defaultPortNode ~ofs:ofs ~height:7.5 ~width:7.5 kgraph knode in
 	let cont = halfCirclePortContainer ~custom:custom () in
 	port#addData cont;
 	port
@@ -1592,7 +1592,13 @@ let lineSelThickness tt =
 	| Gu_Mult -> 2.5
 	| Gu_Big -> 4.0
 
-let new_edge ?(custom=default_informations) ?(dash=false) ?(thick=Gu_Simple) kgraph sourceNode sourcePort targetNode targetPort = 
+let lineStyle ty = 
+	match ty with
+	| Dash -> DASH
+	| Dot -> DOT
+	| _ -> SOLID
+
+let new_edge ?(custom=default_informations) ?(edge_type=Simple) ?(thick=Gu_Simple) kgraph sourceNode sourcePort targetNode targetPort = 
 	let edge = new kedge kgraph in
 	edge#setSource sourceNode;
 	edge#setSourcePort sourcePort;
@@ -1603,7 +1609,7 @@ let new_edge ?(custom=default_informations) ?(dash=false) ?(thick=Gu_Simple) kgr
 	
 	cont#addStyle (create_style (LineWidth (lineThickness thick)));
 	cont#addStyle (create_style ~on_sel:true (LineWidth (lineSelThickness thick)));
-	if dash then cont#addStyle (create_style (LineStyle DASH));
+	if (lineStyle edge_type <> SOLID)  then cont#addStyle (create_style (LineStyle (lineStyle edge_type)));
 	let color = create_color 100 100 255 in
 	cont#addStyle (create_style (Foreground (create_coloring (opLineColor custom))));
 	cont#addStyle (create_style ~on_sel:true (Foreground (create_coloring color)));

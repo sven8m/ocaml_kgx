@@ -452,6 +452,8 @@ let simpleFunctionNode ?(insideSelf=false) ?(order=false) ?(vis=true) ?(control=
 	node
 
 (** [addReset node] adds a port of type control to the [node] *)
-let addReset node = 
+let addReset  node = 
 	node#addControlList (create_n_ports 1 node {look=Visible;side=Control})
 
+let addResetBegin ?(look=Visible) ?(side=Control) node = 
+	node#addFirstControlList (create_n_ports 1 node {look=look;side=side})

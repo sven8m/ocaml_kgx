@@ -43,6 +43,7 @@ let print_edge_type edge =
 	| Aut_second_half_history -> "Aut_second_half_history"
 	| Aut_port -> "Aut_port"
 	| Dash -> "Dash"
+	| Dot -> "Dot"
 	in
 	Format.printf "%s@." text
 
@@ -69,7 +70,7 @@ let rec translate_edge ?(sourcePort) (kg : Kgraph.kgraph) sourceNode (edge : iEd
 		in
 		(*Format.printf "found target@."; *)
 		let kedge = match edge#getType with
-		| Dash | Simple | Mult | Big ->
+		| Dot | Dash | Simple | Mult | Big ->
 			let sourcePort = passOpt sourcePort in
 			let targetPort = passOpt targetPort in
 			let translateThickness e_t = 
@@ -77,10 +78,10 @@ let rec translate_edge ?(sourcePort) (kg : Kgraph.kgraph) sourceNode (edge : iEd
 				| Simple -> Gu_Simple
 				| Mult -> Gu_Mult
 				| Big -> Gu_Big
-				| Dash -> Gu_Simple
+				| Dash | Dot -> Gu_Simple
 				| _ -> assert false
 			in
-			let kedge = new_edge ~custom:(edge:>iInformation) ~dash:(edge#getType = Dash) ~thick:(translateThickness edge#getType) kg sourceNode sourcePort targetNode targetPort in
+			let kedge = new_edge ~custom:(edge:>iInformation) ~edge_type:edge#getType ~thick:(translateThickness edge#getType) kg sourceNode sourcePort targetNode targetPort in
 			Some kedge
 		| Aut_begin | Aut_end | Aut_begin_history | Aut_end_history | Aut_first_half | Aut_first_half_begin | Aut_second_half_begin | Aut_second_half_end | Aut_second_half_history ->
 			Some (automaton_edge ~custom:(edge:>iInformation) kg edge#getType sourceNode targetNode)

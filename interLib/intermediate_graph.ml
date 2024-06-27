@@ -88,7 +88,8 @@ type port_type = {look : portLook ; side : portSide}
 type edge_type = 
 	Simple | Mult | Big | Aut_port | Aut_begin | Aut_end | Aut_begin_history | Aut_end_history 
 	| Aut_first_half | Aut_first_half_begin | Aut_second_half_begin | Aut_second_half_history | Aut_second_half_end
-	| Seq | Seq_half | DepLink | DepAutLink | Link | AutLink | Dash
+	| Seq | Seq_half | DepLink | DepAutLink | Link | AutLink | Dash | Dot
+
 
 type label_placement = Tail | Center | Head | Undef
 
@@ -220,6 +221,8 @@ and iNode = object(self)
 	method setForceOrder b = forceOrder <- b
 	method setEnoughSize b = enough <- b
 	method setInsideSelf b = insideSelf <- b
+
+	method addFirstControlList l = control <- control @ (List.rev l)
 
 	method delPort p_del =
 		ports <- List.filter (fun p -> p#getId <> p_del#getId) ports;
