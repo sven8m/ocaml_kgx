@@ -303,6 +303,8 @@ and getKnodeFromType kg node =
 		simpleTextNode ~custom:(node:>iInformation) kg "mod"
 	| Forall ->
 		function_node ~always_expand:true ~custom:(node:>iInformation) kg "forall" node#getLayer	
+	| Empty ->
+		emptyNode ~custom:(node:>iInformation) kg
 
 (** [translate_node kg node] takes an iNode [node] and translates it into a KNode, its ports into KPorts, and recursively its children. (not the edges) *)
 and translate_node kg node =

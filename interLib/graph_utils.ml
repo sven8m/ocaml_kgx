@@ -1084,6 +1084,25 @@ let partialAppNode ?(custom=default_informations) kgraph name num num_taken =
 let addEnoughSize node = 
 	node#addProperty (PersistentEntry.nodeSize "[NODE_LABELS, PORTS, PORT_LABELS, MINIMUM_SIZE]")
 
+
+let emptyNode ?(custom=default_informations) kgraph =
+	let node = new knode kgraph in
+	resetPortsSurrounding node;
+	node#setHeight 0.1;
+	node#setWidth 0.1;
+	let cont = new containerRendering in
+
+	let c1 = create_coord Left in
+	let c2 = create_coord ~pos_val:(Rel 0.5) Top in
+	let c3 = create_coord Right in
+	let p1 = create_point c1 c2 in
+	let p2 = create_point c3 c2 in
+	
+	cont#setContainer (Polygon [p1;p2]);
+	cont#addStyle (create_style (Background (create_coloring (opLineColor custom))));
+	cont#addStyle (create_style (Foreground (create_coloring (opLineColor custom))));
+	node#addData cont;
+	node
 (* end for z *)
 
 let function_node ?(always_expand=false) ?(order=false) ?(custom=default_informations) ?(res=false) ?(aut=false) ?(m=false) kgraph name layer = 

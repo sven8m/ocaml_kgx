@@ -76,6 +76,7 @@ let number_ports node_type = match node_type with
 	| PartApp _ -> 1,1,0
 	| Mod -> 1,1,1
 	| Forall -> assert false
+	| Empty -> 1,1,0
 
 (** [topOutputs node_type] takes a node_type and returns the number of outputs to place on the north side *)
 let topOutputs node_type = match node_type with
@@ -170,6 +171,9 @@ let needOffsets node node_type =
 			-.3.0) in
 		addOffsets node#getInputs offsets;
 		addOffsets node#getOutputs [-.5.0]
+	| Empty ->
+		addOffsets node#getInputs [-5.0];
+		addOffsets node#getOutputs [-5.5];
 	| _ -> ()
 
 
