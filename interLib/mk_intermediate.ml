@@ -2,6 +2,13 @@ open Intermediate_graph
 
 (** Mk_intermediate creates iObjects *)
 
+(** The principle is either to call [mkOpNode] or [mkFunctionNode] the first for operations which have no intern nodes, and the latter for block delimiters.
+
+In the case of [mkOpNode], we look at the [port_type] to know which number of inputs, outputs and control ports are to be added. Then are maybe added some offsets
+and names to these ports.
+
+In the case of [mkFunctionNode], the input and output names depend on the list of given input and output names, and on the list of custom ports given.*)
+
 (** [create_n_ports n node ty] creates [n] ports on node [node] of type [ty]. 
 
 Option [no] indicates if it is a [no] port, [vis] if the port is visible, [bub] if the port is a buble,
@@ -83,7 +90,6 @@ let topOutputs node_type = match node_type with
 	| Deconstr (_,n) -> (n-1)
 	| _ -> 0
 
-
 (** [topInputs node_type] takes a node_type and returns the number of inputs to place on the north side *)
 let topInputs node_type = match node_type with
 	| Constr (_,n) -> n
@@ -91,11 +97,9 @@ let topInputs node_type = match node_type with
 	| PartApp (_,_,n) -> n
 	| _ -> 0
 
-
 (** [botInputs node_type] takes a node_type and returns the number of inputs to place on the south side *)
 let botInputs node_type = match node_type with
 	| _ -> 0
-
 
 (** [botOutputs node_type] takes a node_type and returns the number of outputs to place on the south side *)
 let botOutputs node_type = match node_type with
@@ -134,16 +138,6 @@ let addNames node node_type =
 		let inputs = List.init (n+1) (fun i -> if i <> n then string_of_int (i+1) else "else") in
 		addOuterNames node#getControl conds;
 		addOuterNames node#getInputs inputs
-		(*let offsets = List.init n (fun i ->
-			let i = i + 1 in
-			let delta = if i >= 10 then
-				8.0 -. 0.013 *. (float_of_int n)
-			else 8.0 -. 0.045 *. (float_of_int n)
-			in
-			let ofs = if i >= 10 then (-5.0) -. 0.013 *. (float_of_int n) else 4.0 in
-			(-.ofs -. delta *. (float_of_int (i - 1)))
-		) in
-		addOffsets node#getControl offsets*)
 	| Ram -> 
 		addOuterNames node#getInputs ["read_addr";"write?";"write_addr";"write_data"]
 	| _ -> ()
@@ -275,6 +269,12 @@ let automaton_edge ?(inline=false) ?(half=false) ?(first=false) source target la
 	source#addEdge edge;
 	target#addBackEdge edge
 
+(** [seq_edge sourceNode targetNode label] creates an edge which is a thick bended polyline with arrow at the end, from the source to the target. 
+The edge has a label with text [label].
+
+Options [sourcePort] and [targetPort] to declare the endpoints ports.
+
+Option [half] to not show the arrow. (default [false]). *)
 let seq_edge ?(half=false) ?(sourcePort=None) ?(targetPort=None) sourceNode targetNode label = 
 	let edge_type = if half then Seq_half else Seq in
 	let edge = new iEdge in
@@ -296,6 +296,7 @@ let seq_edge ?(half=false) ?(sourcePort=None) ?(targetPort=None) sourceNode targ
 		edge#setSourcePort p;
 		p#addEdge edge
 
+(** [edgeLabel name] creates an iEdgeLabel with text [name] with option to set its position with [pos] or to give it a forced position with [forced].*)
 let edgeLabel ?(pos=Undef) ?(forced=Undef) name = 
 	let lab = new iEdgeLabel name in
 	lab#setPosition pos;
@@ -334,7 +335,7 @@ let mkOpNode ?(insideSelf=false) node_type parent layer =
 	parent#addChild node;
 	node
 
-(** [mkRecordNode r_type i_type name_list parent layer] creates an iNode of the type [r_type] similarly to [simpleOpNode],
+(** [mkRecordNode r_type i_type name_list parent layer] creates an iNode of the type [r_type] similarly to [mkOpNode],
 but there are nodes inside the operation node to create, so it is separated *)
 let mkRecordNode record_type inner_type name_list parent layer = 
 	let node = new iNode in
@@ -387,7 +388,7 @@ Option [order] if the node has fixed port order.
 
 Option [vis] if the ports are visible (default [true]).
 
-Option [addI] and [addO] if an additional port has to be added for the inputs and outputs, then the type is given.
+Option [addI], [addO] [addC] if an additional list of ports has to be added for the inputs, outputs or controls. In this case, the type of the ports are mentioned.
 *)
 let mkFunctionNode ?(insideSelf=false) ?(order=false) ?(vis=true) ?(control=false) ?(addI=[]) ?(addO=[]) ?(addC=[]) node_type input_names output_names parent layer = 
 	let node = new iNode in
@@ -406,13 +407,6 @@ let mkFunctionNode ?(insideSelf=false) ?(order=false) ?(vis=true) ?(control=fals
 			node#addInputList (create_n_ports 1 node {look=look;side=x.side}); x.name :: (addPortsInputs q)
 	in
 	let true_input_names = (addPortsInputs addI) @ input_names in	
-(*
-	match addI with
-	| None -> input_names
-	| Some pt -> 
-		node#addInputList (create_n_ports ~vis:vis 1 node pt);
-		"" :: input_names
-	in*)
 
 	let rec addPortsOutputs addList =
 		match addList with
@@ -460,5 +454,6 @@ let mkFunctionNode ?(insideSelf=false) ?(order=false) ?(vis=true) ?(control=fals
 let addReset  node = 
 	node#addControlList (create_n_ports 1 node {look=Visible;side=Control})
 
+(** [addResetBegin node] add a control port to the [node] at the beginning of the list of control ports. The options enables to customize the type of the port.*)
 let addResetBegin ?(look=Visible) ?(side=Control) node = 
 	node#addFirstControlList (create_n_ports 1 node {look=look;side=side})

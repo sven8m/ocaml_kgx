@@ -75,10 +75,6 @@ type node_type =
 	| Mod 
 	| Forall
 	| Empty
-(*
-type port_type = 
-	Input | Output | Control | Undefined | OutputTop | InputTop | OutputBot | InputBot
-*)
 
 type portLook = Invisible | Visible | Not | Question | Buble | HalfCircle | Loop
 type portSide = East | West | North | South | Undefined | Input | Output | Control

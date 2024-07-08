@@ -1,6 +1,9 @@
 open Intermediate_graph
 open Graph_utils
 
+(** [intermediate_to_kgraph] translates an iGraph into a Kgraph using the [graph_utils] functions for the rendering. *)
+
+
 let portTbl = Hashtbl.create 42
 let nodeTbl = Hashtbl.create 42
 
@@ -21,34 +24,7 @@ let passOpt el =
 	| None -> assert false
 	| Some el -> el
 
-let print_edge_type edge = 
-	let text = match edge#getType with
-	| Link -> "Link"
-	| Simple -> "Simple"
-	| AutLink -> "AutLink"
-	| Aut_begin -> "Autbegin"
-	| Aut_begin_history -> "Aut_begin_history"
-	| Aut_end -> "Aut_end"
-	| Aut_end_history -> "Aut_end_history"
-	| DepAutLink -> "DepAutLink"
-	| DepLink -> "DepLink"
-	| Mult -> "Mult"
-	| Seq -> "Seq"
-	| Seq_half -> "Seq_half"
-	| Big -> "Big"
-	| Aut_first_half -> "Aut_first_half"
-	| Aut_first_half_begin -> "Aut_first_half_begin"
-	| Aut_second_half_begin -> "Aut_second_half_begin"
-	| Aut_second_half_end -> "Aut_second_half_end"
-	| Aut_second_half_history -> "Aut_second_half_history"
-	| Aut_port -> "Aut_port"
-	| Dash -> "Dash"
-	| Dot -> "Dot"
-	in
-	Format.printf "%s@." text
-
 (** [translate_edge_label kg lab] takes an iEdgeLabel [lab] and translates it into the corresponding Klabel *)
-
 let translate_edge_label ?(custom=default_informations) kg lab = 
 	if lab#getInlined then
 		inlinedLabel ~custom:custom kg lab#getName
@@ -58,11 +34,7 @@ let translate_edge_label ?(custom=default_informations) kg lab =
 (** [translate_edge kg sourceNode edge] takes an iEdge [edge] and translates it to a [KEdge], given the KGraph [kg], the source KNode [sourceNode]
 and the potential source KPort [sourcePort] *)
 let rec translate_edge ?(sourcePort) (kg : Kgraph.kgraph) sourceNode (edge : iEdge) = 
-(*	Format.printf "will translate edge@.";
-*)	if go_deeper (edge#getTarget#getLayer - 1) && ((edge#getTarget)#getType <> Link || !InterLib_options.do_show_all) && ((edge#getSource)#getType <> Link || !InterLib_options.do_show_all) && (not (edge_between_text edge)) then begin
-		(*Format.printf "entering @.";
-		Format.printf "%b %b@." edge#getSource#getAsText edge#getTarget#getAsText;
-		print_edge_type edge;			*)
+	if go_deeper (edge#getTarget#getLayer - 1) && ((edge#getTarget)#getType <> Link || !InterLib_options.do_show_all) && ((edge#getSource)#getType <> Link || !InterLib_options.do_show_all) && (not (edge_between_text edge)) then begin
 		let targetNode = Hashtbl.find nodeTbl edge#getTarget#getId in
 		let targetPort = match edge#getTargetPort with
 		| None -> None
@@ -115,8 +87,7 @@ let rec translate_edge ?(sourcePort) (kg : Kgraph.kgraph) sourceNode (edge : iEd
 			addInsideSelfEdge kedge edge#getInsideSelf;
 		end
 	end
-	(*Format.printf "has finished edge@."
-*)
+
 (** [translate_port kg port] takes an iPort [port] and translates it to a KPort given the Kgraph [kg] *)
 and translate_port (kg : Kgraph.kgraph) (port : iPort) = 
 	if Hashtbl.mem portTbl port#getId then
@@ -316,6 +287,7 @@ and translate_node_edges kg (node : iNode) =
 		List.iter (fun child ->
 			translate_node_edges kg child) node#getChildren
 
+(** [compare_edges] is a utility function to sort the edges. *)
 let compare_edges edge1 edge2 = 
 	if edge1#getInCycle = edge2#getInCycle then begin
 		match edge1#getDead , edge2#getDead with
@@ -329,16 +301,20 @@ let compare_edges edge1 edge2 =
 		| true,false -> 1
 	end
 
+
+(** [sort_edges] sorts the edges.*)
 let sort_edges (eC : iEdgeContainer) = 
 	let edges = eC # getEdges in
 	let edges = List.sort compare_edges edges in
 	eC #setEdges edges
 
+(** [sort_edges_node] sorts the edges outgoing from a node or its ports.*)
 let rec sort_edges_node node = 
 	sort_edges (node:>iEdgeContainer);
 	List.iter (fun port ->
 		sort_edges (port:>iEdgeContainer)) node#getPorts;
 	List.iter sort_edges_node node#getChildren
+
 
 (** [translate_graph ig] translates the iGraph [ig] into the corresponding Kgraph *)
 let translate_graph (ig : iGraph) = 
