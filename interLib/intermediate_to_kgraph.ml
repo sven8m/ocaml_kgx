@@ -126,31 +126,6 @@ and translate_port (kg : Kgraph.kgraph) (port : iPort) =
 		let kp =
 			createPort ~custom:(port:>iInformation) ~ofs:(port#getOffset) ~look:(port#getType).look ~side:(port#getType).side kg kn
 		in
-		(*if port#isBuble then
-			match port#getType with
-			| OutputTop ->
-				bublePort ~custom:(port:>iInformation) ~ofs:(port#getOffset) kg kn
-			| Output ->
-				bublePort ~dir:East ~custom:(port:>iInformation) ~ofs:(port#getOffset) kg kn
-			| _ -> assert false
-		else if port#isNot then
-			notOutputPort ~custom:(port:>iInformation) ~ofs:(port#getOffset) kg kn
-		else if port#isQuestion then
-			questionOutputPort ~custom:(port:>iInformation) ~ofs:(port#getOffset) kg kn
-		else 
-		match port#getType, port#isVisible with
-		| Input, true -> visibleInputPort ~custom:(port:>iInformation) ~ofs:(port#getOffset) kg kn
-		| Input, false -> invisibleInputPort ~custom:(port:>iInformation) ~ofs:(port#getOffset) kg kn
-		| Output, true -> visibleOutputPort ~custom:(port:>iInformation) ~ofs:(port#getOffset) kg kn
-		| Output, false -> invisibleOutputPort ~custom:(port:>iInformation) ~ofs:(port#getOffset) kg kn
-		| Control, _ -> visibleControlPort ~custom:(port:>iInformation) ~ofs:(port#getOffset) kg kn
-		| OutputTop , _ -> invisibleControlPort ~custom:(port:>iInformation) ~ofs:(port#getOffset) kg kn
-		| InputTop , _ -> invisibleControlPort ~custom:(port:>iInformation) ~ofs:(port#getOffset) kg kn
-		| Undefined,true -> visiblePort ~custom:(port:>iInformation) ~ofs:(port#getOffset) kg kn
-		| Undefined,false -> invisiblePort ~custom:(port:>iInformation) ~ofs:(port#getOffset) kg kn 
-		| (InputBot | OutputBot) , true -> visibleBotPort ~custom:(port:>iInformation) ~ofs:(port#getOffset) kg kn
-		| (InputBot | OutputBot) , false -> invisibleBotPort ~custom:(port:>iInformation) ~ofs:(port#getOffset) kg kn
-		in*)
 		Hashtbl.replace portTbl port#getId kp;
 		if port#getName <> "" then begin
 			let lab = portLabel ~custom:(port:>iInformation) kg port#getName in
@@ -180,35 +155,35 @@ and indexPorts (node : iNode) =
 and getKnodeFromType kg node = 
 	match node#getType with
 	| And _ ->
-		simpleAndNode ~custom:(node:>iInformation) kg
+		andNode ~custom:(node:>iInformation) kg
 	| Or _ -> 
-		simpleOrNode ~custom:(node:>iInformation) kg
+		orNode ~custom:(node:>iInformation) kg
 	| Xor _ -> 
-		simpleXorNode ~custom:(node:>iInformation) kg
+		xorNode ~custom:(node:>iInformation) kg
 	| Nand -> 
-		simpleNandNode ~custom:(node:>iInformation) kg
+		nandNode ~custom:(node:>iInformation) kg
 	| Mux ->
-		simpleMuxNode ~custom:(node:>iInformation) kg
+		muxNode ~custom:(node:>iInformation) kg
 	| Reg ->
-		simpleRegNode ~custom:(node:>iInformation) kg
+		regNode ~custom:(node:>iInformation) kg
 	| Buffer | Not ->
-		simpleBufferNode ~custom:(node:>iInformation) kg
+		bufferNode ~custom:(node:>iInformation) kg
 	| Fby ->
-		simpleFbyNode ~custom:(node:>iInformation) kg
+		fbyNode ~custom:(node:>iInformation) kg
 	| Cond _->
-		simpleCondNode ~custom:(node:>iInformation) kg
+		condNode ~custom:(node:>iInformation) kg
 	| Every s ->
 		function_node ~order:(node#isForcedOrder) ~custom:(node:>iInformation) kg s node#getLayer 	
 	| Fct s ->
 		function_node ~order:(node#isForcedOrder) ~custom:(node:>iInformation) kg s node#getLayer
 	| Slice (i,j) ->
-		simpleSliceNode ~custom:(node:>iInformation) kg i j
+		sliceNode ~custom:(node:>iInformation) kg i j
 	| Select i ->
-		simpleSelectNode ~custom:(node:>iInformation) kg i
+		selectNode ~custom:(node:>iInformation) kg i
 	| Concat ->
-		simpleConcatNode ~custom:(node:>iInformation) kg
+		concatNode ~custom:(node:>iInformation) kg
 	| Match _ ->
-		simpleMatchNode ~custom:(node:>iInformation) kg
+		matchNode ~custom:(node:>iInformation) kg
 	| Match_node ->
 		function_node ~custom:(node:>iInformation) ~m:true kg "match" node#getLayer
 	| Match_state s ->
@@ -220,87 +195,87 @@ and getKnodeFromType kg node =
 	| Aut_state (s,init) ->
 		stateNode ~custom:(node:>iInformation) ~first:init ~init:init kg s node#getLayer
 	| For ->
-		simpleSeqBlockNode ~custom:(node:>iInformation) kg "for"
+		seqBlockNode ~custom:(node:>iInformation) kg "for"
 	| While ->
-		simpleSeqBlockNode ~custom:(node:>iInformation) kg "while"
+		seqBlockNode ~custom:(node:>iInformation) kg "while"
 	| Pause init ->
-		simpleBubleNode ~init:init kg 
+		bubleNode ~init:init kg 
 	| Ram ->
 		ramNode ~custom:(node:>iInformation) kg
 	| Rom ->
 		romNode ~custom:(node:>iInformation) kg
 	| Const (s,var) ->
-		simpleConstNode ~custom:(node:>iInformation) ~const:(not var) kg s
-	| Tuple _ | UnTuple _ -> simpleTupleNode ~custom:(node:>iInformation) kg
+		constNode ~custom:(node:>iInformation) ~const:(not var) kg s
+	| Tuple _ | UnTuple _ -> tupleNode ~custom:(node:>iInformation) kg
 	| Sink (s,used) ->
-		simpleSinkNode ~custom:(node:>iInformation) ~used:used kg s
+		sinkNode ~custom:(node:>iInformation) ~used:used kg s
 	| Var s ->
-		simpleInputVarNode ~custom:(node:>iInformation) kg s	
+		inputVarNode ~custom:(node:>iInformation) kg s	
 	| Sync init ->
-		simpleSyncNode ~custom:(node:>iInformation) ~init:init kg
+		syncNode ~custom:(node:>iInformation) ~init:init kg
 	| Final ->
 		terminalSyncNode kg		
 	| Link -> 
-		simpleLinkNode kg
+		linkNode kg
 	(* for z *)
 	| Add _ ->
-		simpleAddNode ~custom:(node:>iInformation) kg
+		addNode ~custom:(node:>iInformation) kg
 	| Minus _ ->
-		simpleMinusNode ~custom:(node:>iInformation) kg
+		minusNode ~custom:(node:>iInformation) kg
 	| Mult _ ->
-		simpleTimesNode ~custom:(node:>iInformation) kg
+		timesNode ~custom:(node:>iInformation) kg
 	| Div ->
-		simpleDivNode ~custom:(node:>iInformation) kg
+		divNode ~custom:(node:>iInformation) kg
 	| Last ->
-		simpleLastNode ~custom:(node:>iInformation) kg
+		lastNode ~custom:(node:>iInformation) kg
 	| Deconstr (name , n) ->
-		simpleDeConstrNode ~custom:(node:>iInformation) kg name n
+		deConstrNode ~custom:(node:>iInformation) kg name n
 	| Constr (name, n) ->
-		simpleConstrNode ~custom:(node:>iInformation) kg name n
+		constrNode ~custom:(node:>iInformation) kg name n
 	| Der (name,_) ->
-		simpleDerNode ~custom:(node:>iInformation) kg name
+		derNode ~custom:(node:>iInformation) kg name
 	| Inv ->
-		simpleInvisibleNode ~custom:(node:>iInformation) kg
+		invisibleNode ~custom:(node:>iInformation) kg
 	| VertText t ->
-		simpleTextNode ~custom:(node:>iInformation) kg t
+		textNode ~custom:(node:>iInformation) kg t
 	| Present ->
-		simplePresentNode ~custom:(node:>iInformation) kg
+		presentNode ~custom:(node:>iInformation) kg
 	| Text (s,_) ->
-		simpleTextNode ~custom:(node:>iInformation) kg s
+		textNode ~custom:(node:>iInformation) kg s
 	| Period _ ->
-		simplePeriodNode ~custom:(node:>iInformation) kg
+		periodNode ~custom:(node:>iInformation) kg
 	| Emit s ->
-		simpleEmitNode ~custom:(node:>iInformation) kg s
+		emitNode ~custom:(node:>iInformation) kg s
 	| Up ->
-		simpleUpNode ~custom:(node:>iInformation) kg
+		upNode ~custom:(node:>iInformation) kg
 	| Scond (t_opt) ->
-		simpleScondNode ~custom:(node:>iInformation) kg t_opt
+		scondNode ~custom:(node:>iInformation) kg t_opt
 	| BlanckFct b ->
-		simpleBlanckNode ~custom:(node:>iInformation) kg b
+		blanckNode ~custom:(node:>iInformation) kg b
 	| Mg -> 
-		simpleMinusGreaterNode ~custom:(node:>iInformation) kg
+		minusGreaterNode ~custom:(node:>iInformation) kg
 	| Next s ->
-		simpleNextNode ~custom:(node:>iInformation) kg s
+		nextNode ~custom:(node:>iInformation) kg s
 	| ResetDer ->
-		simpleResetDerNode ~custom:(node:>iInformation) kg
+		resetDerNode ~custom:(node:>iInformation) kg
 	| RecordPat | Record ->
-		simpleRecordNode ~custom:(node:>iInformation) kg
+		recordNode ~custom:(node:>iInformation) kg
 	| InnerRecord s | InnerRecordPat s ->
-		simpleInnerRecordNode ~custom:(node:>iInformation) kg s
+		innerRecordNode ~custom:(node:>iInformation) kg s
 	| Init s ->
-		simpleInitNode ~custom:(node:>iInformation) kg s
+		initNode ~custom:(node:>iInformation) kg s
 	| Disc ->
-		simpleDiscNode ~custom:(node:>iInformation) kg
+		discNode ~custom:(node:>iInformation) kg
 	| Test ->
-		simpleTestNode ~custom:(node:>iInformation) kg
+		testNode ~custom:(node:>iInformation) kg
 	| InvState ->
-		simpleInvStateNode kg
+		invStateNode kg
 	| App _ -> 
-		simpleAppNode ~custom:(node:>iInformation) kg
+		appNode ~custom:(node:>iInformation) kg
 	| PartApp (s,n1,n2) ->	
 		partialAppNode ~custom:(node:>iInformation) kg s n1 n2
 	| Mod ->
-		simpleTextNode ~custom:(node:>iInformation) kg "mod"
+		textNode ~custom:(node:>iInformation) kg "mod"
 	| Forall ->
 		function_node ~always_expand:true ~custom:(node:>iInformation) kg "forall" node#getLayer	
 	| Empty ->
@@ -325,7 +300,7 @@ and translate_node kg node =
 				let kc = translate_node kg child in
 				kc#setParent kn) node#getChildren
 		else if (node#getAsText) then begin
-			let textNode = simpleTextNode ~custom:(node:>iInformation) kg node#getTextContent in
+			let textNode = textNode ~custom:(node:>iInformation) kg node#getTextContent in
 			textNode#setParent kn;
 		end;
 		kn

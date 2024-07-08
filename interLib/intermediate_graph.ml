@@ -80,7 +80,7 @@ type port_type =
 	Input | Output | Control | Undefined | OutputTop | InputTop | OutputBot | InputBot
 *)
 
-type portLook = Invisible | Visible | Not | Question | Buble | HalfCircle
+type portLook = Invisible | Visible | Not | Question | Buble | HalfCircle | Loop
 type portSide = East | West | North | South | Undefined | Input | Output | Control
 
 type port_type = {look : portLook ; side : portSide}

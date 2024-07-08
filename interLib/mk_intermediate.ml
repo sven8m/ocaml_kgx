@@ -305,14 +305,14 @@ let edgeLabel ?(pos=Undef) ?(forced=Undef) name =
 
 let mk_portType ?(look=Invisible) ?(side=Undefined) () = {look = look ; side = side}
 
-(** [simpleOpNode node_type parent layer] creates an iNode corresponding to the [node_type], 
+(** [mkOpNode node_type parent layer] creates an iNode corresponding to the [node_type], 
 with number of ports, names and innerLinks depending on the [node_type], and parent [parent]. 
 The [layer] is used for coloring.
 
 Order of the ports for inputs and outputs :  
 	South; North; Default (West for inputs, East for outputs)
 *)
-let simpleOpNode ?(insideSelf=false) node_type parent layer =
+let mkOpNode ?(insideSelf=false) node_type parent layer =
 	let nb_inputs,nb_outputs, nb_control = number_ports node_type in
 	let node = new iNode in
 	node#setType node_type;
@@ -334,9 +334,9 @@ let simpleOpNode ?(insideSelf=false) node_type parent layer =
 	parent#addChild node;
 	node
 
-(** [simpleRecordNode r_type i_type name_list parent layer] creates an iNode of the type [r_type] similarly to [simpleOpNode],
+(** [mkRecordNode r_type i_type name_list parent layer] creates an iNode of the type [r_type] similarly to [simpleOpNode],
 but there are nodes inside the operation node to create, so it is separated *)
-let simpleRecordNode record_type inner_type name_list parent layer = 
+let mkRecordNode record_type inner_type name_list parent layer = 
 	let node = new iNode in
 	node#setType record_type;
 	node#setLayer layer;
@@ -377,7 +377,8 @@ type additionalPort = {
 
 let mk_addPort ?(name="") ?(look=None) side = 
 	{side=side; name = name;look=look}
-(** [simpleFunctionNode node_type input_names output_names parent layer] creates an iNode for a [node_type] function, with 
+
+(** [mkFunctionNode node_type input_names output_names parent layer] creates an iNode for a [node_type] function, with 
 input ports having names [input_names], and output ports having names [output_names], and parent [parent]. 
 
 Option [control] if there should be a control port on the node 
@@ -388,7 +389,7 @@ Option [vis] if the ports are visible (default [true]).
 
 Option [addI] and [addO] if an additional port has to be added for the inputs and outputs, then the type is given.
 *)
-let simpleFunctionNode ?(insideSelf=false) ?(order=false) ?(vis=true) ?(control=false) ?(addI=[]) ?(addO=[]) ?(addC=[]) node_type input_names output_names parent layer = 
+let mkFunctionNode ?(insideSelf=false) ?(order=false) ?(vis=true) ?(control=false) ?(addI=[]) ?(addO=[]) ?(addC=[]) node_type input_names output_names parent layer = 
 	let node = new iNode in
 	node#setType node_type;
 	node#setLayer layer;
