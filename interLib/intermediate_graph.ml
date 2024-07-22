@@ -76,7 +76,7 @@ type node_type =
 	| Forall
 	| Empty
 
-type portLook = Invisible | Visible | Not | Question | Buble | HalfCircle | Loop
+type portLook = Invisible | Visible | Not | Question | Bubble | HalfCircle | Loop
 type portSide = East | West | North | South | Undefined | Input | Output | Control
 
 type port_type = {look : portLook ; side : portSide}
@@ -234,32 +234,20 @@ and iPort node = object
 
 	val mutable name = ""
 	val mutable p_type = (default_port_type : port_type)
-	val mutable visible = true
-	val mutable no = false
-	val mutable question = false
 	val mutable parent = (node : iNode)
 	val mutable ofs = (None : float option)
-	val mutable buble = false
 	val mutable index = 0
 
 	method getName = name
 	method getType = p_type
-	method isVisible = visible
 	method getParent = parent
-	method isNot = no
 	method getOffset = ofs
-	method isQuestion = question
-	method isBuble = buble
 	method getIndex = index
 
 	method setName n = name <- n
 	method setType t = p_type <- t
-	method setVisible b = visible <- b
 	method setParent p = parent <- p
-	method setNot b = no <- b
 	method setOffset o = ofs <- Some o
-	method setQuestion q = question <- q
-	method setBuble b = buble <- b
 	method setIndex i = index <- i
 end
 

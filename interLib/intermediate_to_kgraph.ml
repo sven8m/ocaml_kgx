@@ -170,7 +170,7 @@ and getKnodeFromType kg node =
 	| While ->
 		seqBlockNode ~custom:(node:>iInformation) kg "while"
 	| Pause init ->
-		bubleNode ~init:init kg 
+		bubbleNode ~init:init kg 
 	| Ram ->
 		ramNode ~custom:(node:>iInformation) kg
 	| Rom ->

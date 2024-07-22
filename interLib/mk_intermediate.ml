@@ -10,22 +10,16 @@ and names to these ports.
 In the case of [mkFunctionNode], the input and output names depend on the list of given input and output names, and on the list of custom ports given.*)
 
 (** [create_n_ports n node ty] creates [n] ports on node [node] of type [ty]. 
-
-Option [no] indicates if it is a [no] port, [vis] if the port is visible, [bub] if the port is a buble,
-[question] if the port is a question mark. By default all options are [false]. *)
-let rec create_n_ports (*?(question=false) ?(no=false) ?(vis=false) ?(bub=false)*) n node ty = 
+ *)
+let rec create_n_ports n node ty = 
 	match n with
 	| 0 -> []
 	| n -> 
 		let port = new iPort node in
 		port#setType ty;
-		(*port#setVisible vis;
-		port#setNot no;
-		port#setQuestion question;
-		port#setBuble bub;*)
 		node#addPort port;
 		let outer = new iOuterPort port in
-		outer :: (create_n_ports (*~question:question ~no:no ~vis:vis ~bub:bub*) (n-1) node ty)
+		outer :: (create_n_ports (n-1) node ty)
 
 (** [outerToEndPoint outer] takes an iOuterPort and creates a corresponding iEndPoint *)
 let outerToEndPoint o = 
@@ -356,7 +350,7 @@ let mkRecordNode record_type inner_type name_list parent layer =
 		| Record -> East
 		| _ -> assert false
 		in
-		let portType = {look=Buble;side=outSide} in
+		let portType = {look=Bubble;side=outSide} in
 		inner_node#addOutputList (create_n_ports 1 inner_node portType);
 		node#addChild inner_node;
 		let source = outerToEndPoint (List.hd inner_node#getOutputs) in

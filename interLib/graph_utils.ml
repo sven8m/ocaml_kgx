@@ -292,7 +292,7 @@ let questionPort ?(custom=default_informations) ?(ofs=None) kgraph knode =
 	port
 
 (** [notPortContainer ()] creates an ellipse container with filled background, with color depending on [custom]. *)
-let bublePortContainer ?(custom=default_informations) () = 
+let bubblePortContainer ?(custom=default_informations) () = 
 	let cont = new containerRendering in
 	cont#setContainer Ellipse;
 	cont#addStyle (create_style (LineWidth 1.3));
@@ -301,10 +301,10 @@ let bublePortContainer ?(custom=default_informations) () =
 	cont#addStyle (create_style ~on_sel:true (LineWidth 1.5));
 	cont
 	
-(** [bublePort kgraph knode] creates a port for [knode] with width and height 5.0, with container [bublePortContainer]. *)
-let bublePort ?(custom=default_informations) ?(ofs=None) kgraph knode = 
+(** [bubblePort kgraph knode] creates a port for [knode] with width and height 5.0, with container [bubblePortContainer]. *)
+let bubblePort ?(custom=default_informations) ?(ofs=None) kgraph knode = 
 	let port = defaultPortNode ~ofs:ofs ~height:5.0 ~width:5.0 kgraph knode in
-	let cont = bublePortContainer ~custom:custom () in
+	let cont = bubblePortContainer ~custom:custom () in
 	port#addData cont;
 	port
 
@@ -389,7 +389,7 @@ let createPort ?(custom=default_informations) ?(ofs=None) ?(look=Invisible) ?(si
 	| Visible -> visiblePort ~custom:custom kgraph ~ofs:ofs knode
 	| Not -> notPort ~custom:custom ~ofs:ofs kgraph knode 
 	| Question -> questionPort ~custom:custom ~ofs:ofs kgraph knode
-	| Buble -> bublePort ~custom:custom ~ofs:ofs kgraph knode
+	| Bubble -> bubblePort ~custom:custom ~ofs:ofs kgraph knode
 	| HalfCircle -> halfCirclePort ~custom:custom ~ofs:ofs kgraph knode
 	| Loop -> loopPort ~custom:custom ~ofs:ofs kgraph knode
 	in
@@ -1238,7 +1238,7 @@ let seqBlockNode ?(custom=default_informations) kgraph name =
 	node
 
 
-let bubleNode ?(init=false) kgraph = 
+let bubbleNode ?(init=false) kgraph = 
 	let node = defaultStateNode ~layer:(if init then "FIRST" else "NONE") kgraph in
 	let cont = new containerRendering in
 	let color = create_color 0 0 0 in
