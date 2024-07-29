@@ -576,7 +576,7 @@ let matchNode ?(custom=default_informations) kgraph =
 
 (** [bufferNode kgraph] creates a rectangular node with text [()] *)
 let tupleNode ?(custom=default_informations) kgraph = 
-	opNode ~custom:custom kgraph "()" 0.5 0.5 
+	opNode ~order:true ~custom:custom kgraph "()" 0.5 0.5 
 
 (** [constNode kgraph s] creates a node with shape rectangular which right border is a triangle, with text [s].
 	If option [const] is [false] (default [true]), the node is put left on the layout. *)
@@ -786,8 +786,8 @@ let deConstrNode ?(custom=default_informations) ?(vert=false) ?(right_ofs=27.35)
 let constrNode ?(custom=default_informations) kgraph name num =
 	deConstrNode ~custom:custom ~vert:true ~right_ofs:12.35 kgraph name num
 
-(** [integrCont alone] creates a container consisting of an horizontal followed by an horizontal line to the top and lastly an horizontal line in an *)
-let integrCont ?(custom=default_informations) alone = 
+(** [oldIntegrCont alone] creates a container consisting of an horizontal followed by an horizontal line to the top and lastly an horizontal line in an *)
+let oldIntegrCont ?(custom=default_informations) alone = 
 	let line = new containerRendering in
 
 	let c1 = Point.create_coord Left in
@@ -820,19 +820,39 @@ let integrCont ?(custom=default_informations) alone =
 	line#setPlacement (Point pd);
 	line	
 
-
-let derNode ?(custom=default_informations) kgraph init_name =
+(* old design for derivative node *)
+let oldDerNode ?(custom=default_informations) kgraph init_name =
 	let node = defaultNode ~order:true kgraph in
 	node#setWidth 30.0;
 	node#setHeight 30.0;
 	let cont = opContWtT ~custom:custom () in
-	cont#addContainerRendering (integrCont ~custom:custom (init_name = ""));
+	cont#addContainerRendering (oldIntegrCont ~custom:custom (init_name = ""));
 	let t = textContainer ~s:8 ~custom:custom init_name 0.5 0.5 in
 	t#setPlacement (place ~top:15.0 ~left:5.0 ~right:5.0 ~bottom:0.0 ());	
 	cont#addContainerRendering t;
 	node#addData cont;
 	resetPortsSurrounding node;
 	node
+
+(* new design for derivative node *)
+let derNode ?(custom=default_informations) kgraph init_name =
+	let node = defaultNode ~order:true kgraph in
+	node#setWidth 30.0;
+	node#setHeight 30.0;
+	let cont = opContWtT ~custom:custom () in
+	let tint = textContainer ~s:13 ~custom:custom "&#8747;" 0.5 0.5 in
+	tint#addStyle (create_style Bold);
+	tint#setPlacement (place ~top:2.0 ~left:5.0 ~right:5.0 ~bottom:(if init_name <> "" then 15.0 else 2.0) ());
+	cont#addContainerRendering tint;
+	if init_name <> "" then begin
+		let t = textContainer ~s:8 ~custom:custom init_name 0.5 0.6 in
+		t#setPlacement (place ~top:17.0 ~left:5.0 ~right:5.0 ~bottom:0.0 ());	
+		cont#addContainerRendering t;
+	end;
+	node#addData cont;
+	resetPortsSurrounding node;
+	node
+
 
 let testCondCont ?(custom=default_informations) () = 
 
@@ -1648,6 +1668,9 @@ let linkEdge ?(custom=default_informations) (kgraph : Kgraph.kgraph) sourceNode 
 	edge#addProperty (PersistentEntry.create_property "org.eclipse.elk.noLayout" "true");
 	cont#addContainerRendering (arrow_decorator ~custom:custom ~tiny:true true);
 	edge#addData cont
+
+let addCompaction knode = 
+	knode#addProperty (PersistentEntry.create_property "org.eclipse.elk.layered.compaction.postCompaction.strategy" "LEFT")
 
 let init_kgraph () = 
 	let kgraph = new kgraph in

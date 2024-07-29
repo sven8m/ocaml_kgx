@@ -260,6 +260,8 @@ and translate_node kg node =
 		revInputPorts node;
 		indexPorts node;
 		let kn = getKnodeFromType kg node in
+		if !InterLib_options.do_compact_opt && (List.length node#getChildren > 0) then
+			addCompaction kn;
 		if node#isForcedEnoughSize then
 			addEnoughSize kn;
 		addInsideSelfNode kn node#getInsideSelf; 
