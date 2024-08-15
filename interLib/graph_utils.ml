@@ -1283,14 +1283,14 @@ let bubbleNode ?(init=false) kgraph =
 
 
 let ramNode ?(custom=default_informations) kgraph = 
-	let node = opNode ~custom:custom ~title:true ~order:true kgraph "ram" 0.5 0.1 in
+	let node = opNode ~custom:custom ~title:true ~order:true kgraph "RAM" 0.5 0.1 in
 	node#setHeight 130.0;
 	node#setWidth 70.0;
 	node#addProperty (PersistentEntry.portLabelPlacement "[INSIDE,NEXT_TO_PORT_IF_POSSIBLE]");
 	node
 
 let romNode ?(custom=default_informations) kgraph = 
-	let node = opNode ~custom:custom ~center:true ~title:true ~order:true kgraph "rom" 0.5 0.5 in
+	let node = opNode ~custom:custom ~center:true ~title:true ~order:true kgraph "ROM" 0.5 0.5 in
 	node#setHeight 60.0;
 	node#setWidth 30.0;
 	node
